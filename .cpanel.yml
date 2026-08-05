@@ -1,0 +1,14 @@
+---
+# Plantilla que el workflow copia como `.cpanel.yml` a la raíz de la rama
+# `deploy`. NO se activa desde `main`. El porqué está en deploy/README.md y en
+# docs/adr/ADR-004-despliegue-por-rama-de-artefactos.md.
+#
+# Una sola operación de copia, idempotente: si una tarea falla a mitad, cPanel
+# se detiene y NO revierte las anteriores.
+#
+# rsync y no `cp -R`: `cp` no borra lo que desapareció del build, y como los
+# assets llevan hash de contenido, los viejos se acumularían para siempre.
+deployment:
+  tasks:
+    - export DEPLOYPATH=$HOME/public_html/
+    - rsync -a --delete --exclude '.git/' --exclude '.gitattributes' --exclude '.cpanel.yml' --exclude 'cgi-bin/' --exclude '.well-known/' ./ "$DEPLOYPATH"
