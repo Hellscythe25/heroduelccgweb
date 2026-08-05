@@ -189,3 +189,21 @@ documentos de partida.
 Pendiente inmediato: desbloquear los puntos 1 y 2 de ABIERTO para que la fase 0
 pueda cerrarse de verdad (el criterio de salida exige que el "hola mundo" llegue
 a staging **automáticamente**, y eso todavía no ha ocurrido).
+
+### 2026-08-05 — Sesión 2: despliegue real
+
+- Dominio decidido: `heroduelccg.com`.
+- ADR-004: se despliega por rama de artefactos con Git Version Control de
+  cPanel, porque los secretos SSH siguen sin existir.
+- cPanel configurado apuntando a `deploy`. Primer despliegue ejecutado: los
+  archivos llegaron a `public_html`.
+- **Incidente — permisos.** El sitio respondía con un listado de directorio en
+  `/` y 404 en todo lo demás. Causa: `rsync -a` preserva los permisos del
+  origen, y el clon de git de cPanel hereda el umask restrictivo de la cuenta
+  (600/700). LiteSpeed no podía leer los archivos **ni el `.htaccess`**, así que
+  además de los 404 quedaron inactivas la redirección canónica, las cabeceras de
+  seguridad y `Options -Indexes`.
+  Corregido con `--chmod=D755,F644` en `deploy/cpanel.yml`.
+  Lección registrada en el runbook: **un "Index of /" no es un despliegue
+  parcial, es un despliegue fallido**, aunque los archivos se vean.
+- Queda pendiente volver a desplegar y repetir la verificación completa.

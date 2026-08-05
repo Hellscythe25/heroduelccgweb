@@ -8,7 +8,15 @@
 #
 # rsync y no `cp -R`: `cp` no borra lo que desapareció del build, y como los
 # assets llevan hash de contenido, los viejos se acumularían para siempre.
+#
+# --chmod=D755,F644 NO es opcional. `rsync -a` preserva los permisos del origen,
+# y el clon que cPanel hace en ~/repositories/ hereda el umask de la cuenta, que
+# en shared hosting suele ser restrictivo (600/700). Con esos permisos LiteSpeed
+# sirve el contenido estático pero no puede LEERLO: responde 404 a todo y, peor,
+# ignora el .htaccess entero — sin redirección canónica, sin cabeceras de
+# seguridad y con el listado de directorios a la vista. Forzar 755/644 aquí lo
+# hace independiente de cómo esté configurada la cuenta.
 deployment:
   tasks:
     - export DEPLOYPATH=$HOME/public_html/
-    - rsync -a --delete --exclude '.git/' --exclude '.gitattributes' --exclude '.cpanel.yml' --exclude 'cgi-bin/' --exclude '.well-known/' ./ "$DEPLOYPATH"
+    - rsync -a --delete --chmod=D755,F644 --exclude '.git/' --exclude '.gitattributes' --exclude '.cpanel.yml' --exclude 'cgi-bin/' --exclude '.well-known/' ./ "$DEPLOYPATH"
