@@ -1,0 +1,124 @@
+/*
+ * Estilos base. Deliberadamente cortos: el presupuesto de CSS es 40 KB
+ * comprimidos para el sitio entero (docs/DEPLOY.md §12).
+ */
+@import './tokens.css';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: var(--hd-surface);
+  color: var(--hd-text);
+  font-family: var(--hd-font-sans);
+  font-size: var(--hd-text-base);
+  line-height: var(--hd-leading-normal);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3 {
+  line-height: var(--hd-leading-tight);
+  text-wrap: balance;
+  font-weight: 650;
+}
+
+h1 {
+  font-size: var(--hd-text-3xl);
+}
+h2 {
+  font-size: var(--hd-text-2xl);
+}
+h3 {
+  font-size: var(--hd-text-xl);
+}
+
+p {
+  text-wrap: pretty;
+  max-width: var(--hd-measure);
+}
+
+img,
+picture,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+a {
+  color: var(--hd-accent);
+  text-underline-offset: 0.2em;
+}
+
+a:hover {
+  text-decoration-thickness: 2px;
+}
+
+/* Foco siempre visible: la navegación por teclado es requisito, no extra. */
+:focus-visible {
+  outline: 2px solid var(--hd-focus);
+  outline-offset: 2px;
+  border-radius: var(--hd-radius-sm);
+}
+
+/* Enlace de salto: oculto hasta recibir foco. */
+.skip-link {
+  position: absolute;
+  left: var(--hd-space-2);
+  top: var(--hd-space-2);
+  z-index: 100;
+  padding: var(--hd-space-2) var(--hd-space-4);
+  background: var(--hd-accent);
+  color: var(--hd-accent-contrast);
+  border-radius: var(--hd-radius-md);
+  font-weight: 600;
+  text-decoration: none;
+  transform: translateY(-200%);
+}
+
+.skip-link:focus-visible {
+  transform: translateY(0);
+}
+
+.container {
+  width: 100%;
+  max-width: var(--hd-container);
+  margin-inline: auto;
+  padding-inline: var(--hd-space-4);
+}
+
+main {
+  flex: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

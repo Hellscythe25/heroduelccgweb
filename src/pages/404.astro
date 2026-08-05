@@ -1,0 +1,68 @@
+---
+/**
+ * 404 única para todo el sitio: Apache la sirve vía `ErrorDocument 404`
+ * (public/.htaccess) y en ese punto no hay forma estática de saber el idioma
+ * del visitante. Por eso se muestra bilingue en vez de adivinar.
+ */
+import '~/styles/global.css';
+import { localizedPath, ui } from '~/i18n/ui';
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>404 — {ui.es['site.name']}</title>
+    <meta name="robots" content="noindex" />
+    <link rel="icon" href="/favicon/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body>
+    <main id="main" class="container wrap">
+      <p class="code" aria-hidden="true">404</p>
+
+      <section>
+        <h1>{ui.es['404.title']}</h1>
+        <p>{ui.es['404.body']}</p>
+        <p><a href={localizedPath('es', 'home')}>{ui.es['404.back']}</a></p>
+      </section>
+
+      <section lang="en">
+        <h2>{ui.en['404.title']}</h2>
+        <p>{ui.en['404.body']}</p>
+        <p><a href={localizedPath('en', 'home')}>{ui.en['404.back']}</a></p>
+      </section>
+    </main>
+  </body>
+</html>
+
+<style>
+  .wrap {
+    display: flex;
+    flex-direction: column;
+    gap: var(--hd-space-8);
+    padding-block: var(--hd-space-16);
+  }
+
+  .code {
+    font-family: var(--hd-font-mono);
+    font-size: var(--hd-text-3xl);
+    font-weight: 800;
+    color: var(--hd-accent);
+    letter-spacing: 0.1em;
+  }
+
+  h2 {
+    font-size: var(--hd-text-xl);
+  }
+
+  p {
+    color: var(--hd-text-muted);
+  }
+
+  h1,
+  h2 {
+    color: var(--hd-text);
+    margin-block-end: var(--hd-space-2);
+  }
+</style>

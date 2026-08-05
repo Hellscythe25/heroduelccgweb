@@ -1,0 +1,25 @@
+# Build output
+dist/
+.astro/
+
+# Dependencies — never committed (see docs/DEPLOY.md §1: inode budget)
+node_modules/
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Local Claude Code state (agent and command definitions ARE versioned)
+.claude/settings.local.json

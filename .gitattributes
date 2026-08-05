@@ -1,0 +1,15 @@
+# Normaliza finales de línea: el equipo trabaja en Windows y CI corre en Linux.
+* text=auto eol=lf
+
+# Los scripts que ejecuta CI deben llevar LF siempre, o bash falla con
+# "bad interpreter: /bin/bash^M".
+*.sh text eol=lf
+*.yml text eol=lf
+.htaccess text eol=lf
+
+*.png binary
+*.jpg binary
+*.webp binary
+*.avif binary
+*.woff2 binary
+*.ico binary

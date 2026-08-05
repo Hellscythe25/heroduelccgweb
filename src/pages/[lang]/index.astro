@@ -1,0 +1,74 @@
+---
+/**
+ * Landing. Una sola plantilla para todos los idiomas: el contenido vive en
+ * src/i18n/ui.ts, no duplicado por locale. Así la paridad ES/EN es estructural
+ * y no depende de que alguien recuerde actualizar dos archivos.
+ *
+ * Fase 0 (docs/DEPLOY.md §15): "hola mundo" que llega a staging solo. El hero
+ * real, la captura de correos y los enlaces de tienda son fase 1.
+ */
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import { locales, useTranslations, type Lang } from '~/i18n/ui';
+
+export function getStaticPaths() {
+  return locales.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Lang;
+const t = useTranslations(lang);
+---
+
+<BaseLayout
+  title={`${t('site.name')} — ${t('site.tagline')}`}
+  description={t('site.description')}
+  lang={lang}
+  routeKey="home"
+>
+  <section class="hero container">
+    <p class="badge">{t('home.badge')}</p>
+    <h1>{t('home.title')}</h1>
+    <p class="subtitle">{t('home.subtitle')}</p>
+  </section>
+
+  <section class="container status">
+    <h2>{t('home.status.title')}</h2>
+    <p>{t('home.status.body')}</p>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    padding-block: var(--hd-space-16) var(--hd-space-8);
+  }
+
+  .badge {
+    display: inline-block;
+    margin-block-end: var(--hd-space-4);
+    padding: var(--hd-space-1) var(--hd-space-3);
+    border: 1px solid var(--hd-accent);
+    border-radius: var(--hd-radius-full);
+    color: var(--hd-accent);
+    font-size: var(--hd-text-xs);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .subtitle {
+    margin-block-start: var(--hd-space-4);
+    font-size: var(--hd-text-lg);
+    color: var(--hd-text-muted);
+  }
+
+  .status {
+    padding-block: var(--hd-space-8) var(--hd-space-16);
+  }
+
+  .status h2 {
+    margin-block-end: var(--hd-space-3);
+  }
+
+  .status p {
+    color: var(--hd-text-muted);
+  }
+</style>

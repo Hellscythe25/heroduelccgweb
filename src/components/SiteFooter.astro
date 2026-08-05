@@ -1,0 +1,40 @@
+---
+import { useTranslations, type Lang } from '~/i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+/* Ano de copyright fijado en build. El sitio es estático: no hay reloj en runtime. */
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container">
+    <p class="line">
+      &copy; {year} {t('site.name')}. {t('footer.rights')}
+    </p>
+    <p class="line muted">{t('footer.phase')}</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    border-top: 1px solid var(--hd-border);
+    background: var(--hd-surface-sunken);
+    padding-block: var(--hd-space-6);
+    font-size: var(--hd-text-sm);
+  }
+
+  .line {
+    margin: 0;
+    max-width: none;
+  }
+
+  .muted {
+    color: var(--hd-text-muted);
+  }
+</style>

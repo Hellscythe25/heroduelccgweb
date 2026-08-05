@@ -1,0 +1,96 @@
+name: Deploy producción
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-prod
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  build-deploy:
+    name: Construir y publicar en producción
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: production
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22 # Astro 7 exige Node >= 22.12
+          cache: npm
+
+      - run: npm ci
+
+      # ---- Gates: si algo falla, no se despliega nada ----
+      - name: Sin placeholders
+        run: npm run placeholders
+
+      - name: Validar datos del juego contra esquema
+        run: npm run data:validate
+
+      - name: Typecheck
+        run: npm run check
+
+      - name: Tests (codec de mazos, validadores, utilidades)
+        run: npm test
+
+      - name: Build
+        run: npm run build
+        env:
+          SITE_URL: ${{ vars.SITE_URL_PROD }}
+          DEPLOY_ENV: production
+
+      - name: Índice de búsqueda
+        run: npm run search:index
+
+      - name: Presupuesto de rendimiento
+        run: npm run budget
+
+      # ---- Publicación ----
+      - name: Configurar SSH
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -p "${{ secrets.SSH_PORT }}" "${{ secrets.SSH_HOST }}" >> ~/.ssh/known_hosts
+
+      # Respaldo antes de tocar nada: es el rollback de segundos de §10.
+      - name: Respaldo remoto del despliegue anterior
+        run: |
+          ssh -p "${{ secrets.SSH_PORT }}" -i ~/.ssh/id_ed25519 \
+            "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}" \
+            "rm -rf ~/backups/prev && mkdir -p ~/backups && \
+             cp -a ${{ secrets.DEPLOY_PATH_PROD }} ~/backups/prev"
+
+      # --delete es seguro porque .htaccess viaja dentro de dist/.
+      # --delay-updates reduce la ventana en la que el sitio mezcla versiones.
+      # --exclude '.well-known/' protege la renovación de AutoSSL.
+      - name: Rsync a public_html
+        run: |
+          rsync -az --delete --delay-updates --human-readable \
+            -e "ssh -p ${{ secrets.SSH_PORT }} -i ~/.ssh/id_ed25519" \
+            --exclude 'cgi-bin/' \
+            --exclude '.well-known/' \
+            dist/ "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.DEPLOY_PATH_PROD }}"
+
+      - name: Verificación post-deploy
+        run: |
+          sleep 5
+          for path in / /es/ /en/ /sitemap-index.xml; do
+            curl -fsS -o /dev/null -w "$path -> %{http_code}\n" "${{ vars.SITE_URL_PROD }}$path"
+          done
+
+      - name: Auditoría de inodes
+        run: |
+          ssh -p "${{ secrets.SSH_PORT }}" -i ~/.ssh/id_ed25519 \
+            "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}" \
+            "find ${{ secrets.DEPLOY_PATH_PROD }} -type f | wc -l" \
+            | awk '{ print "Archivos en producción: " $1 " (límite del plan: 300000)" }'

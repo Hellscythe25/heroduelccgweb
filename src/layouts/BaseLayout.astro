@@ -1,0 +1,41 @@
+---
+import '~/styles/global.css';
+import Seo from '~/components/Seo.astro';
+import SiteHeader from '~/components/SiteHeader.astro';
+import SiteFooter from '~/components/SiteFooter.astro';
+import { localeTags, useTranslations, type Lang, type RouteKey } from '~/i18n/ui';
+
+interface Props {
+  title: string;
+  description: string;
+  lang: Lang;
+  routeKey: RouteKey;
+  image?: string | undefined;
+  noindex?: boolean;
+}
+
+const { title, description, lang, routeKey, image, noindex = false } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<!doctype html>
+<html lang={localeTags[lang]}>
+  <head>
+    <Seo
+      title={title}
+      description={description}
+      lang={lang}
+      routeKey={routeKey}
+      image={image}
+      noindex={noindex}
+    />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">{t('nav.skipToContent')}</a>
+    <SiteHeader lang={lang} routeKey={routeKey} />
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+    <SiteFooter lang={lang} />
+  </body>
+</html>

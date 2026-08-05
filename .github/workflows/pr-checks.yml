@@ -1,0 +1,62 @@
+name: Checks de PR
+
+on:
+  pull_request:
+    branches: [main, develop]
+  workflow_dispatch:
+
+concurrency:
+  group: pr-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Gates
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # Los gates corren de más barato a más caro: un dato inválido no merece
+      # que gastemos minutos construyendo el sitio.
+      - name: Sin placeholders
+        run: npm run placeholders
+
+      - name: Validar datos del juego contra esquema
+        run: npm run data:validate
+
+      - name: Typecheck
+        run: npm run check
+
+      - name: Tests
+        run: npm test
+
+      - name: Build
+        run: npm run build
+        env:
+          SITE_URL: ${{ vars.SITE_URL_STAGING || 'https://staging.example.invalid' }}
+          DEPLOY_ENV: staging
+
+      - name: Índice de búsqueda
+        run: npm run search:index
+
+      - name: Presupuesto de rendimiento
+        run: npm run budget
+
+      - name: Publicar artefacto de preview
+        uses: actions/upload-artifact@v4
+        with:
+          name: site-preview
+          path: dist/
+          retention-days: 7

@@ -1,0 +1,143 @@
+/*
+ * Tokens del sistema de diseño — dueño: agente `disenador-ui`.
+ *
+ * Regla dura: contraste AA (4.5:1 texto normal, 3:1 texto grande y bordes de
+ * control). Una estética "oscura y épica" falla contraste con enorme facilidad,
+ * por eso cada par texto/fondo lleva su ratio anotado y verificado.
+ *
+ * Ningún componente define colores literales. Si un valor no está aquí, no se usa.
+ */
+
+:root {
+  color-scheme: dark light;
+
+  /* ---- Paleta base ---- */
+  --hd-ink-950: #0b0c11;
+  --hd-ink-900: #0e0f14;
+  --hd-ink-800: #171922;
+  --hd-ink-700: #232634;
+  --hd-ink-600: #333749;
+  --hd-ink-300: #a8b0bf;
+  --hd-ink-100: #e6e9f0;
+  --hd-ink-050: #f2f4f8;
+  --hd-paper: #ffffff;
+
+  /* Oro de marca: acento sobre superficies oscuras */
+  --hd-gold-400: #e8b44a;
+  --hd-gold-600: #b8862a;
+  --hd-gold-800: #8a5a00;
+
+  /* Carmesi: estados destructivos y acentos de duelo */
+  --hd-crimson-400: #ef6d72;
+  --hd-crimson-600: #b3242b;
+
+  --hd-emerald-400: #59d09a;
+  --hd-emerald-700: #14663f;
+
+  /* ---- Tipografia ----
+     Sin Google Fonts (docs/DEPLOY.md §12): stack del sistema mientras no exista
+     una woff2 subconjuntada y autoalojada. Coste actual: 0 KB. */
+  --hd-font-sans:
+    ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue',
+    Arial, sans-serif;
+  --hd-font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Consolas, monospace;
+
+  /* Escala tipográfica fluida, razon 1.25 */
+  --hd-text-xs: 0.79rem;
+  --hd-text-sm: 0.889rem;
+  --hd-text-base: 1rem;
+  --hd-text-lg: 1.125rem;
+  --hd-text-xl: clamp(1.25rem, 0.5vw + 1.1rem, 1.4rem);
+  --hd-text-2xl: clamp(1.5rem, 1.2vw + 1.2rem, 1.9rem);
+  --hd-text-3xl: clamp(2rem, 3vw + 1.2rem, 3.25rem);
+
+  --hd-leading-tight: 1.15;
+  --hd-leading-normal: 1.6;
+
+  /* ---- Espaciado (escala de 4 px) ---- */
+  --hd-space-1: 0.25rem;
+  --hd-space-2: 0.5rem;
+  --hd-space-3: 0.75rem;
+  --hd-space-4: 1rem;
+  --hd-space-6: 1.5rem;
+  --hd-space-8: 2rem;
+  --hd-space-12: 3rem;
+  --hd-space-16: 4rem;
+
+  /* ---- Radios y elevacion ---- */
+  --hd-radius-sm: 4px;
+  --hd-radius-md: 8px;
+  --hd-radius-lg: 14px;
+  --hd-radius-full: 999px;
+
+  --hd-shadow-md: 0 2px 8px rgb(0 0 0 / 0.35);
+
+  /* ---- Layout ---- */
+  --hd-measure: 68ch;
+  --hd-container: 72rem;
+
+  --hd-motion-fast: 120ms;
+  --hd-motion-ease: cubic-bezier(0.2, 0, 0, 1);
+}
+
+/* ---- Tema oscuro (por defecto: es la identidad del juego) ----
+   surface #0e0f14
+     text        #f2f4f8  -> 17.4:1  AAA
+     text-muted  #a8b0bf  ->  8.8:1  AAA
+     accent      #e8b44a  -> 10.0:1  AAA
+     crimson-400 #ef6d72  ->  6.4:1  AA  */
+:root,
+:root[data-theme='dark'] {
+  --hd-surface: var(--hd-ink-900);
+  --hd-surface-raised: var(--hd-ink-800);
+  --hd-surface-sunken: var(--hd-ink-950);
+  --hd-border: var(--hd-ink-700);
+  --hd-border-strong: var(--hd-ink-600);
+
+  --hd-text: var(--hd-ink-050);
+  --hd-text-muted: var(--hd-ink-300);
+  --hd-accent: var(--hd-gold-400);
+  --hd-accent-contrast: var(--hd-ink-950);
+  --hd-danger: var(--hd-crimson-400);
+  --hd-success: var(--hd-emerald-400);
+  --hd-focus: var(--hd-gold-400);
+}
+
+/* ---- Tema claro ----
+   surface #ffffff
+     text        #171922  -> 16.6:1  AAA
+     text-muted  #4a4f60  ->  8.3:1  AAA  (no se reusa ink-300: 2.2:1, falla)
+     accent      #8a5a00  ->  5.9:1  AA   (gold-400 sobre blanco es 1.9:1)  */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme='dark']) {
+    --hd-surface: var(--hd-paper);
+    --hd-surface-raised: #f6f7fa;
+    --hd-surface-sunken: #eceef4;
+    --hd-border: #d5d9e2;
+    --hd-border-strong: #a9b0bf;
+
+    --hd-text: var(--hd-ink-800);
+    --hd-text-muted: #4a4f60;
+    --hd-accent: var(--hd-gold-800);
+    --hd-accent-contrast: var(--hd-paper);
+    --hd-danger: var(--hd-crimson-600);
+    --hd-success: var(--hd-emerald-700);
+    --hd-focus: var(--hd-gold-800);
+  }
+}
+
+:root[data-theme='light'] {
+  --hd-surface: var(--hd-paper);
+  --hd-surface-raised: #f6f7fa;
+  --hd-surface-sunken: #eceef4;
+  --hd-border: #d5d9e2;
+  --hd-border-strong: #a9b0bf;
+
+  --hd-text: var(--hd-ink-800);
+  --hd-text-muted: #4a4f60;
+  --hd-accent: var(--hd-gold-800);
+  --hd-accent-contrast: var(--hd-paper);
+  --hd-danger: var(--hd-crimson-600);
+  --hd-success: var(--hd-emerald-700);
+  --hd-focus: var(--hd-gold-800);
+}

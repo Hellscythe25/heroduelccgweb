@@ -1,0 +1,76 @@
+---
+/**
+ * Raíz del sitio. Todas las páginas reales viven bajo /es/ o /en/, así que "/"
+ * solo existe para repartir.
+ *
+ * Es un meta-refresh y no una regla de Apache a propósito: un hosting estático
+ * no puede negociar Accept-Language sin romper la cache de la CDN, y una
+ * redirección incondicional a /es/ dejaría al visitante anglófono sin salida
+ * visible. Aquí hay refresh inmediato y, si falla o el usuario vuelve atrás,
+ * dos enlaces reales. Los hreflang le dicen a Google que "/" no es contenido.
+ */
+import { localeTags, localizedPath, locales, languages, ui } from '~/i18n/ui';
+
+const site = Astro.site ?? new URL(Astro.url.origin);
+const target = localizedPath('es', 'home');
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="refresh" content={`0; url=${target}`} />
+    <title>{ui.es['site.name']}</title>
+    <meta name="description" content={ui.es['site.description']} />
+    <link rel="canonical" href={new URL(target, site).href} />
+    {
+      locales.map((lang) => (
+        <link
+          rel="alternate"
+          hreflang={localeTags[lang]}
+          href={new URL(localizedPath(lang, 'home'), site).href}
+        />
+      ))
+    }
+    <link rel="alternate" hreflang="x-default" href={new URL(target, site).href} />
+    <link rel="icon" href="/favicon/favicon.svg" type="image/svg+xml" />
+    <style>
+      body {
+        margin: 0;
+        min-height: 100dvh;
+        display: grid;
+        place-content: center;
+        gap: 1rem;
+        text-align: center;
+        background: #0e0f14;
+        color: #f2f4f8;
+        font-family: ui-sans-serif, system-ui, sans-serif;
+      }
+      a {
+        color: #e8b44a;
+      }
+      ul {
+        display: flex;
+        gap: 1.5rem;
+        justify-content: center;
+        list-style: none;
+        padding: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <p>{ui.es['site.name']}</p>
+    <ul>
+      {
+        locales.map((lang) => (
+          <li>
+            <a href={localizedPath(lang, 'home')} hreflang={lang} lang={lang}>
+              {languages[lang]}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </body>
+</html>

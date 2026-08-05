@@ -1,0 +1,58 @@
+---
+/**
+ * Metadatos por plantilla — dueño: agente `seo-tecnico`.
+ *
+ * Regla: ninguna página se publica sin título y descripción. La imagen OG es
+ * opcional en fase 0 porque el asset todavía no existe; cuando `seo-tecnico`
+ * produzca /og/default.png en fase 1, pasa a ser obligatoria y este componente
+ * deja de aceptar su ausencia.
+ */
+import { alternates, localeTags, type Lang, type RouteKey } from '~/i18n/ui';
+
+interface Props {
+  title: string;
+  description: string;
+  lang: Lang;
+  /** Clave de ruta, para generar los hreflang de la misma página en otros idiomas. */
+  routeKey: RouteKey;
+  image?: string | undefined;
+  noindex?: boolean;
+}
+
+const { title, description, lang, routeKey, image, noindex = false } = Astro.props;
+
+const site = Astro.site;
+const canonical = new URL(Astro.url.pathname, site ?? Astro.url.origin);
+const imageUrl = image ? new URL(image, site ?? Astro.url.origin) : undefined;
+const links = alternates(routeKey);
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical.href} />
+
+{noindex && <meta name="robots" content="noindex, nofollow" />}
+
+{
+  links.map(({ lang: alt, path }) => (
+    <link rel="alternate" hreflang={localeTags[alt]} href={new URL(path, site ?? Astro.url.origin).href} />
+  ))
+}
+<link rel="alternate" hreflang="x-default" href={new URL(links[0]?.path ?? '/', site ?? Astro.url.origin).href} />
+
+<meta property="og:type" content="website" />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical.href} />
+<meta property="og:locale" content={localeTags[lang].replace('-', '_')} />
+{imageUrl && <meta property="og:image" content={imageUrl.href} />}
+
+<meta name="twitter:card" content={imageUrl ? 'summary_large_image' : 'summary'} />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+{imageUrl && <meta name="twitter:image" content={imageUrl.href} />}
+
+<link rel="icon" href="/favicon/favicon.svg" type="image/svg+xml" />
+<link rel="sitemap" href="/sitemap-index.xml" />

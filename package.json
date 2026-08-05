@@ -1,0 +1,37 @@
+{
+  "name": "heroduel-web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Public website for the Hero Duel CCG video game (beta).",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build && node scripts/postbuild.mjs",
+    "preview": "astro preview",
+    "astro": "astro",
+    "check": "astro check && tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "data:validate": "vitest run tests/data.test.ts",
+    "budget": "node scripts/check-budget.mjs",
+    "placeholders": "node scripts/check-placeholders.mjs",
+    "search:index": "pagefind --site dist",
+    "verify": "npm run placeholders && npm run data:validate && npm run check && npm test"
+  },
+  "dependencies": {
+    "astro": "^7.1.6",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "@astrojs/sitemap": "^3.7.3",
+    "fast-check": "^4.9.0",
+    "pagefind": "^1.5.2",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.10"
+  }
+}

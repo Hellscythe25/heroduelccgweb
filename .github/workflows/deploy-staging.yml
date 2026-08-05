@@ -1,0 +1,83 @@
+name: Deploy staging
+
+on:
+  push:
+    branches: [develop]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-staging
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  build-deploy:
+    name: Construir y publicar en staging
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: staging
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22 # Astro 7 exige Node >= 22.12
+          cache: npm
+
+      - run: npm ci
+
+      # ---- Gates: si algo falla, no se despliega nada ----
+      - name: Sin placeholders
+        run: npm run placeholders
+
+      - name: Validar datos del juego contra esquema
+        run: npm run data:validate
+
+      - name: Typecheck
+        run: npm run check
+
+      - name: Tests
+        run: npm test
+
+      - name: Build
+        run: npm run build
+        env:
+          SITE_URL: ${{ vars.SITE_URL_STAGING }}
+          DEPLOY_ENV: staging # anade noindex y robots Disallow
+
+      - name: Índice de búsqueda
+        run: npm run search:index
+
+      - name: Presupuesto de rendimiento
+        run: npm run budget
+
+      # ---- Publicación ----
+      - name: Configurar SSH
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -p "${{ secrets.SSH_PORT }}" "${{ secrets.SSH_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Rsync a staging
+        run: |
+          rsync -az --delete --delay-updates --human-readable \
+            -e "ssh -p ${{ secrets.SSH_PORT }} -i ~/.ssh/id_ed25519" \
+            --exclude 'cgi-bin/' \
+            --exclude '.well-known/' \
+            dist/ "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.DEPLOY_PATH_STAGING }}"
+
+      # Staging vive detras de Directory Privacy (auth básica de cPanel), así que
+      # un 401 es la respuesta correcta y esperada: confirma que sigue protegido.
+      - name: Verificación post-deploy
+        run: |
+          sleep 5
+          code=$(curl -s -o /dev/null -w '%{http_code}' "${{ vars.SITE_URL_STAGING }}/es/")
+          echo "GET /es/ -> $code"
+          case "$code" in
+            200|401) exit 0 ;;
+            *) echo "Respuesta inesperada de staging."; exit 1 ;;
+          esac
