@@ -1,0 +1,107 @@
+name: Publicar rama deploy
+
+# Construye el sitio y publica SOLO los artefactos en la rama `deploy`, que es
+# la que clona Git Version Control de cPanel. `main` nunca se despliega directo:
+# cPanel no construye el sitio (ver deploy/README.md).
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-branch
+  cancel-in-progress: false
+
+permissions:
+  contents: write # necesario para empujar la rama `deploy`
+
+jobs:
+  build-publish:
+    name: Construir y publicar artefactos
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22 # Astro 7 exige Node >= 22.12
+          cache: npm
+
+      - run: npm ci
+
+      # ---- Gates: si algo falla, la rama deploy no se toca ----
+      - name: Sin placeholders
+        run: npm run placeholders
+
+      - name: Validar datos del juego contra esquema
+        run: npm run data:validate
+
+      - name: Typecheck
+        run: npm run check
+
+      - name: Tests
+        run: npm test
+
+      - name: Build
+        run: npm run build
+        env:
+          SITE_URL: ${{ vars.SITE_URL_PROD || 'https://heroduelccg.com' }}
+          DEPLOY_ENV: production
+
+      - name: Índice de búsqueda
+        run: npm run search:index
+
+      - name: Presupuesto de rendimiento
+        run: npm run budget
+
+      # ---- Publicación en la rama de artefactos ----
+      # Commit encima del estado anterior, sin --force: "Update from Remote" de
+      # cPanel avanza por fast-forward y una historia reescrita lo rompe.
+      - name: Publicar en la rama deploy
+        run: |
+          set -euo pipefail
+
+          REPO="https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git"
+
+          if git ls-remote --exit-code --heads "$REPO" deploy >/dev/null 2>&1; then
+            git clone --branch deploy --single-branch --depth 1 "$REPO" .deploy
+          else
+            echo "La rama deploy no existe todavía; se crea huérfana."
+            git clone --depth 1 "$REPO" .deploy
+            git -C .deploy checkout --orphan deploy
+            git -C .deploy rm -rq --cached . || true
+          fi
+
+          # Vaciar el contenido anterior conservando .git, para que los archivos
+          # eliminados del build desaparezcan también de la rama.
+          find .deploy -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+
+          cp -a dist/. .deploy/
+          cp deploy/cpanel.yml .deploy/.cpanel.yml
+
+          # Los artefactos viajan byte a byte: ninguna conversión de finales de
+          # línea. Un CRLF colado en .cpanel.yml rompe su parseo en cPanel.
+          printf '* -text\n' > .deploy/.gitattributes
+
+          cd .deploy
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+
+          if git diff --cached --quiet; then
+            echo "El build es idéntico al publicado; no hay nada que empujar."
+            exit 0
+          fi
+
+          git commit -q -m "build: ${{ github.sha }}"
+          git push origin deploy
+
+      - name: Resumen
+        run: |
+          echo "Artefactos publicados en la rama 'deploy'."
+          echo "Para publicarlos en el servidor: cPanel → Git Version Control →"
+          echo "  Manage → Pull or Deploy → Update from Remote → Deploy HEAD Commit."
+          echo "Procedimiento completo: docs/runbooks/desplegar-cpanel.md"

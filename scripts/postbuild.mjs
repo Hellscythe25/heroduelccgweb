@@ -43,21 +43,24 @@ async function exists(path) {
   }
 }
 
+/** Dominio de producción. Decidido el 2026-08-04; no es un secreto ni un placeholder. */
+const PRODUCTION_URL = 'https://heroduelccg.com';
+
 const siteUrl = process.env.SITE_URL;
 const deployEnv = process.env.DEPLOY_ENV ?? 'local';
 
-if (!siteUrl) {
-  if (deployEnv !== 'local') {
-    fail(`SITE_URL no está definida y DEPLOY_ENV=${deployEnv}. Un despliegue sin dominio canónico produce redirecciones rotas.`);
-  }
-  console.warn('  postbuild: SITE_URL sin definir, usando http://localhost:4321 (solo local).');
+// Staging jamás hereda el dominio de producción por omisión: si lo hiciera,
+// generaría canónicas y redirecciones apuntando al sitio real desde una copia
+// que no debe ser indexada.
+if (!siteUrl && deployEnv === 'staging') {
+  fail('SITE_URL no está definida y DEPLOY_ENV=staging. Staging necesita su propio dominio.');
 }
 
 let host;
 try {
-  host = new URL(siteUrl ?? 'http://localhost:4321').host;
+  host = new URL(siteUrl ?? PRODUCTION_URL).host;
 } catch {
-  fail(`SITE_URL no es una URL valida: ${siteUrl}`);
+  fail(`SITE_URL no es una URL válida: ${siteUrl}`);
 }
 
 if (!(await exists(DIST))) {

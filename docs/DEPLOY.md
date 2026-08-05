@@ -442,6 +442,16 @@ Más lento y sin garantías atómicas, pero funciona sin SSH. **Nunca FTP plano.
 
 ### Alternativa: *Git Version Control* de cPanel
 
+> **NOTA (2026-08-04): esta alternativa es la vía ACTIVA, no el pipeline de
+> rsync de arriba.** Los secretos SSH todavía no existen, así que se implementó
+> el patrón que describe esta sección: CI construye y publica los artefactos en
+> una rama `deploy`, y cPanel clona *esa* rama. Ver
+> `docs/adr/ADR-004-despliegue-por-rama-de-artefactos.md` y el runbook
+> `docs/runbooks/desplegar-cpanel.md`.
+>
+> Los workflows de rsync se conservan escritos, pero solo se lanzan a mano.
+> Volver a ellos cuando existan las credenciales es cambiar un disparador.
+
 Sirve si prefieres no depender de GitHub Actions, pero tiene un límite serio: **cPanel no construye el sitio**. Habría que commitear `dist/` al repositorio, lo que ensucia el historial y multiplica el tamaño del repo.
 
 Patrón viable si se elige: CI construye y hace push de `dist/` a una rama `deploy` que solo contiene artefactos; cPanel clona *esa* rama y despliega con `.cpanel.yml`.

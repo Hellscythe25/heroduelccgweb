@@ -1,8 +1,16 @@
-name: Deploy producción
+name: Deploy producción (rsync, alternativa)
+
+# INACTIVO por decisión de ADR-004: la vía activa es la rama `deploy` que clona
+# cPanel (.github/workflows/deploy-cpanel.yml). Este workflow se conserva porque
+# rsync sigue siendo la opción técnicamente superior — casi atómica y con
+# respaldo remoto para revertir en segundos — y es a donde migrar cuando existan
+# los secretos SSH.
+#
+# Solo se lanza a mano, y a propósito: activarlo por `push` sin los secretos
+# cargados llenaría el historial de ejecuciones en rojo y acabaría enseñando al
+# equipo a ignorar los fallos de CI.
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 concurrency:

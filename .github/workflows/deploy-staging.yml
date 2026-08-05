@@ -1,8 +1,9 @@
-name: Deploy staging
+name: Deploy staging (rsync, alternativa)
+
+# INACTIVO mientras no existan los secretos SSH ni el subdominio de staging.
+# Ver la nota de deploy-prod.yml y ADR-004.
 
 on:
-  push:
-    branches: [develop]
   workflow_dispatch:
 
 concurrency:

@@ -3,11 +3,14 @@ import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 
 /**
- * El dominio definitivo aún es una decisión ABIERTA (docs/DEPLOY.md §16).
- * Se inyecta por entorno para no dejar placeholders en el repositorio:
- * scripts/check-placeholders.mjs falla el build si alguno sobrevive.
+ * Dominio canónico de producción, decidido el 2026-08-04 (ADR-003).
+ * Es información pública, no un secreto: vive en el repositorio.
+ *
+ * `SITE_URL` lo sobrescribe para staging y para pruebas. El mismo valor
+ * alimenta las canónicas, el sitemap y la redirección de .htaccess, que
+ * scripts/postbuild.mjs inyecta tras el build.
  */
-const SITE_URL = process.env.SITE_URL ?? 'http://localhost:4321';
+const SITE_URL = process.env.SITE_URL ?? 'https://heroduelccg.com';
 
 export default defineConfig({
   site: SITE_URL,

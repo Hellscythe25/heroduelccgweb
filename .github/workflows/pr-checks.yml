@@ -45,7 +45,7 @@ jobs:
       - name: Build
         run: npm run build
         env:
-          SITE_URL: ${{ vars.SITE_URL_STAGING || 'https://staging.example.invalid' }}
+          SITE_URL: ${{ vars.SITE_URL_STAGING || 'https://staging.heroduelccg.com' }}
           DEPLOY_ENV: staging
 
       - name: Índice de búsqueda

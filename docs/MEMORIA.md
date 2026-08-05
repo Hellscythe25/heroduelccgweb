@@ -22,9 +22,11 @@ Criterio de salida: un "hola mundo" llega a staging automáticamente.
 | Sistema de diseño (tokens, contraste AA verificado) | Hecho |
 | `.htaccess` versionado en `public/` | Hecho |
 | Gates de CI (placeholders, datos, tipos, tests, presupuesto) | Hecho |
-| Workflows: PR, staging, producción | Escritos, **sin ejecutar todavía** |
-| Despliegue real a staging | **Bloqueado** — faltan credenciales y dominio |
-| SSL / AutoSSL | **Bloqueado** — depende del dominio |
+| Dominio decidido (`heroduelccg.com`) | Hecho |
+| Workflow de la rama `deploy` (vía activa) | Escrito, **pendiente de primera ejecución** |
+| Configuración de cPanel apuntando a `deploy` | **Pendiente** — la hace un humano |
+| Workflows de rsync (PR, staging, producción) | Escritos, **inactivos** por falta de secretos SSH |
+| SSL / AutoSSL | Pendiente de verificar tras el primer despliegue |
 
 Estado medido en la última verificación local: build en verde, 4 páginas,
 **0 KB de JavaScript**, 2.4 KB de CSS comprimido, 11 tests en verde.
@@ -60,6 +62,17 @@ Estado medido en la última verificación local: build en verde, 4 páginas,
   Apache. Un hosting estático no puede negociar `Accept-Language` sin romper la
   caché de la CDN, y una redirección incondicional a `/es/` dejaría al visitante
   anglófono sin salida visible.
+- **El dominio es `heroduelccg.com`** (2026-08-04). Vive en el repositorio como
+  valor por defecto: es información pública, no un secreto. `SITE_URL` lo
+  sobrescribe para staging, y staging **falla** si no define el suyo — heredar el
+  dominio real generaría canónicas apuntando a producción desde una copia que no
+  debe indexarse.
+- **ADR-004 — Se despliega por rama de artefactos, no por rsync.** GitHub
+  Actions construye y publica el sitio en una rama `deploy`; cPanel clona esa
+  rama. `main` **nunca** se despliega directo: cPanel no construye el sitio, y un
+  `.cpanel.yml` en `main` publicaría el código fuente y ninguna página. Los
+  workflows de rsync quedan escritos pero solo lanzables a mano.
+  Ver `docs/adr/ADR-004-despliegue-por-rama-de-artefactos.md`.
 - **`deckRules` vale `null` mientras el juego no exporte las reglas de
   construcción.** No se rellena con valores plausibles: el tamaño de mazo y los
   límites de copias por rareza son balance. El validador exige reglas reales en
@@ -94,31 +107,38 @@ Estado medido en la última verificación local: build en verde, 4 páginas,
 
 Ordenados por lo que bloquean.
 
-1. **¿Cuál es el dominio?** *Bloquea el despliegue real, AutoSSL, el subdominio
-   de staging y las URLs canónicas.* Todo lo demás está listo: solo hay que
-   definir las variables `SITE_URL_PROD` y `SITE_URL_STAGING` en GitHub.
-   Pregunta asociada: ¿el dominio es el del estudio o uno propio del juego? La
-   respuesta cambia la estructura de subdominios.
-2. **Credenciales del hosting.** *Bloquea todo despliegue.* Hacen falta como
-   GitHub Secrets: `SSH_HOST`, `SSH_PORT` (no es el 22; confirmar en cPanel →
-   SSH Access, habitualmente `21098`), `SSH_USER`, `SSH_PRIVATE_KEY`,
-   `DEPLOY_PATH_PROD`, `DEPLOY_PATH_STAGING`. Procedimiento en
-   `docs/runbooks/rotar-claves.md`.
-3. **¿Existe pipeline de exportación de datos desde Unity, o hay que
+1. **Configurar Git Version Control de cPanel apuntando a la rama `deploy`.**
+   *Bloquea el primer despliegue real.* Es trabajo humano, no de CI: clonar el
+   repositorio en `~/repositories/`, **fuera de `public_html`**, y seleccionar
+   `deploy` como *Checked-Out Branch*. Si queda en `main`, se publica el código
+   fuente y ninguna página. Paso a paso en `docs/runbooks/desplegar-cpanel.md`.
+2. **Credenciales SSH del hosting.** *Ya no bloquea el despliegue* (ADR-004 lo
+   resolvió por otra vía), pero **sí bloquea las tres cosas que se perdieron**:
+   despliegue automático de punta a punta, publicación casi atómica y rollback en
+   segundos con respaldo previo. Hacen falta como GitHub Secrets: `SSH_HOST`,
+   `SSH_PORT` (no es el 22; confirmar en cPanel → SSH Access, habitualmente
+   `21098`), `SSH_USER`, `SSH_PRIVATE_KEY`, `DEPLOY_PATH_PROD`,
+   `DEPLOY_PATH_STAGING`. Procedimiento en `docs/runbooks/rotar-claves.md`.
+3. **¿Se crea el subdominio de staging (`staging.heroduelccg.com`)?**
+   *Bloquea el criterio de salida de la fase 0*, que exige que el "hola mundo"
+   llegue **a staging** automáticamente. Con la vía actual el despliegue va a
+   producción y requiere dos clics manuales, así que la fase 0 cierra con una
+   salvedad registrada, no con el criterio literal cumplido.
+4. **¿Existe pipeline de exportación de datos desde Unity, o hay que
    construirlo?** *Bloquea las fases 3 y 4 por completo.* Sin export, el
    compendio y el deckbuilder no pueden existir sin inventar balance, y eso está
    prohibido. Si la respuesta es "hay que construirlo", el interino aceptable es
    un JSON mantenido a mano **con fecha límite registrada aquí**.
-4. **¿Qué entidad legal figura como responsable del tratamiento de datos?**
+5. **¿Qué entidad legal figura como responsable del tratamiento de datos?**
    *Bloquea la captura de correos y, por tanto, la newsletter de la fase 1.*
    Conviene resolverlo antes del primer suscriptor, no después.
-5. **¿Quién asume el rol de editor de contenido dentro del estudio?** *Bloquea
+6. **¿Quién asume el rol de editor de contenido dentro del estudio?** *Bloquea
    la fase 2 en la práctica:* sin un dueño, el blog se publica dos veces y se
    abandona.
-6. **¿Plan de hosting concreto?** El límite de 20 GB de Stellar es holgado para
+7. **¿Plan de hosting concreto?** El límite de 20 GB de Stellar es holgado para
    un sitio estático, pero conviene confirmar cuál se contrató, sobre todo por
    la disponibilidad de SSH.
-7. **Discrepancia menor en `AGENTES.md`:** la tabla del §1 dice 8 agentes Sonnet
+8. **Discrepancia menor en `AGENTES.md`:** la tabla del §1 dice 8 agentes Sonnet
    y 4 Haiku, pero las etiquetas por agente de los §3 y §4 suman 9 Sonnet y 3
    Haiku. Se implementaron las etiquetas por agente, que son más específicas.
    Confirmar cuál es la intención.
