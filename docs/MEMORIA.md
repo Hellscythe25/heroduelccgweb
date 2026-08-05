@@ -6,10 +6,10 @@
 > Estados: `DECIDIDO` (no se reabre sin ADR) · `PROPUESTO` (sin confirmar) ·
 > `DESCARTADO` (con motivo, siempre) · `ABIERTO` (requiere decisión humana).
 
-**Fase actual: 0 — Base.**
-Criterio de salida: un "hola mundo" llega a staging automáticamente.
+**Fase actual: 1 — Landing.**
+Criterio de salida: producción en vivo y la prensa puede citar el juego.
 
-**Última actualización:** 2026-08-04
+**Última actualización:** 2026-08-05
 
 ---
 
@@ -23,13 +23,16 @@ Criterio de salida: un "hola mundo" llega a staging automáticamente.
 | `.htaccess` versionado en `public/` | Hecho |
 | Gates de CI (placeholders, datos, tipos, tests, presupuesto) | Hecho |
 | Dominio decidido (`heroduelccg.com`) | Hecho |
-| Workflow de la rama `deploy` (vía activa) | Escrito, **pendiente de primera ejecución** |
-| Configuración de cPanel apuntando a `deploy` | **Pendiente** — la hace un humano |
+| Workflow de la rama `deploy` (vía activa) | Hecho y ejecutado |
+| Configuración de cPanel apuntando a `deploy` | Hecho |
+| Sitio en producción y verificado | Hecho (2026-08-05) |
+| SSL / AutoSSL | Verificado, sin advertencias |
+| Imagen OG por defecto | Hecha — `scripts/generate-og.mjs` |
 | Workflows de rsync (PR, staging, producción) | Escritos, **inactivos** por falta de secretos SSH |
-| SSL / AutoSSL | Pendiente de verificar tras el primer despliegue |
+| Protección de `main` | **Pendiente** — `docs/runbooks/proteger-main.md` |
 
-Estado medido en la última verificación local: build en verde, 4 páginas,
-**0 KB de JavaScript**, 2.4 KB de CSS comprimido, 11 tests en verde.
+Estado medido en la última verificación: build en verde, 4 páginas,
+**0 KB de JavaScript**, 2.6 KB de CSS comprimido, 11 tests en verde.
 
 ---
 
@@ -93,11 +96,9 @@ Estado medido en la última verificación local: build en verde, 4 páginas,
   puede no encajar con jugadores de un CCG.
 - **Decap CMS o TinaCMS** si el flujo de Git resulta ser fricción real para los
   socios no técnicos. Decidir después de que publiquen su primer post a mano.
-- **Imagen OG por defecto (`/og/default.png`).** El componente `Seo.astro` ya
-  acepta el parámetro y omite la etiqueta si el asset no existe. Falta el diseño.
-  Bloquea el cumplimiento de "ninguna página se publica sin imagen OG".
 - **JSON-LD (`VideoGame`, `Article`, `BreadcrumbList`).** Fase 1–2, dueño
-  `seo-tecnico`. No se implementó en fase 0 por disciplina de alcance.
+  `seo-tecnico`. `VideoGame` necesita datos que todavía no existen (plataformas,
+  fecha, género declarado): se implementa junto con el presskit, no antes.
 - **Tipografía autoalojada en woff2.** Ahora mismo se usa el stack del sistema,
   coste 0 KB. Cuando haya identidad de marca definida, `disenador-ui` la sustituye.
 
@@ -107,11 +108,12 @@ Estado medido en la última verificación local: build en verde, 4 páginas,
 
 Ordenados por lo que bloquean.
 
-1. **Configurar Git Version Control de cPanel apuntando a la rama `deploy`.**
-   *Bloquea el primer despliegue real.* Es trabajo humano, no de CI: clonar el
-   repositorio en `~/repositories/`, **fuera de `public_html`**, y seleccionar
-   `deploy` como *Checked-Out Branch*. Si queda en `main`, se publica el código
-   fuente y ninguna página. Paso a paso en `docs/runbooks/desplegar-cpanel.md`.
+1. **Proteger la rama `main` en GitHub.** *Bloquea nada técnicamente, y por eso
+   es fácil de posponer indefinidamente.* `main` es producción: cada commit que
+   entra acaba en el servidor. La regla ya está escrita en `CLAUDE.md`, pero una
+   regla que solo vive en un documento es una intención, no una regla. Paso a
+   paso en `docs/runbooks/proteger-main.md`. No se puede automatizar desde aquí:
+   la API de *branch protection* exige credenciales de administrador.
 2. **Credenciales SSH del hosting.** *Ya no bloquea el despliegue* (ADR-004 lo
    resolvió por otra vía), pero **sí bloquea las tres cosas que se perdieron**:
    despliegue automático de punta a punta, publicación casi atómica y rollback en
@@ -130,15 +132,30 @@ Ordenados por lo que bloquean.
    prohibido. Si la respuesta es "hay que construirlo", el interino aceptable es
    un JSON mantenido a mano **con fecha límite registrada aquí**.
 5. **¿Qué entidad legal figura como responsable del tratamiento de datos?**
-   *Bloquea la captura de correos y, por tanto, la newsletter de la fase 1.*
-   Conviene resolverlo antes del primer suscriptor, no después.
-6. **¿Quién asume el rol de editor de contenido dentro del estudio?** *Bloquea
+   *Bloquea las páginas legales de la fase 1.* No se publica una política de
+   privacidad con un responsable inventado: un documento legal falso es peor que
+   su ausencia. Hace falta razón social exacta, identificador fiscal, domicilio
+   y un correo para ejercicio de derechos. Al no haber newsletter ni analítica,
+   ahora mismo el sitio **no trata datos personales**, así que esto ya no es
+   urgente — pero vuelve a serlo el día que se añada cualquiera de las dos.
+6. **Enlaces externos: existen Steam y Discord, pero faltan las URLs.**
+   *Bloquea los CTA de la landing*, que es la razón de ser de la fase 1. La
+   estructura ya está lista: en cuanto se rellenen en `src/site.ts`, los botones
+   aparecen en los dos idiomas. La invitación de Discord debe ser **permanente**;
+   las que caducan a los 7 días dejan la landing rota sin que nadie se entere.
+7. **Contenido real de la landing y del presskit.** *Bloquea el criterio de
+   salida de la fase 1* ("la prensa puede citar el juego"). Hacen falta:
+   descripción corta y larga, factsheet (plataformas, fecha, precio, modos,
+   idiomas), logotipo en SVG y PNG, capturas a resolución completa, GIFs,
+   tráiler y correo de contacto de prensa. Nada de eso puede redactarse aquí sin
+   inventar.
+8. **¿Quién asume el rol de editor de contenido dentro del estudio?** *Bloquea
    la fase 2 en la práctica:* sin un dueño, el blog se publica dos veces y se
    abandona.
-7. **¿Plan de hosting concreto?** El límite de 20 GB de Stellar es holgado para
+9. **¿Plan de hosting concreto?** El límite de 20 GB de Stellar es holgado para
    un sitio estático, pero conviene confirmar cuál se contrató, sobre todo por
    la disponibilidad de SSH.
-8. **Discrepancia menor en `AGENTES.md`:** la tabla del §1 dice 8 agentes Sonnet
+10. **Discrepancia menor en `AGENTES.md`:** la tabla del §1 dice 8 agentes Sonnet
    y 4 Haiku, pero las etiquetas por agente de los §3 y §4 suman 9 Sonnet y 3
    Haiku. Se implementaron las etiquetas por agente, que son más específicas.
    Confirmar cuál es la intención.
@@ -148,6 +165,23 @@ Ordenados por lo que bloquean.
 ## DESCARTADO
 
 Con su motivo. **Sin el motivo, la misma idea vuelve cada tres sesiones.**
+
+- **Newsletter en la fase 1** (decisión del estudio, 2026-08-05). Se retoma
+  cuando haya entidad legal definida y ganas de mantener una lista.
+  *Consecuencia asumida:* `DEPLOY.md` §11 la marca como prioridad número uno de
+  la fase, con el argumento de que una lista propia es el único canal que no
+  depende del algoritmo de nadie. Los visitantes de la beta que pasen por el
+  sitio en este periodo no dejan forma de contacto y no vuelven solos. Si se
+  reabre, la opción con menos coste técnico es Buttondown: es la única de las
+  tres evaluadas que permite un formulario HTML puro, sin JavaScript, sin
+  cookies y por tanto sin banner de consentimiento.
+- **Analítica en la fase 1** (decisión del estudio, 2026-08-05).
+  *Consecuencia asumida:* se lanza a ciegas — no se sabrá si la prensa entra al
+  presskit ni si alguien pulsa el CTA de wishlist. A favor: CSP más estricta y
+  cero JavaScript de terceros. Si se reabre, Cloudflare Web Analytics es
+  gratuita, sin cookies y no exige mover los nameservers; basta el beacon.
+- **Autoalojar Umami.** Exigiría un proceso vivo en el hosting compartido, que
+  contradice el ADR-001. Si algún día se quiere Umami, es Umami Cloud.
 
 - **Laravel o Node/Passenger en el shared hosting.** Procesos vivos en un plan
   con límite de *entry processes*; se convierten en cuello de botella
@@ -222,3 +256,29 @@ a staging **automáticamente**, y eso todavía no ha ocurrido).
 criterio de salida literal pide que el "hola mundo" llegue **a staging** de
 forma **automática**. Llega a **producción** y con **dos clics manuales** en
 cPanel. Ver ADR-004 y los puntos 2 y 3 de ABIERTO.
+
+### 2026-08-05 — Sesión 3: arranque de la fase 1
+
+Decisiones del estudio: **sin newsletter y sin analítica** en esta fase; entidad
+legal aún sin decidir, así que **no se publican legales**. Existen Steam y
+Discord, pero las URLs todavía no están en el repositorio.
+
+Construido (rama `feat/landing-phase-1`):
+
+- `src/site.ts` como fuente única de enlaces externos. Un enlace vacío es una
+  ausencia declarada, no un placeholder: el CTA no se renderiza en vez de
+  apuntar a ninguna parte.
+- Componente `CtaLink`, con objetivo táctil de 44 px y sin JavaScript.
+- Landing reestructurada con hero y fila de CTA condicionada a `site.ts`.
+- Imagen OG por defecto generada desde los tokens del sistema de diseño
+  (`scripts/generate-og.mjs`), y `Seo.astro` la aplica a toda página que no
+  traiga la suya. Cierra el requisito de `DEPLOY.md` §13.
+
+**Corrección de contenido, importante.** La copia de la fase 0 contenía
+afirmaciones que **inventé yo**, no el estudio: en concreto *"un juego de cartas
+coleccionables donde cada héroe cambia las reglas del mazo"*, que describe una
+mecánica concreta. En fase 0 era texto de relleno en un sitio que nadie visitaba;
+desde ayer está **público**. Sustituida por la afirmación mínima defendible —
+nombre, género y estado— hasta que el estudio confirme qué se puede decir.
+Regla que lo cubría y que no se aplicó a tiempo: *cada afirmación sobre el juego
+debe rastrearse a `src/data/` o a una decisión registrada*.

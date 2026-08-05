@@ -58,11 +58,16 @@ export const ui = {
     'nav.language': 'Idioma',
     'home.badge': 'En beta',
     'home.title': 'Hero Duel',
-    'home.subtitle':
-      'Un juego de cartas coleccionables donde cada héroe cambia las reglas del mazo.',
-    'home.status.title': 'Estado del sitio',
-    'home.status.body':
-      'Fase 0: la base técnica está en pie y el despliegue automático funciona. El contenido público llega en la fase 1.',
+    // Afirmación deliberadamente mínima: nombre, género y estado. Todo lo demás
+    // (mecánicas, plataformas, fechas) necesita confirmación del estudio antes
+    // de publicarse. Ver docs/MEMORIA.md.
+    'home.subtitle': 'Un juego de cartas coleccionables en desarrollo.',
+    'home.cta.steam': 'Añadir a deseados en Steam',
+    'home.cta.discord': 'Únete al Discord',
+    'home.cta.itch': 'Verlo en itch.io',
+    'home.building.title': 'Estamos construyendo esto',
+    'home.building.body':
+      'El sitio crece a la vez que el juego. Pronto habrá devlog, compendio de cartas y constructor de mazos.',
     'footer.rights': 'Todos los derechos reservados.',
     'footer.phase': 'Sitio en construcción — fase 0',
     '404.title': 'Esta carta no está en el mazo',
@@ -85,11 +90,13 @@ export const ui = {
     'nav.language': 'Language',
     'home.badge': 'In beta',
     'home.title': 'Hero Duel',
-    'home.subtitle':
-      'A collectible card game where every hero rewrites what your deck can do.',
-    'home.status.title': 'Site status',
-    'home.status.body':
-      'Phase 0: the technical foundation is up and automatic deployment works. Public content ships in phase 1.',
+    'home.subtitle': 'A collectible card game in development.',
+    'home.cta.steam': 'Wishlist on Steam',
+    'home.cta.discord': 'Join the Discord',
+    'home.cta.itch': 'View on itch.io',
+    'home.building.title': 'We are building this',
+    'home.building.body':
+      'The site grows alongside the game. A devlog, a card compendium and a deckbuilder are on the way.',
     'footer.rights': 'All rights reserved.',
     'footer.phase': 'Site under construction — phase 0',
     '404.title': 'That card is not in the deck',

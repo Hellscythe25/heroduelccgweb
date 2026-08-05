@@ -4,11 +4,14 @@
  * src/i18n/ui.ts, no duplicado por locale. Así la paridad ES/EN es estructural
  * y no depende de que alguien recuerde actualizar dos archivos.
  *
- * Fase 0 (docs/DEPLOY.md §15): "hola mundo" que llega a staging solo. El hero
- * real, la captura de correos y los enlaces de tienda son fase 1.
+ * Los CTA se renderizan solo si su URL existe en src/site.ts. Un botón que
+ * lleva a ninguna parte es peor que la ausencia del botón: gasta la atención
+ * del visitante una sola vez y la gasta mal.
  */
 import BaseLayout from '~/layouts/BaseLayout.astro';
-import { locales, useTranslations, type Lang } from '~/i18n/ui';
+import CtaLink from '~/components/CtaLink.astro';
+import { locales, useTranslations, type Lang, type UiKey } from '~/i18n/ui';
+import { activeLinks } from '~/site';
 
 export function getStaticPaths() {
   return locales.map((lang) => ({ params: { lang } }));
@@ -16,6 +19,13 @@ export function getStaticPaths() {
 
 const lang = Astro.params.lang as Lang;
 const t = useTranslations(lang);
+
+const links = activeLinks();
+const ctaLabels: Record<string, UiKey> = {
+  steam: 'home.cta.steam',
+  discord: 'home.cta.discord',
+  itch: 'home.cta.itch',
+};
 ---
 
 <BaseLayout
@@ -28,11 +38,23 @@ const t = useTranslations(lang);
     <p class="badge">{t('home.badge')}</p>
     <h1>{t('home.title')}</h1>
     <p class="subtitle">{t('home.subtitle')}</p>
+
+    {
+      links.length > 0 && (
+        <div class="actions">
+          {links.map((link, index) => (
+            <CtaLink href={link.url} external variant={index === 0 ? 'primary' : 'secondary'}>
+              {t(ctaLabels[link.key]!)}
+            </CtaLink>
+          ))}
+        </div>
+      )
+    }
   </section>
 
-  <section class="container status">
-    <h2>{t('home.status.title')}</h2>
-    <p>{t('home.status.body')}</p>
+  <section class="container building">
+    <h2>{t('home.building.title')}</h2>
+    <p>{t('home.building.body')}</p>
   </section>
 </BaseLayout>
 
@@ -60,15 +82,22 @@ const t = useTranslations(lang);
     color: var(--hd-text-muted);
   }
 
-  .status {
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--hd-space-3);
+    margin-block-start: var(--hd-space-8);
+  }
+
+  .building {
     padding-block: var(--hd-space-8) var(--hd-space-16);
   }
 
-  .status h2 {
+  .building h2 {
     margin-block-end: var(--hd-space-3);
   }
 
-  .status p {
+  .building p {
     color: var(--hd-text-muted);
   }
 </style>

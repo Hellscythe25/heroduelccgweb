@@ -1,0 +1,86 @@
+---
+/**
+ * Enlace de llamada a la acción. Es un `<a>`, no un `<button>`: navega, no
+ * ejecuta. Un `<button>` con un onclick que redirige rompe el clic central, el
+ * "abrir en pestaña nueva" y los lectores de pantalla.
+ *
+ * Sin JavaScript. El estilo lo da el sistema de diseño.
+ */
+interface Props {
+  href: string;
+  variant?: 'primary' | 'secondary';
+  /** Los destinos externos se abren en pestaña nueva y se anuncian como tal. */
+  external?: boolean;
+  /** Texto para lectores de pantalla cuando el rótulo visible no basta. */
+  ariaLabel?: string | undefined;
+}
+
+const { href, variant = 'primary', external = false, ariaLabel } = Astro.props;
+---
+
+<a
+  class:list={['cta', variant]}
+  href={href}
+  aria-label={ariaLabel}
+  {...external ? { target: '_blank', rel: 'noopener noreferrer' } : {}}
+>
+  <slot />
+  {
+    external && (
+      <svg class="ext" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" focusable="false">
+        <path
+          d="M6 2h8v8M14 2 6.5 9.5M11 9.5V14H2V5h4.5"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.6"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    )
+  }
+</a>
+
+<style>
+  .cta {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--hd-space-2);
+    padding: var(--hd-space-3) var(--hd-space-6);
+    border-radius: var(--hd-radius-md);
+    font-weight: 650;
+    font-size: var(--hd-text-base);
+    text-decoration: none;
+    /* Objetivo táctil mínimo de 44 px: por debajo, falla en móvil. */
+    min-block-size: 2.75rem;
+    transition:
+      background-color var(--hd-motion-fast) var(--hd-motion-ease),
+      border-color var(--hd-motion-fast) var(--hd-motion-ease);
+  }
+
+  .primary {
+    background: var(--hd-accent);
+    color: var(--hd-accent-contrast);
+    border: 1px solid var(--hd-accent);
+  }
+
+  .primary:hover {
+    background: var(--hd-gold-600);
+    border-color: var(--hd-gold-600);
+  }
+
+  .secondary {
+    background: transparent;
+    color: var(--hd-text);
+    border: 1px solid var(--hd-border-strong);
+  }
+
+  .secondary:hover {
+    border-color: var(--hd-text);
+    background: var(--hd-surface-raised);
+  }
+
+  .ext {
+    opacity: 0.75;
+  }
+</style>
