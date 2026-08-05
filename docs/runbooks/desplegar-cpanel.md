@@ -118,6 +118,7 @@ Comprueba también:
 | Síntoma | Causa | Solución |
 |---|---|---|
 | **`/` muestra "Index of /" y todo lo demás da 404** | **Permisos.** `rsync` heredó el umask restrictivo del clon de git y LiteSpeed no puede leer los archivos ni el `.htaccess` | Ya resuelto con `--chmod=D755,F644` en `deploy/cpanel.yml`. Si reaparece, comprueba en File Manager que `index.html` sea `0644` y las carpetas `0755` |
+| **Despliegas y el sitio no cambia** | Pulsaste *Deploy* sin *Update from Remote*. `Deploy` publica lo que el servidor **ya tiene** | Mira el panel: si cambia "Last Deployed on" pero **no** el SHA, es esto. Pulsa *Update from Remote* primero |
 | `A valid .cpanel.yml file exists` | cPanel está en la rama `main` | Cambia a `deploy` en Pull or Deploy |
 | Se publicó `src/`, `package.json`… | Igual que arriba | Cambia a `deploy` y vuelve a desplegar; borra a mano lo que quedó en `public_html` |
 | `rsync: command not found` | El shell enjaulado no trae rsync en el PATH | Cambia la tarea de `deploy/cpanel.yml` por `/bin/cp -R ./* $DEPLOYPATH` **y** `/bin/cp ./.htaccess $DEPLOYPATH`. Perderás el borrado de archivos viejos: audita inodes con más frecuencia |

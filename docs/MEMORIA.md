@@ -206,4 +206,19 @@ a staging **automáticamente**, y eso todavía no ha ocurrido).
   Corregido con `--chmod=D755,F644` en `deploy/cpanel.yml`.
   Lección registrada en el runbook: **un "Index of /" no es un despliegue
   parcial, es un despliegue fallido**, aunque los archivos se vean.
-- Queda pendiente volver a desplegar y repetir la verificación completa.
+- **Segundo incidente, de procedimiento:** dos despliegues seguidos publicaron
+  la misma versión rota. Causa: se pulsó *Deploy HEAD Commit* sin *Update from
+  Remote*, y `Deploy` solo publica lo que el servidor ya tiene. La pista está en
+  el panel: cambia "Last Deployed on" pero no el SHA. Anotado en el runbook.
+- **Sitio verificado en producción (2026-08-05, commit de datos `e926f37`):**
+  rutas `/`, `/es/`, `/en/`, sitemap, robots y favicon en 200; `http`, `www` y
+  las rutas sin barra final redirigen con un solo 301 al ápice en HTTPS; las
+  siete cabeceras de seguridad presentes, CSP en Report-Only; assets con hash
+  cacheados un año e HTML con `must-revalidate`; 404 propio en vez del de
+  LiteSpeed; SSL válido; **cero JavaScript** en la landing; `src/`,
+  `package.json`, `docs/`, `.env`, `.git/` y `.cpanel.yml` inaccesibles.
+
+**La fase 0 queda funcionalmente cerrada**, con una salvedad registrada: el
+criterio de salida literal pide que el "hola mundo" llegue **a staging** de
+forma **automática**. Llega a **producción** y con **dos clics manuales** en
+cPanel. Ver ADR-004 y los puntos 2 y 3 de ABIERTO.
