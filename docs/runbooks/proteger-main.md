@@ -32,7 +32,24 @@ terminen sus checks. No hace falta fusionarlo para seguir.
 
 ---
 
-## Pasos
+## Vía rápida: importar el ruleset versionado
+
+El repositorio guarda la protección como código en
+[`.github/rulesets/main.json`](../../.github/rulesets/main.json).
+
+**Settings → Rules → Rulesets → New ruleset → Import a ruleset**, y seleccionas
+ese archivo. Aplica las cuatro reglas de una vez y, al escribir el nombre del
+check directamente, esquiva el problema del buscador descrito arriba.
+
+Comprueba que **Enforcement status** quede en `Active` y pulsa **Create**.
+
+Si cambias la protección desde la interfaz, **exporta el ruleset y actualiza ese
+archivo en el mismo PR**. Un JSON que ya no describe la realidad es peor que no
+tenerlo: la próxima persona lo importará convencida de estar restaurando algo.
+
+---
+
+## Vía manual, si la importación falla
 
 1. GitHub → repositorio → **Settings** → **Rules** → **Rulesets** → **New
    ruleset** → **New branch ruleset**.
