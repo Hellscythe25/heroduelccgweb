@@ -57,11 +57,16 @@ español a propósito: son identificadores de documentación, no de código, y
 
 ## Fase actual
 
-**Fase 0 — Base.** Criterio de salida: un "hola mundo" llega a staging
-automáticamente.
+**Fase 1 — Landing.** Criterio de salida: producción en vivo y la prensa puede
+citar el juego.
 
-En curso: repo, CI, `.htaccess`, sistema de diseño, i18n, gates.
-Fuera de alcance ahora: blog, compendio, deckbuilder, presskit, analítica.
+En curso: landing real, presskit, legales.
+Fuera de alcance ahora: blog, compendio, deckbuilder.
+Descartados por decisión en esta fase: newsletter y analítica
+(ver `docs/MEMORIA.md`).
+
+La fase 0 quedó cerrada con una salvedad: el despliegue llega a producción, no
+a staging, y necesita dos clics manuales en cPanel (ADR-004).
 
 Fases y alcance completo en `docs/DEPLOY.md` §15. El estado vivo, con bloqueos
 y decisiones abiertas, en `docs/MEMORIA.md`.

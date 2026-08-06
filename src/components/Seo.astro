@@ -2,10 +2,12 @@
 /**
  * Metadatos por plantilla — dueño: agente `seo-tecnico`.
  *
- * Regla: ninguna página se publica sin título y descripción. La imagen OG es
- * opcional en fase 0 porque el asset todavía no existe; cuando `seo-tecnico`
- * produzca /og/default.png en fase 1, pasa a ser obligatoria y este componente
- * deja de aceptar su ausencia.
+ * Regla: ninguna página se publica sin título, descripción e imagen OG.
+ *
+ * La imagen por defecto la genera `node scripts/generate-og.mjs` a partir de
+ * los tokens del sistema de diseño. Una página puede pasar la suya propia —lo
+ * hará el compendio, con una imagen por carta—, pero nunca puede quedarse sin
+ * ninguna: un enlace sin previsualización en Discord o X se lee como spam.
  */
 import { alternates, localeTags, type Lang, type RouteKey } from '~/i18n/ui';
 
@@ -15,15 +17,18 @@ interface Props {
   lang: Lang;
   /** Clave de ruta, para generar los hreflang de la misma página en otros idiomas. */
   routeKey: RouteKey;
+  /** Ruta absoluta a una imagen propia. Si se omite, se usa la del sitio. */
   image?: string | undefined;
   noindex?: boolean;
 }
+
+const DEFAULT_OG_IMAGE = '/og/default.png';
 
 const { title, description, lang, routeKey, image, noindex = false } = Astro.props;
 
 const site = Astro.site;
 const canonical = new URL(Astro.url.pathname, site ?? Astro.url.origin);
-const imageUrl = image ? new URL(image, site ?? Astro.url.origin) : undefined;
+const imageUrl = new URL(image ?? DEFAULT_OG_IMAGE, site ?? Astro.url.origin);
 const links = alternates(routeKey);
 ---
 
@@ -47,12 +52,13 @@ const links = alternates(routeKey);
 <meta property="og:description" content={description} />
 <meta property="og:url" content={canonical.href} />
 <meta property="og:locale" content={localeTags[lang].replace('-', '_')} />
-{imageUrl && <meta property="og:image" content={imageUrl.href} />}
+<meta property="og:image" content={imageUrl.href} />
+<meta property="og:image:alt" content={title} />
 
-<meta name="twitter:card" content={imageUrl ? 'summary_large_image' : 'summary'} />
+<meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={title} />
 <meta name="twitter:description" content={description} />
-{imageUrl && <meta name="twitter:image" content={imageUrl.href} />}
+<meta name="twitter:image" content={imageUrl.href} />
 
 <link rel="icon" href="/favicon/favicon.svg" type="image/svg+xml" />
 <link rel="sitemap" href="/sitemap-index.xml" />
