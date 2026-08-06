@@ -20,6 +20,18 @@ es una intención**. Esto la vuelve mecánica.
 
 ---
 
+## Antes de empezar
+
+**Necesitas un PR abierto con los checks ya ejecutados.** GitHub solo ofrece un
+check en la lista de "required status checks" si lo ha visto correr alguna vez;
+en un repositorio recién creado, `Gates` no aparece por ningún lado y parece que
+falta algo.
+
+Si no tienes ninguno abierto, crea un PR cualquiera primero y espera a que
+terminen sus checks. No hace falta fusionarlo para seguir.
+
+---
+
 ## Pasos
 
 1. GitHub → repositorio → **Settings** → **Rules** → **Rulesets** → **New
@@ -43,6 +55,8 @@ es una intención**. Esto la vuelve mecánica.
    - Marca **Dismiss stale pull request approvals when new commits are pushed**.
 7. Dentro de *Require status checks to pass*, busca y añade: **`Gates`**
    (el job de `.github/workflows/pr-checks.yml`).
+   - Si no aparece en el buscador, es que todavía no ha corrido nunca. Ver
+     "Antes de empezar".
    - Marca también **Require branches to be up to date before merging**.
 8. **Create**.
 
