@@ -1,0 +1,40 @@
+---
+/**
+ * Secciones de un solo segmento bajo /{lang}/.
+ *
+ * Existe este archivo, y no uno por sección, porque los slugs se traducen:
+ * /es/prensa/ y /en/presskit/ son la misma página. `getStaticPaths` los saca de
+ * la tabla `routes`, así que la URL pública y la navegación no pueden divergir.
+ *
+ * Cuando aparezca una segunda sección de un solo segmento, se añade aquí su par
+ * de rutas con su `props.section` y se ramifica el render. Dos archivos con
+ * parámetro dinámico al mismo nivel producirían rutas ambiguas.
+ */
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import PressKitPage from '~/components/PressKitPage.astro';
+import { locales, routes, useTranslations, type Lang } from '~/i18n/ui';
+import { isPressKitPublishable, pressKit } from '~/press';
+
+export function getStaticPaths() {
+  return locales.map((lang) => ({
+    params: { lang, section: routes.presskit[lang] },
+    props: { section: 'presskit' as const },
+  }));
+}
+
+const lang = Astro.params.lang as Lang;
+const t = useTranslations(lang);
+
+const title = `${t('press.title')} — ${pressKit.game.title}`;
+const description = isPressKitPublishable ? pressKit.description.short[lang] : t('press.intro');
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  lang={lang}
+  routeKey="presskit"
+  noindex={!isPressKitPublishable}
+>
+  <PressKitPage lang={lang} />
+</BaseLayout>

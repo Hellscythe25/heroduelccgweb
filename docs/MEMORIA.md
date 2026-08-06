@@ -282,3 +282,32 @@ desde ayer está **público**. Sustituida por la afirmación mínima defendible 
 nombre, género y estado— hasta que el estudio confirme qué se puede decir.
 Regla que lo cubría y que no se aplicó a tiempo: *cada afirmación sobre el juego
 debe rastrearse a `src/data/` o a una decisión registrada*.
+
+### 2026-08-06 — Kit de prensa (rama `feat/landing-presskit`)
+
+Montado el kit en formato `presskit()` con los datos vacíos y validados por
+esquema, para que rellenarlo sea una lista de tareas y no un folio en blanco.
+
+- `src/press.ts` — datos y esquema Zod. **No vive en `src/data/`**: esa carpeta
+  es canon del juego, con dueño propio; esto es material de marketing que
+  escribe el estudio y cambia por otros motivos.
+- `missingPressKitFields()` devuelve, por cada campo obligatorio que falta, el
+  motivo por el que hace falta. La página los muestra en una tabla.
+- **Publicación automática por completitud:** mientras falte algo obligatorio la
+  página se genera pero va con `noindex`, fuera del sitemap y sin enlace en el
+  menú. Cuando no falte nada, se publica sola. Nadie tiene que acordarse de
+  activarla, que es justo lo que se olvida.
+- Rutas localizadas resueltas en `src/pages/[lang]/[section].astro`, con los
+  slugs sacados de la tabla `routes`: `/es/prensa/` y `/en/presskit/`, y el
+  selector de idioma salta de una a la otra sin volver a la home.
+- El tráiler y el zip **no** son obligatorios: un periodista puede escribir la
+  nota sin ellos, y no puede sin descripción, plataformas ni capturas.
+- Mínimo de tres capturas. Con una sola, todas las notas publicadas se ven
+  iguales.
+
+Correcciones de paso: el pie decía "fase 0" —jerga interna que envejece sin que
+nadie lo note— y el `<header>` dentro del `<article>` duplicaba un landmark de
+banner para los lectores de pantalla.
+
+**Faltan los 11 campos obligatorios.** La página los lista con su motivo; se
+rellenan en `src/press.ts`.
