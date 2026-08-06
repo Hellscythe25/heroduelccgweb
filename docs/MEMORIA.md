@@ -9,7 +9,7 @@
 **Fase actual: 1 — Landing.**
 Criterio de salida: producción en vivo y la prensa puede citar el juego.
 
-**Última actualización:** 2026-08-05
+**Última actualización:** 2026-08-06
 
 ---
 
@@ -29,7 +29,7 @@ Criterio de salida: producción en vivo y la prensa puede citar el juego.
 | SSL / AutoSSL | Verificado, sin advertencias |
 | Imagen OG por defecto | Hecha — `scripts/generate-og.mjs` |
 | Workflows de rsync (PR, staging, producción) | Escritos, **inactivos** por falta de secretos SSH |
-| Protección de `main` | **Pendiente** — `docs/runbooks/proteger-main.md` |
+| Protección de `main` | Hecha y verificada (2026-08-06) |
 
 Estado medido en la última verificación: build en verde, 4 páginas,
 **0 KB de JavaScript**, 2.6 KB de CSS comprimido, 11 tests en verde.
@@ -108,54 +108,48 @@ Estado medido en la última verificación: build en verde, 4 páginas,
 
 Ordenados por lo que bloquean.
 
-1. **Proteger la rama `main` en GitHub.** *Bloquea nada técnicamente, y por eso
-   es fácil de posponer indefinidamente.* `main` es producción: cada commit que
-   entra acaba en el servidor. La regla ya está escrita en `CLAUDE.md`, pero una
-   regla que solo vive en un documento es una intención, no una regla. Paso a
-   paso en `docs/runbooks/proteger-main.md`. No se puede automatizar desde aquí:
-   la API de *branch protection* exige credenciales de administrador.
-2. **Credenciales SSH del hosting.** *Ya no bloquea el despliegue* (ADR-004 lo
+1. **Credenciales SSH del hosting.** *Ya no bloquea el despliegue* (ADR-004 lo
    resolvió por otra vía), pero **sí bloquea las tres cosas que se perdieron**:
    despliegue automático de punta a punta, publicación casi atómica y rollback en
    segundos con respaldo previo. Hacen falta como GitHub Secrets: `SSH_HOST`,
    `SSH_PORT` (no es el 22; confirmar en cPanel → SSH Access, habitualmente
    `21098`), `SSH_USER`, `SSH_PRIVATE_KEY`, `DEPLOY_PATH_PROD`,
    `DEPLOY_PATH_STAGING`. Procedimiento en `docs/runbooks/rotar-claves.md`.
-3. **¿Se crea el subdominio de staging (`staging.heroduelccg.com`)?**
+2. **¿Se crea el subdominio de staging (`staging.heroduelccg.com`)?**
    *Bloquea el criterio de salida de la fase 0*, que exige que el "hola mundo"
    llegue **a staging** automáticamente. Con la vía actual el despliegue va a
    producción y requiere dos clics manuales, así que la fase 0 cierra con una
    salvedad registrada, no con el criterio literal cumplido.
-4. **¿Existe pipeline de exportación de datos desde Unity, o hay que
+3. **¿Existe pipeline de exportación de datos desde Unity, o hay que
    construirlo?** *Bloquea las fases 3 y 4 por completo.* Sin export, el
    compendio y el deckbuilder no pueden existir sin inventar balance, y eso está
    prohibido. Si la respuesta es "hay que construirlo", el interino aceptable es
    un JSON mantenido a mano **con fecha límite registrada aquí**.
-5. **¿Qué entidad legal figura como responsable del tratamiento de datos?**
+4. **¿Qué entidad legal figura como responsable del tratamiento de datos?**
    *Bloquea las páginas legales de la fase 1.* No se publica una política de
    privacidad con un responsable inventado: un documento legal falso es peor que
    su ausencia. Hace falta razón social exacta, identificador fiscal, domicilio
    y un correo para ejercicio de derechos. Al no haber newsletter ni analítica,
    ahora mismo el sitio **no trata datos personales**, así que esto ya no es
    urgente — pero vuelve a serlo el día que se añada cualquiera de las dos.
-6. **Enlaces externos: existen Steam y Discord, pero faltan las URLs.**
+5. **Enlaces externos: existen Steam y Discord, pero faltan las URLs.**
    *Bloquea los CTA de la landing*, que es la razón de ser de la fase 1. La
    estructura ya está lista: en cuanto se rellenen en `src/site.ts`, los botones
    aparecen en los dos idiomas. La invitación de Discord debe ser **permanente**;
    las que caducan a los 7 días dejan la landing rota sin que nadie se entere.
-7. **Contenido real de la landing y del presskit.** *Bloquea el criterio de
+6. **Contenido real de la landing y del presskit.** *Bloquea el criterio de
    salida de la fase 1* ("la prensa puede citar el juego"). Hacen falta:
    descripción corta y larga, factsheet (plataformas, fecha, precio, modos,
    idiomas), logotipo en SVG y PNG, capturas a resolución completa, GIFs,
    tráiler y correo de contacto de prensa. Nada de eso puede redactarse aquí sin
    inventar.
-8. **¿Quién asume el rol de editor de contenido dentro del estudio?** *Bloquea
+7. **¿Quién asume el rol de editor de contenido dentro del estudio?** *Bloquea
    la fase 2 en la práctica:* sin un dueño, el blog se publica dos veces y se
    abandona.
-9. **¿Plan de hosting concreto?** El límite de 20 GB de Stellar es holgado para
+8. **¿Plan de hosting concreto?** El límite de 20 GB de Stellar es holgado para
    un sitio estático, pero conviene confirmar cuál se contrató, sobre todo por
    la disponibilidad de SSH.
-10. **Discrepancia menor en `AGENTES.md`:** la tabla del §1 dice 8 agentes Sonnet
+9. **Discrepancia menor en `AGENTES.md`:** la tabla del §1 dice 8 agentes Sonnet
    y 4 Haiku, pero las etiquetas por agente de los §3 y §4 suman 9 Sonnet y 3
    Haiku. Se implementaron las etiquetas por agente, que son más específicas.
    Confirmar cuál es la intención.
@@ -263,7 +257,7 @@ Decisiones del estudio: **sin newsletter y sin analítica** en esta fase; entida
 legal aún sin decidir, así que **no se publican legales**. Existen Steam y
 Discord, pero las URLs todavía no están en el repositorio.
 
-Construido (rama `feat/landing-phase-1`):
+Construido y **publicado en producción** (PR #1, desplegado el 2026-08-06):
 
 - `src/site.ts` como fuente única de enlaces externos. Un enlace vacío es una
   ausencia declarada, no un placeholder: el CTA no se renderiza en vez de
@@ -282,6 +276,30 @@ desde ayer está **público**. Sustituida por la afirmación mínima defendible 
 nombre, género y estado— hasta que el estudio confirme qué se puede decir.
 Regla que lo cubría y que no se aplicó a tiempo: *cada afirmación sobre el juego
 debe rastrearse a `src/data/` o a una decisión registrada*.
+
+### 2026-08-06 — `main` protegida y fase 1 en producción
+
+- **`main` protegida** con un ruleset versionado en `.github/rulesets/main.json`:
+  obliga a PR, exige el check `Gates` en verde y la rama al día, y bloquea
+  borrado y `push --force`. **Verificado empíricamente**, no solo activado: un
+  push directo a `main` fue rechazado con "Changes must be made through a pull
+  request" y "Required status check *Gates* is expected".
+- Se guarda como JSON importable porque la interfaz de GitHub no deja
+  seleccionar un check hasta que lo ha visto correr alguna vez — en un
+  repositorio nuevo, `Gates` simplemente no aparece y parece que falta el
+  workflow. La importación escribe el nombre directamente y esquiva el problema.
+  **Si la protección se cambia desde la interfaz, hay que exportarla y
+  actualizar ese archivo en el mismo PR:** un JSON que ya no describe la
+  realidad es peor que no tenerlo.
+- PR #1 fusionado y desplegado. Verificado en vivo: copia corregida en los dos
+  idiomas, imagen OG sirviéndose (38 KB), rutas en 200, **7 de 7 cabeceras de
+  seguridad**, ningún archivo de código accesible, 404 propio.
+- El primer despliegue de fase 1 volvió a tropezar con lo mismo que el
+  incidente anterior, y merece quedar escrito: al pulsar *Deploy* justo después
+  del merge, la rama `deploy` **todavía no existía reconstruida** — el workflow
+  tarda unos 2m 40s. Regla práctica: **espera a ver la ejecución en verde en
+  Actions antes de tocar cPanel**, y solo entonces *Update from Remote* y
+  *Deploy*.
 
 ### 2026-08-06 — Kit de prensa (rama `feat/landing-presskit`)
 
