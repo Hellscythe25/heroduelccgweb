@@ -1,5 +1,6 @@
 ---
 import { localizedPath, locales, languages, useTranslations, type Lang, type RouteKey } from '~/i18n/ui';
+import { isPressKitPublishable } from '~/press';
 
 interface Props {
   lang: Lang;
@@ -10,9 +11,13 @@ interface Props {
 const { lang, routeKey } = Astro.props;
 const t = useTranslations(lang);
 
-/* Fase 0 solo publica la home. La navegación crece cuando cada sección existe:
-   un menú con enlaces a páginas 404 se lee como un sitio roto. */
-const nav: { key: RouteKey; label: string }[] = [{ key: 'home', label: t('nav.home') }];
+/* La navegación crece solo cuando la sección existe de verdad: un menú con
+   enlaces a páginas vacías o a 404 se lee como un sitio abandonado.
+   El kit de prensa aparece cuando deja de estar en borrador (src/press.ts). */
+const nav: { key: RouteKey; label: string }[] = [
+  { key: 'home', label: t('nav.home') },
+  ...(isPressKitPublishable ? [{ key: 'presskit' as const, label: t('nav.presskit') }] : []),
+];
 ---
 
 <header class="site-header">

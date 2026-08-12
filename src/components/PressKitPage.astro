@@ -1,0 +1,299 @@
+---
+/**
+ * Kit de prensa en formato `presskit()`.
+ *
+ * Mientras falte algún campo obligatorio, la página se muestra en borrador con
+ * la lista exacta de lo que falta y por qué importa. Es deliberado: un kit
+ * incompleto que parece completo es peor que uno que admite lo que le falta,
+ * porque el periodista descubre el hueco cuando ya está escribiendo.
+ *
+ * Los bloques sin datos no se renderizan vacíos: desaparecen.
+ */
+import { useTranslations, type Lang } from '~/i18n/ui';
+import { isPressKitPublishable, missingPressKitFields, pressKit } from '~/press';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const missing = missingPressKitFields();
+const kit = pressKit;
+
+/** Filas de la ficha técnica. Las vacías se descartan, no se pintan a medias. */
+const factsheet: { label: string; value: string }[] = [
+  { label: t('press.studio'), value: kit.studio.name },
+  { label: t('press.founded'), value: kit.studio.foundedYear },
+  { label: t('press.location'), value: kit.studio.location },
+  { label: t('press.release'), value: kit.game.releaseDate[lang] },
+  { label: t('press.platforms'), value: kit.game.platforms.join(', ') },
+  { label: t('press.price'), value: kit.game.price[lang] },
+  { label: t('press.modes'), value: kit.game.modes.map((mode) => mode[lang]).join(', ') },
+  { label: t('press.languages'), value: kit.game.languages.join(', ') },
+  { label: t('press.engine'), value: kit.game.engine },
+].filter((row) => row.value.trim().length > 0);
+---
+
+<article class="container kit">
+  {/* Sin <header>: dentro de un <article> confunde a los lectores de pantalla,
+      que ya tienen el banner de la página. El h1 y su entradilla se bastan. */}
+  <h1>{t('press.title')}</h1>
+  <p class="intro">{t('press.intro')}</p>
+
+  {
+    !isPressKitPublishable && (
+      <section class="draft" aria-labelledby="draft-heading">
+        <h2 id="draft-heading">{t('press.draft.title')}</h2>
+        <p>{t('press.draft.body')}</p>
+
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">{t('press.draft.field')}</th>
+                <th scope="col">{t('press.draft.why')}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {missing.map((field) => (
+                <tr>
+                  <th scope="row"><code>{field.path}</code></th>
+                  <td>{field.why[lang]}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <p class="howto">{t('press.draft.howto')}</p>
+      </section>
+    )
+  }
+
+  {
+    factsheet.length > 0 && (
+      <section aria-labelledby="factsheet-heading">
+        <h2 id="factsheet-heading">{t('press.factsheet')}</h2>
+        <div class="table-scroll">
+          <table>
+            <tbody>
+              {factsheet.map((row) => (
+                <tr>
+                  <th scope="row">{row.label}</th>
+                  <td>{row.value}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    )
+  }
+
+  {
+    kit.description.short[lang].trim().length > 0 && (
+      <section aria-labelledby="short-heading">
+        <h2 id="short-heading">{t('press.short')}</h2>
+        <p>{kit.description.short[lang]}</p>
+      </section>
+    )
+  }
+
+  {
+    kit.description.long[lang].trim().length > 0 && (
+      <section aria-labelledby="long-heading">
+        <h2 id="long-heading">{t('press.long')}</h2>
+        {kit.description.long[lang]
+          .split('\n\n')
+          .filter((paragraph) => paragraph.trim().length > 0)
+          .map((paragraph) => (
+            <p>{paragraph}</p>
+          ))}
+      </section>
+    )
+  }
+
+  {
+    (kit.assets.logos.length > 0 ||
+      kit.assets.screenshots.length > 0 ||
+      kit.assets.trailerUrl.length > 0 ||
+      kit.assets.zipUrl.length > 0) && (
+      <section aria-labelledby="assets-heading">
+        <h2 id="assets-heading">{t('press.assets')}</h2>
+
+        {kit.assets.zipUrl.length > 0 && (
+          <p>
+            <a href={kit.assets.zipUrl} download>
+              {t('press.zip')}
+            </a>
+          </p>
+        )}
+
+        {kit.assets.logos.length > 0 && (
+          <>
+            <h3>{t('press.logos')}</h3>
+            <ul class="gallery">
+              {kit.assets.logos.map((asset) => (
+                <li>
+                  <a href={asset.src} download>
+                    <img src={asset.src} alt={asset.alt[lang]} loading="lazy" />
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
+
+        {kit.assets.screenshots.length > 0 && (
+          <>
+            <h3>{t('press.screenshots')}</h3>
+            <ul class="gallery">
+              {kit.assets.screenshots.map((asset) => (
+                <li>
+                  <a href={asset.src} download>
+                    <img src={asset.src} alt={asset.alt[lang]} loading="lazy" />
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
+
+        {kit.assets.trailerUrl.length > 0 && (
+          <>
+            <h3>{t('press.trailer')}</h3>
+            <p>
+              <a href={kit.assets.trailerUrl} target="_blank" rel="noopener noreferrer">
+                {kit.assets.trailerUrl}
+              </a>
+            </p>
+          </>
+        )}
+      </section>
+    )
+  }
+
+  {
+    (kit.contact.email.length > 0 || kit.contact.socials.length > 0) && (
+      <section aria-labelledby="contact-heading">
+        <h2 id="contact-heading">{t('press.contact')}</h2>
+        {kit.contact.email.length > 0 && (
+          <p>
+            <a href={`mailto:${kit.contact.email}`}>{kit.contact.email}</a>
+          </p>
+        )}
+        {kit.contact.socials.length > 0 && (
+          <ul class="socials">
+            {kit.contact.socials.map((social) => (
+              <li>
+                <a href={social.url} target="_blank" rel="noopener noreferrer">
+                  {social.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+    )
+  }
+</article>
+
+<style>
+  .kit {
+    padding-block: var(--hd-space-12) var(--hd-space-16);
+    display: flex;
+    flex-direction: column;
+    gap: var(--hd-space-12);
+  }
+
+  .intro {
+    margin-block-start: var(--hd-space-4);
+    color: var(--hd-text-muted);
+    font-size: var(--hd-text-lg);
+  }
+
+  h2 {
+    margin-block-end: var(--hd-space-4);
+  }
+
+  h3 {
+    margin-block: var(--hd-space-6) var(--hd-space-3);
+  }
+
+  section > p + p {
+    margin-block-start: var(--hd-space-4);
+  }
+
+  .draft {
+    padding: var(--hd-space-6);
+    border: 1px solid var(--hd-accent);
+    border-radius: var(--hd-radius-lg);
+    background: var(--hd-surface-raised);
+  }
+
+  .draft .howto {
+    margin-block-start: var(--hd-space-4);
+    color: var(--hd-text-muted);
+    font-size: var(--hd-text-sm);
+  }
+
+  /* Las tablas anchas hacen scroll dentro de su caja; la página nunca. */
+  .table-scroll {
+    overflow-x: auto;
+  }
+
+  table {
+    inline-size: 100%;
+    border-collapse: collapse;
+    text-align: start;
+  }
+
+  th,
+  td {
+    padding: var(--hd-space-3);
+    border-block-end: 1px solid var(--hd-border);
+    vertical-align: top;
+  }
+
+  th {
+    text-align: start;
+    font-weight: 650;
+    white-space: nowrap;
+  }
+
+  tbody th {
+    color: var(--hd-text-muted);
+    font-weight: 500;
+  }
+
+  code {
+    font-family: var(--hd-font-mono);
+    font-size: var(--hd-text-sm);
+    color: var(--hd-accent);
+  }
+
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: var(--hd-space-4);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .gallery img {
+    inline-size: 100%;
+    border-radius: var(--hd-radius-md);
+    border: 1px solid var(--hd-border);
+  }
+
+  .socials {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--hd-space-4);
+    list-style: none;
+    padding: 0;
+  }
+</style>

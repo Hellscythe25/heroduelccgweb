@@ -1,6 +1,21 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
+import { isPressKitPublishable } from './src/press.ts';
+import { locales, routes } from './src/i18n/ui.ts';
+
+/**
+ * Rutas que no deben anunciarse en el sitemap.
+ *
+ * El kit de prensa se genera siempre para poder previsualizarlo, pero mientras
+ * le falten campos obligatorios va con `noindex` y fuera del sitemap. Un sitemap
+ * es una declaración pública de "estas son mis páginas": incluir una que se
+ * admite a sí misma incompleta invita a que la prensa la encuentre justo cuando
+ * peor está.
+ */
+const excludedPaths = isPressKitPublishable
+  ? []
+  : locales.map((lang) => `/${lang}/${routes.presskit[lang]}/`);
 
 /**
  * Dominio canónico de producción, decidido el 2026-08-04 (ADR-003).
@@ -39,6 +54,7 @@ export default defineConfig({
         defaultLocale: 'es',
         locales: { es: 'es-ES', en: 'en-US' },
       },
+      filter: (page) => !excludedPaths.some((path) => new URL(page).pathname === path),
     }),
   ],
 
