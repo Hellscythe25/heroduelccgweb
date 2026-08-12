@@ -9,7 +9,7 @@
 **Fase actual: 1 — Landing.**
 Criterio de salida: producción en vivo y la prensa puede citar el juego.
 
-**Última actualización:** 2026-08-06
+**Última actualización:** 2026-08-06 (cierre de sesión 3)
 
 ---
 
@@ -329,3 +329,63 @@ banner para los lectores de pantalla.
 
 **Faltan los 11 campos obligatorios.** La página los lista con su motivo; se
 rellenan en `src/press.ts`.
+
+---
+
+## Cierre de sesión — 2026-08-06
+
+### Estado al cerrar
+
+| | |
+|---|---|
+| Sitio en producción | <https://heroduelccg.com> — verificado |
+| Última versión desplegada | `acace91` (build de `e460d2b`) |
+| `main` | Protegida y comprobada |
+| PR abierto sin fusionar | `feat/landing-presskit` — contiene también la memoria |
+| PR obsoleto | `docs/memoria-fase-1-desplegada` (#2) — su contenido ya viaja en el anterior; **cerrar** |
+| Rama fusionada sin borrar | `feat/landing-phase-1` |
+
+Producción **no** contiene todavía el kit de prensa: falta fusionar y desplegar.
+
+### Lo primero al retomar
+
+1. Fusionar `feat/landing-presskit`.
+2. Esperar a **"Publicar rama deploy"** en verde (unos 2m 40s).
+3. cPanel → *Update from Remote* → *Deploy HEAD Commit*.
+4. Verificar `/es/prensa/`: debe responder pero con `noindex`, fuera del
+   sitemap y sin enlace en el menú, listando los 11 campos que faltan.
+
+### VIGILAR — incidencia sin diagnosticar
+
+**El check `Gates` del PR #2 se colgó y GitHub lo canceló a los 15 minutos**,
+que es exactamente el `timeout-minutes` del workflow. El mismo workflow tardó
+**43 segundos** en el PR #1 y "Publicar rama deploy" tarda 2m 40s sobre el mismo
+código, así que un PR que solo toca un `.md` no tiene motivo para tardar quince
+minutos.
+
+No se pudo diagnosticar: `gh` no está autenticado en la máquina de trabajo y no
+hay acceso a los registros de Actions desde la sesión.
+
+**Si se repite,** hay que mirar en qué paso se detiene:
+
+| Paso donde se cuelga | Interpretación |
+|---|---|
+| `npm ci` | Red del runner; reintentar |
+| `Índice de búsqueda` (pagefind) | Problema nuestro |
+| `Publicar artefacto de preview` | Problema nuestro; es el único paso que no comparte con el workflow de despliegue |
+
+Mientras no se repita, se trata como incidencia puntual de infraestructura. **No
+se sube el `timeout-minutes` para "arreglarlo":** eso convertiría un cuelgue
+visible en una espera larga y silenciosa.
+
+### Recordatorio operativo que ya falló dos veces
+
+`Deploy HEAD Commit` publica **lo que el servidor ya tiene**. Sin *Update from
+Remote* antes, se republica la versión anterior. La señal es que cambia la hora
+del último despliegue pero **no el SHA**.
+
+### Lo que bloquea la fase 1, y no es técnico
+
+Su criterio de salida es "la prensa puede citar el juego". Falta contenido que
+solo puede aportar el estudio: las URLs de Steam y Discord, la descripción corta
+y larga, el factsheet y las capturas. Detalle en ABIERTO, puntos 5 y 6.

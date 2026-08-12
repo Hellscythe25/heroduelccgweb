@@ -31,6 +31,26 @@ convencionales. Las entradas no se escriben a mano.
   unicidad, referencias cruzadas y coherencia de versión.
 - 15 subagentes y 6 comandos de Claude Code en `.claude/`.
 - Documentación: ADR-001, ADR-002, ADR-003, memoria de proyecto y runbooks.
+- Despliegue por rama de artefactos: CI construye y publica el sitio en la rama
+  `deploy`, que clona Git Version Control de cPanel (ADR-004).
+- Protección de `main` versionada como ruleset importable en
+  `.github/rulesets/main.json`.
+- Imagen OG por defecto generada desde los tokens del sistema de diseño
+  (`scripts/generate-og.mjs`), aplicada a toda página sin imagen propia.
+- Enlaces externos centralizados en `src/site.ts`, con los CTA de la landing
+  condicionados a que la URL exista.
+- Kit de prensa en formato `presskit()` (`src/press.ts` y `/es/prensa/`,
+  `/en/presskit/`), que se publica solo cuando deja de faltarle campos.
 
+### Corregido
+
+- La landing afirmaba una mecánica del juego que no procedía del estudio.
+  Sustituida por la afirmación mínima defendible.
+- Textos internos de fase visibles al público, en la landing y en el pie.
+- Permisos del despliegue: `rsync` heredaba el umask del clon de git y el
+  servidor no podía leer los archivos ni el `.htaccess`.
+- `<header>` dentro de `<article>` duplicaba un landmark de banner.
+
+**Versión del sitio:** sin publicar todavía; no se ha etiquetado ninguna.
 **Versión de datos:** `0.0.0` — el catálogo aún no está vinculado a un parche
-del juego. Ver `docs/MEMORIA.md`, punto 3 de ABIERTO.
+del juego. Ver `docs/MEMORIA.md`, ABIERTO.
