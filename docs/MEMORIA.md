@@ -90,8 +90,11 @@ Estado medido en la última verificación: build en verde, 4 páginas,
   - Alcance de la fase 1: inicio, el juego, cómo se juega, héroes, esqueleto
     del devlog y borradores de Privacidad y Términos. Compendio y deckbuilder
     siguen fuera.
-  - **No se publica el arte provisional** generado por IA. Mientras no haya
-    arte aprobado, los héroes se representan con emblemas geométricos.
+  - ~~No se publica el arte provisional~~ — **revisado el mismo día**: el
+    dueño pidió usar las imágenes del juego. Se publican retratos, arenas,
+    escenas y el emblema, importados con `scripts/import-game-art.mjs`, con un
+    aviso en el pie de que son provisionales. El emblema geométrico queda como
+    respaldo para un héroe sin retrato.
   - El responsable de los datos en los legales es **Inca Games** (Nueva
     Jersey, EE. UU.).
 - **Los datos del juego no publicables todavía** (decisión del juego, no de la
