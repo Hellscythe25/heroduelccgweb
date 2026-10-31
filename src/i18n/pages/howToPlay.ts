@@ -10,7 +10,6 @@ import type { TextBlock } from './game';
 
 export interface HowToPlayCopy {
   meta: { title: string; description: string };
-  eyebrow: string;
   title: string;
   lead: string;
   setup: { title: string; items: string[] };
@@ -31,7 +30,6 @@ export const howToPlayCopy: Record<Lang, HowToPlayCopy> = {
       description:
         'Las reglas de un duelo de Hero Duel CCG: energía, turno, ataque, equipo, habilidades de héroe y reloj de turno.',
     },
-    eyebrow: 'Cómo se juega',
     title: 'Así funciona un duelo',
     lead: 'Gana quien deja en 0 la vida del héroe rival. Estas son las reglas, paso a paso.',
     setup: {
@@ -116,7 +114,6 @@ export const howToPlayCopy: Record<Lang, HowToPlayCopy> = {
       description:
         'The rules of a Hero Duel CCG duel: energy, turns, attacks, equipment, hero abilities and the turn timer.',
     },
-    eyebrow: 'How to play',
     title: 'How a duel works',
     lead: "The first to bring the enemy hero's life to 0 wins. Here are the rules, step by step.",
     setup: {

@@ -5,16 +5,20 @@
  * ES/EN es estructural y no depende de que alguien recuerde actualizar dos
  * archivos.
  *
+ * La pieza fuerte es la alineación de los cinco héroes, como una pantalla de
+ * selección: cada franja lleva a la ficha del héroe. Todo lo demás es sobrio a
+ * propósito para no competir con el arte.
+ *
  * Los CTA externos se renderizan solo si su URL existe en src/site.ts. Un botón
- * que lleva a ninguna parte es peor que la ausencia del botón: gasta la atención
- * del visitante una sola vez y la gasta mal. Mientras no existan, los CTA
- * llevan al interior del sitio.
+ * que lleva a ninguna parte es peor que la ausencia del botón. Mientras no
+ * existan, los CTA llevan al interior del sitio.
  */
+import { Picture } from 'astro:assets';
 import BaseLayout from '~/layouts/BaseLayout.astro';
 import CtaLink from '~/components/CtaLink.astro';
 import HeroEmblem from '~/components/HeroEmblem.astro';
+import { brandEmblem, heroPortrait } from '~/art';
 import { heroes } from '~/data';
-import { gameCopy } from '~/i18n/pages/game';
 import { heroPresentation } from '~/i18n/pages/heroes';
 import { homeCopy } from '~/i18n/pages/home';
 import { localizedPath, locales, useTranslations, type Lang, type UiKey } from '~/i18n/ui';
@@ -36,10 +40,7 @@ const ctaLabels: Record<string, UiKey> = {
 };
 
 const shortName = (name: string) => name.split(' ')[0];
-
-// Ilustración del duelo: los dos primeros héroes del juego, con su vida real.
-const [left, right] = heroes;
-const slots = gameCopy[lang].collection.types.slice(1).map((type) => type.title);
+const heroesPath = localizedPath(lang, 'heroes');
 ---
 
 <BaseLayout
@@ -48,63 +49,74 @@ const slots = gameCopy[lang].collection.types.slice(1).map((type) => type.title)
   lang={lang}
   routeKey="home"
 >
-  <section class="hero">
-    <div class="container hero-grid">
-      <div class="hero-copy">
-        <p class="badge">{t('home.badge')}</p>
-        <h1>{t('home.title')}</h1>
-        <p class="subtitle">{t('home.subtitle')}</p>
-        <div class="actions">
-          {
-            links.map((link, index) => (
-              <CtaLink href={link.url} external variant={index === 0 ? 'primary' : 'secondary'}>
-                {t(ctaLabels[link.key]!)}
-              </CtaLink>
-            ))
-          }
-          <CtaLink href={localizedPath(lang, 'game')} variant={links.length > 0 ? 'secondary' : 'primary'}>
-            {t('home.cta.game')}
-          </CtaLink>
-          <CtaLink href={localizedPath(lang, 'howToPlay')} variant="secondary">{t('home.cta.howToPlay')}</CtaLink>
-        </div>
-      </div>
-
+  <section class="intro">
+    <ul class="lineup">
       {
-        left && right && (
-          <div class="duel" aria-hidden="true">
-            <div class="duelists">
-              {[left, right].map((hero) => (
-                <div class="duelist" style={`--hero: var(--hd-hero-${hero.id})`}>
-                  <HeroEmblem heroId={hero.id} glyph={heroPresentation[hero.id]!.glyph} size={112} />
-                  <p class="duelist-name">{shortName(hero.name[lang])}</p>
-                  <p class="duelist-life">
-                    {t('hero.life')} <span>{hero.life}</span>
-                  </p>
-                </div>
-              ))}
-              <p class="versus">VS</p>
-            </div>
-            <div class="energy">
-              {Array.from({ length: 10 }, (_, index) => (
-                <span class:list={['pip', { lit: index < 4 }]} />
-              ))}
-            </div>
-            <ul class="slots">
-              {slots.map((slot) => (
-                <li>{slot}</li>
-              ))}
-            </ul>
-          </div>
-        )
+        heroes.map((hero, index) => {
+          const portrait = heroPortrait(hero.id);
+          return (
+            <li style={`--hero: var(--hd-hero-${hero.id})`}>
+              <a href={`${heroesPath}#${hero.id}`}>
+                {portrait ? (
+                  <Picture
+                    src={portrait}
+                    alt=""
+                    formats={['avif', 'webp']}
+                    widths={[240, 400, 640]}
+                    sizes="(min-width: 52rem) 16vw, 20vw"
+                    loading={index < 3 ? 'eager' : 'lazy'}
+                    fetchpriority={index === 0 ? 'high' : 'auto'}
+                    class="slice-art"
+                  />
+                ) : (
+                  <HeroEmblem heroId={hero.id} glyph={heroPresentation[hero.id]!.glyph} size={96} />
+                )}
+                <span class="slice-name">{shortName(hero.name[lang])}</span>
+              </a>
+            </li>
+          );
+        })
       }
+    </ul>
+
+    <div class="embers" aria-hidden="true">
+      {Array.from({ length: 14 }, () => <span />)}
+    </div>
+
+    <div class="container intro-copy">
+      <Picture
+        src={brandEmblem}
+        alt=""
+        formats={['avif', 'webp']}
+        widths={[160, 320]}
+        sizes="10rem"
+        loading="eager"
+        class="intro-emblem emblem-fade"
+      />
+      <p class="status">{t('home.badge')}</p>
+      <h1>{t('home.title')}</h1>
+      <p class="subtitle">{t('home.subtitle')}</p>
+      <div class="actions">
+        {
+          links.map((link, index) => (
+            <CtaLink href={link.url} external variant={index === 0 ? 'primary' : 'secondary'}>
+              {t(ctaLabels[link.key]!)}
+            </CtaLink>
+          ))
+        }
+        <CtaLink href={localizedPath(lang, 'game')} variant={links.length > 0 ? 'secondary' : 'primary'}>
+          {t('home.cta.game')}
+        </CtaLink>
+        <CtaLink href={localizedPath(lang, 'howToPlay')} variant="secondary">{t('home.cta.howToPlay')}</CtaLink>
+      </div>
     </div>
   </section>
 
   <section class="section container" aria-label={t('nav.game')}>
-    <ul class="grid pillars">
+    <ul class="pillars">
       {
         copy.pillars.map((pillar) => (
-          <li class="panel">
+          <li>
             <h2 class="pillar-title">{pillar.title}</h2>
             <p>{pillar.body}</p>
           </li>
@@ -114,22 +126,24 @@ const slots = gameCopy[lang].collection.types.slice(1).map((type) => type.title)
   </section>
 
   <section class="section container" aria-labelledby="home-heroes">
-    <h2 id="home-heroes">{copy.heroes.title}</h2>
-    <p class="section-lead">{copy.heroes.body}</p>
+    <div class="heroes-head">
+      <h2 id="home-heroes">{copy.heroes.title}</h2>
+      <p>{copy.heroes.body}</p>
+    </div>
     <ul class="roster">
       {
         heroes.map((hero) => (
-          <li>
-            <a href={`${localizedPath(lang, 'heroes')}#${hero.id}`} style={`--hero: var(--hd-hero-${hero.id})`}>
-              <HeroEmblem heroId={hero.id} glyph={heroPresentation[hero.id]!.glyph} size={56} />
-              <span class="roster-name">{shortName(hero.name[lang])}</span>
-              <span class="roster-role">{heroPresentation[hero.id]!.role[lang]}</span>
-            </a>
+          <li style={`--hero: var(--hd-hero-${hero.id}); --hero-text: var(--hd-hero-${hero.id}-text)`}>
+            <a href={`${heroesPath}#${hero.id}`}>{shortName(hero.name[lang])}</a>
+            <span class="roster-role">{heroPresentation[hero.id]!.role[lang]}</span>
+            <span class="roster-life">
+              {t('hero.life')} {hero.life}
+            </span>
           </li>
         ))
       }
     </ul>
-    <p class="more"><a href={localizedPath(lang, 'heroes')}>{copy.heroes.link}</a></p>
+    <p class="more"><a href={heroesPath}>{copy.heroes.link}</a></p>
   </section>
 
   <section class="section container columns">
@@ -149,45 +163,225 @@ const slots = gameCopy[lang].collection.types.slice(1).map((type) => type.title)
     </div>
   </section>
 
-  <section class="section container" aria-labelledby="home-status">
-    <div class="panel status">
-      <h2 id="home-status">{copy.status.title}</h2>
-      <p>{copy.status.body}</p>
-    </div>
+  <section class="section container closing" aria-labelledby="home-status">
+    <h2 id="home-status">{copy.status.title}</h2>
+    <p>{copy.status.body}</p>
+    <div class="ornament" aria-hidden="true"><span></span></div>
   </section>
 </BaseLayout>
 
 <style>
-  .hero {
-    padding-block: var(--hd-space-16) var(--hd-space-12);
-    background:
-      radial-gradient(50rem 26rem at 75% 10%, var(--hd-gold-wash), transparent 70%),
-      radial-gradient(40rem 20rem at 0% 100%, var(--hd-essence-wash), transparent 70%),
-      var(--hd-surface);
-    border-block-end: 1px solid var(--hd-border);
-  }
-
-  .hero-grid {
+  /* ---- Portada: alineación de héroes ---- */
+  .intro {
+    position: relative;
+    isolation: isolate;
     display: grid;
-    gap: var(--hd-space-12);
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr));
-    align-items: center;
+    border-block-end: 1px solid var(--hd-border-gold);
   }
 
-  .badge {
-    display: inline-block;
+  .lineup {
+    display: flex;
+    block-size: clamp(16rem, 62vw, 22rem);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    overflow: hidden;
+  }
+
+  .lineup li {
+    position: relative;
+    flex: 1 1 0;
+    min-inline-size: 0;
+    transition: flex-grow 320ms var(--hd-motion-ease);
+    animation: slice-in 700ms var(--hd-motion-ease) both;
+  }
+
+  /* Entrada escalonada de los héroes: el único momento animado de la página. */
+  .lineup li:nth-child(2) {
+    animation-delay: 90ms;
+  }
+  .lineup li:nth-child(3) {
+    animation-delay: 180ms;
+  }
+  .lineup li:nth-child(4) {
+    animation-delay: 270ms;
+  }
+  .lineup li:nth-child(5) {
+    animation-delay: 360ms;
+  }
+
+  @keyframes slice-in {
+    from {
+      opacity: 0;
+      transform: translateY(1.5rem);
+    }
+  }
+
+  /* ---- Brasas que suben desde la forja ---- */
+  .embers {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .embers span {
+    position: absolute;
+    inset-block-end: -1rem;
+    inset-inline-start: var(--x);
+    inline-size: var(--s, 4px);
+    block-size: var(--s, 4px);
+    border-radius: 50%;
+    background: var(--hd-gold-300);
+    box-shadow: 0 0 10px 2px var(--hd-ember);
+    opacity: 0;
+    animation: ember-rise var(--d, 9s) linear var(--w, 0s) infinite;
+  }
+
+  .embers span:nth-child(1) { --x: 48%; --d: 9s; --w: 0s; }
+  .embers span:nth-child(2) { --x: 55%; --d: 11s; --w: 2s; --s: 3px; }
+  .embers span:nth-child(3) { --x: 61%; --d: 8s; --w: 4s; }
+  .embers span:nth-child(4) { --x: 67%; --d: 12s; --w: 1s; --s: 5px; }
+  .embers span:nth-child(5) { --x: 72%; --d: 10s; --w: 6s; --s: 3px; }
+  .embers span:nth-child(6) { --x: 78%; --d: 9s; --w: 3s; }
+  .embers span:nth-child(7) { --x: 83%; --d: 13s; --w: 5s; --s: 3px; }
+  .embers span:nth-child(8) { --x: 88%; --d: 10s; --w: 7s; }
+  .embers span:nth-child(9) { --x: 93%; --d: 11s; --w: 2.5s; --s: 5px; }
+  .embers span:nth-child(10) { --x: 58%; --d: 14s; --w: 8s; --s: 3px; }
+  .embers span:nth-child(11) { --x: 75%; --d: 12s; --w: 9s; }
+  .embers span:nth-child(12) { --x: 86%; --d: 9s; --w: 10s; --s: 3px; }
+  .embers span:nth-child(13) { --x: 64%; --d: 10s; --w: 11s; }
+  .embers span:nth-child(14) { --x: 96%; --d: 13s; --w: 4.5s; --s: 3px; }
+
+  @keyframes ember-rise {
+    0% {
+      opacity: 0;
+      transform: translate(0, 0);
+    }
+    15% {
+      opacity: 0.9;
+    }
+    100% {
+      opacity: 0;
+      transform: translate(-3rem, -32rem);
+    }
+  }
+
+  .intro-copy :global(.intro-emblem) {
+    inline-size: clamp(5rem, 12vw, 8rem);
+    block-size: auto;
     margin-block-end: var(--hd-space-4);
-    padding: var(--hd-space-1) var(--hd-space-3);
-    border: 1px solid var(--hd-accent);
-    border-radius: var(--hd-radius-full);
-    color: var(--hd-accent);
-    font-size: var(--hd-text-xs);
+    filter: drop-shadow(0 0 24px var(--hd-gold-glow));
+  }
+
+  /* Franjas inclinadas que se solapan, como una pantalla de selección. */
+  .lineup li + li {
+    margin-inline-start: -2.5rem;
+  }
+
+  .lineup a {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: end center;
+    overflow: hidden;
+    clip-path: polygon(2.5rem 0, 100% 0, calc(100% - 2.5rem) 100%, 0 100%);
+    background: var(--hd-surface-raised);
+    color: var(--hd-text);
+    text-decoration: none;
+  }
+
+  .lineup li:first-child a {
+    clip-path: polygon(0 0, 100% 0, calc(100% - 2.5rem) 100%, 0 100%);
+  }
+
+  .lineup li:last-child a {
+    clip-path: polygon(2.5rem 0, 100% 0, 100% 100%, 0 100%);
+  }
+
+  .lineup a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(0deg, var(--hd-veil-strong) 0%, var(--hd-veil-clear) 45%);
+    box-shadow: inset 0 -3px 0 var(--hero);
+  }
+
+  .lineup :global(.slice-art) {
+    position: absolute;
+    inset: 0;
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+    object-position: 50% 20%;
+    filter: saturate(0.85) brightness(0.8);
+    transition: filter 320ms var(--hd-motion-ease);
+  }
+
+  .lineup :global(.emblem) {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+  }
+
+  .slice-name {
+    position: relative;
+    z-index: 1;
+    margin-block-end: var(--hd-space-4);
+    font-family: var(--hd-font-display);
     font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    font-size: var(--hd-text-lg);
+    letter-spacing: 0.04em;
+  }
+
+  /* En un teléfono las franjas miden ~75 px y el nombre no cabe: se oculta a la
+     vista pero sigue siendo el nombre accesible del enlace. La lista de héroes
+     de más abajo los muestra completos. */
+  @media (max-width: 51.99rem) {
+    .slice-name {
+      position: absolute;
+      inline-size: 1px;
+      block-size: 1px;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+    }
+  }
+
+  /* El héroe señalado se adelanta: responde al puntero y al teclado. */
+  .lineup li:has(a:hover),
+  .lineup li:has(a:focus-visible) {
+    flex-grow: 1.7;
+  }
+
+  .lineup a:hover :global(.slice-art),
+  .lineup a:focus-visible :global(.slice-art) {
+    filter: none;
+  }
+
+  .lineup a:focus-visible {
+    outline: none;
+  }
+
+  .lineup a:focus-visible::after {
+    box-shadow:
+      inset 0 -3px 0 var(--hero),
+      inset 0 0 0 3px var(--hd-focus);
+  }
+
+  .intro-copy {
+    padding-block: var(--hd-space-8) var(--hd-space-12);
+  }
+
+  .status {
+    color: var(--hd-accent);
+    font-weight: 700;
   }
 
   h1 {
+    margin-block-start: var(--hd-space-2);
     font-size: var(--hd-text-display);
     line-height: 1;
     color: var(--hd-accent);
@@ -197,7 +391,6 @@ const slots = gameCopy[lang].collection.types.slice(1).map((type) => type.title)
   .subtitle {
     margin-block-start: var(--hd-space-6);
     font-size: var(--hd-text-lg);
-    color: var(--hd-text);
   }
 
   .actions {
@@ -207,160 +400,136 @@ const slots = gameCopy[lang].collection.types.slice(1).map((type) => type.title)
     margin-block-start: var(--hd-space-8);
   }
 
-  /* ---- Ilustración del duelo (decorativa) ---- */
-  .duel {
-    display: grid;
-    gap: var(--hd-space-6);
-    padding: var(--hd-space-8) var(--hd-space-6);
-    border: 1px solid var(--hd-border-gold);
-    border-radius: var(--hd-radius-lg);
-    background:
-      linear-gradient(180deg, var(--hd-gold-sheen), transparent 60%),
-      var(--hd-surface-raised);
-    box-shadow: var(--hd-shadow-lg);
+  /* En pantalla ancha la alineación ocupa la derecha y el texto se apoya en
+     el lado oscuro, sin velo encima de las caras. */
+  @media (min-width: 52rem) {
+    .intro {
+      grid-template-columns: minmax(0, 1fr);
+      min-block-size: min(46rem, 88vh);
+      align-items: center;
+    }
+
+    .lineup {
+      position: absolute;
+      inset-block: 0;
+      inset-inline: 44% 0;
+      block-size: auto;
+      z-index: -1;
+    }
+
+    .lineup li:first-child a {
+      clip-path: polygon(2.5rem 0, 100% 0, calc(100% - 2.5rem) 100%, 0 100%);
+    }
+
+    .intro::before {
+      content: '';
+      position: absolute;
+      inset-block: 0;
+      inset-inline: 36% auto;
+      inline-size: 12%;
+      z-index: 0;
+      background: linear-gradient(90deg, var(--hd-surface), var(--hd-veil-clear));
+      pointer-events: none;
+    }
+
+    .intro-copy {
+      position: relative;
+      z-index: 1;
+      padding-block: var(--hd-space-16);
+    }
+
+    .intro-copy > * {
+      max-inline-size: 30rem;
+    }
   }
 
-  .duelists {
-    position: relative;
+  /* ---- Secciones ---- */
+  .pillars {
     display: grid;
-    grid-template-columns: 1fr 1fr;
     gap: var(--hd-space-8);
-    text-align: center;
-  }
-
-  .duelist {
-    display: grid;
-    justify-items: center;
-    gap: var(--hd-space-2);
-  }
-
-  .duelist :global(.emblem) {
-    inline-size: clamp(5rem, 18vw, 7rem);
-    block-size: auto;
-  }
-
-  .duelist-name {
-    font-family: var(--hd-font-display);
-    font-size: var(--hd-text-xl);
-    font-weight: 700;
-  }
-
-  .duelist-life {
-    color: var(--hd-text-muted);
-    font-size: var(--hd-text-sm);
-  }
-
-  .duelist-life span {
-    color: var(--hd-text);
-    font-weight: 700;
-  }
-
-  .versus {
-    position: absolute;
-    inset-block-start: 30%;
-    inset-inline-start: 50%;
-    translate: -50% -50%;
-    color: var(--hd-accent);
-    font-family: var(--hd-font-display);
-    font-size: var(--hd-text-2xl);
-    font-weight: 700;
-  }
-
-  .energy {
-    display: grid;
-    grid-template-columns: repeat(10, 1fr);
-    gap: var(--hd-space-1);
-  }
-
-  .pip {
-    block-size: 0.5rem;
-    border-radius: var(--hd-radius-full);
-    background: var(--hd-surface-sunken);
-    border: 1px solid var(--hd-border);
-  }
-
-  .pip.lit {
-    background: var(--hd-essence);
-    border-color: var(--hd-essence);
-    box-shadow: 0 0 8px var(--hd-essence-glow);
-  }
-
-  .slots {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--hd-space-2);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
     padding: 0;
     list-style: none;
   }
 
-  .slots li {
-    padding: var(--hd-space-2);
-    border: 1px dashed var(--hd-border-strong);
-    border-radius: var(--hd-radius-md);
-    color: var(--hd-text-muted);
-    font-size: var(--hd-text-xs);
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    text-align: center;
-    text-transform: uppercase;
+  .pillars li {
+    padding-block-start: var(--hd-space-4);
+    border-block-start: 1px solid var(--hd-border-gold);
   }
 
-  /* ---- Secciones ---- */
   .pillar-title {
     margin-block-end: var(--hd-space-2);
     font-size: var(--hd-text-xl);
     color: var(--hd-accent);
   }
 
-  .section-lead {
-    margin-block-end: var(--hd-space-6);
+  .pillars p {
+    color: var(--hd-text-muted);
+  }
+
+  .heroes-head {
+    display: grid;
+    gap: var(--hd-space-4);
+    margin-block-end: var(--hd-space-8);
+  }
+
+  .heroes-head p {
     color: var(--hd-text-muted);
   }
 
   .roster {
     display: grid;
-    gap: var(--hd-space-3);
-    /* 9.5rem: dos columnas en un teléfono de 375 px, cinco en escritorio. */
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 9.5rem), 1fr));
+    gap: 0;
     padding: 0;
     list-style: none;
   }
 
-  .roster a {
+  .roster li {
     display: grid;
-    justify-items: center;
-    gap: var(--hd-space-1);
-    block-size: 100%;
-    padding: var(--hd-space-6) var(--hd-space-3);
-    border: 1px solid var(--hd-border);
-    border-block-start: 3px solid var(--hero);
-    border-radius: var(--hd-radius-lg);
-    background: var(--hd-surface-raised);
+    grid-template-columns: 9rem 1fr auto;
+    align-items: baseline;
+    gap: var(--hd-space-4);
+    padding-block: var(--hd-space-4);
+    padding-inline-start: var(--hd-space-4);
+    border-block-end: 1px solid var(--hd-border);
+    border-inline-start: 3px solid var(--hero);
+  }
+
+  .roster a {
+    font-family: var(--hd-font-display);
+    font-size: var(--hd-text-xl);
+    font-weight: 700;
     color: var(--hd-text);
-    text-align: center;
     text-decoration: none;
-    transition: border-color var(--hd-motion-fast) var(--hd-motion-ease);
   }
 
   .roster a:hover {
-    border-color: var(--hero);
-  }
-
-  .roster-name {
-    margin-block-start: var(--hd-space-2);
-    font-family: var(--hd-font-display);
-    font-size: var(--hd-text-lg);
-    font-weight: 700;
+    color: var(--hero-text);
   }
 
   .roster-role {
     color: var(--hd-text-muted);
-    font-size: var(--hd-text-xs);
+  }
+
+  .roster-life {
+    color: var(--hd-text-muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  @media (max-width: 36rem) {
+    .roster li {
+      grid-template-columns: 1fr auto;
+    }
+
+    .roster-role {
+      grid-column: 1 / -1;
+      grid-row: 2;
+    }
   }
 
   .more {
     margin-block-start: var(--hd-space-6);
-    font-weight: 600;
+    font-weight: 700;
   }
 
   .columns {
@@ -396,16 +565,20 @@ const slots = gameCopy[lang].collection.types.slice(1).map((type) => type.title)
     transform: rotate(45deg);
   }
 
-  .status {
-    border-color: var(--hd-border-gold);
+  .closing {
     text-align: center;
   }
 
-  .status h2 {
+  .closing h2 {
     margin-block-end: var(--hd-space-3);
   }
 
-  .status p {
+  .closing p {
+    margin-inline: auto;
+    color: var(--hd-text-muted);
+  }
+
+  .closing .ornament {
     margin-inline: auto;
   }
 </style>

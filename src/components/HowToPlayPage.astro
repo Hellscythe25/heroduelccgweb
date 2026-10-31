@@ -1,5 +1,6 @@
 ---
 import PageHead from '~/components/PageHead.astro';
+import { scenes } from '~/art';
 import CtaLink from '~/components/CtaLink.astro';
 import { howToPlayCopy } from '~/i18n/pages/howToPlay';
 import { localizedPath, type Lang } from '~/i18n/ui';
@@ -12,7 +13,7 @@ const { lang } = Astro.props;
 const copy = howToPlayCopy[lang];
 ---
 
-<PageHead eyebrow={copy.eyebrow} title={copy.title} lead={copy.lead} />
+<PageHead title={copy.title} lead={copy.lead} art={scenes.board} />
 
 <section class="section container" aria-labelledby="setup">
   <h2 id="setup">{copy.setup.title}</h2>

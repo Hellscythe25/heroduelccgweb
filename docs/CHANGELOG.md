@@ -14,6 +14,30 @@ convencionales. Las entradas no se escriben a mano.
 
 ## [No publicado]
 
+### Añadido — arte del juego (2026-10-31, rama `feat/landing-game-art`)
+
+- Ilustraciones del juego en el sitio: los cinco retratos, sus arenas, escenas
+  de duelo, tablero y campaña, y el emblema del juego en la cabecera.
+  `scripts/import-game-art.mjs` las copia y optimiza desde el juego; Astro sirve
+  AVIF y WebP en varios anchos.
+- Portada con la alineación de los cinco héroes, enlazada a cada ficha.
+- Fichas de héroe con el retrato sobre su arena.
+- Aviso en el pie: las ilustraciones son provisionales.
+- Colores de la interfaz del juego: botón principal en oro fundido, marcos de
+  carta con su ilustración por tipo, sección "Tres monedas" con los iconos y
+  colores de monedas, esencia y gemas.
+- Detalles: cabecera fija translúcida, grano sutil, brasas y entrada
+  escalonada de los héroes en la portada (sin movimiento si el sistema pide
+  reducirlo).
+- Logo del juego en cabecera, portada y pie; favicons nuevos
+  (`scripts/generate-icons.mjs`) e imagen OG con el logo y los cinco héroes.
+
+### Cambiado — arte del juego
+
+- Texto en Space Grotesk, la tipografía del juego (`@fontsource/space-grotesk`).
+- Sin antetítulos en mayúsculas sobre los títulos de página; rejillas de texto
+  con filo dorado en lugar de tarjetas.
+
 ### Añadido — fase 1, contenido (2026-10-31, rama `feat/landing-game-heroes`)
 
 - Portada nueva y páginas El juego (`/es/juego/`, `/en/game/`), Cómo se juega

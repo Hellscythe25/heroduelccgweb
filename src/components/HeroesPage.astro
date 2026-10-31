@@ -1,7 +1,9 @@
 ---
+import { Picture } from 'astro:assets';
 import PageHead from '~/components/PageHead.astro';
 import HeroEmblem from '~/components/HeroEmblem.astro';
 import HeroProfile from '~/components/HeroProfile.astro';
+import { heroPortrait } from '~/art';
 import { DATA_VERSION, heroes } from '~/data';
 import { heroPresentation, heroesPageCopy } from '~/i18n/pages/heroes';
 import type { Lang } from '~/i18n/ui';
@@ -15,27 +17,39 @@ const copy = heroesPageCopy[lang];
 const maxLife = Math.max(...heroes.map((hero) => hero.life));
 ---
 
-<PageHead eyebrow={copy.eyebrow} title={copy.title} lead={copy.lead}>
-  <nav class="roster" aria-label={copy.eyebrow}>
+<PageHead title={copy.title} lead={copy.lead}>
+  <nav class="roster" aria-label={copy.meta.title}>
     <ul>
       {
-        heroes.map((hero) => (
-          <li>
-            <a href={`#${hero.id}`}>
-              <HeroEmblem heroId={hero.id} glyph={heroPresentation[hero.id]!.glyph} size={40} />
-              <span>{hero.name[lang].split(' ')[0]}</span>
-            </a>
-          </li>
-        ))
+        heroes.map((hero) => {
+          const portrait = heroPortrait(hero.id);
+          return (
+            <li>
+              <a href={`#${hero.id}`} style={`--hero: var(--hd-hero-${hero.id})`}>
+                {portrait ? (
+                  <Picture
+                    src={portrait}
+                    alt=""
+                    formats={['avif', 'webp']}
+                    widths={[96]}
+                    sizes="48px"
+                    class="thumb"
+                  />
+                ) : (
+                  <HeroEmblem heroId={hero.id} glyph={heroPresentation[hero.id]!.glyph} size={40} />
+                )}
+                <span>{hero.name[lang].split(' ')[0]}</span>
+              </a>
+            </li>
+          );
+        })
       }
     </ul>
   </nav>
 </PageHead>
 
-<div class="section container">
-  <div class="profiles">
-    {heroes.map((hero) => <HeroProfile hero={hero} lang={lang} maxLife={maxLife} />)}
-  </div>
+<div class="container">
+  {heroes.map((hero, index) => <HeroProfile hero={hero} lang={lang} maxLife={maxLife} flip={index % 2 === 1} />)}
   <p class="note">{copy.dataNote.replace('{version}', DATA_VERSION)}</p>
 </div>
 
@@ -59,22 +73,26 @@ const maxLife = Math.max(...heroes.map((hero) => hero.life));
     border-radius: var(--hd-radius-full);
     background: var(--hd-surface-raised);
     color: var(--hd-text);
-    font-weight: 600;
+    font-weight: 700;
     text-decoration: none;
   }
 
   .roster a:hover {
-    border-color: var(--hd-border-gold);
+    border-color: var(--hero);
   }
 
-  .profiles {
-    display: grid;
-    gap: var(--hd-space-6);
-    grid-template-columns: repeat(auto-fill, minmax(min(100%, 30rem), 1fr));
+  .roster :global(.thumb) {
+    inline-size: 2.5rem;
+    block-size: 2.5rem;
+    border-radius: var(--hd-radius-full);
+    border: 2px solid var(--hero);
+    object-fit: cover;
+    object-position: 50% 15%;
   }
 
   .note {
-    margin-block-start: var(--hd-space-8);
+    padding-block: var(--hd-space-8) var(--hd-space-12);
+    border-block-start: 1px solid var(--hd-border);
     color: var(--hd-text-muted);
     font-size: var(--hd-text-sm);
   }

@@ -16,6 +16,8 @@
  */
 
 @import '@fontsource/cinzel/700.css';
+@import '@fontsource/space-grotesk/400.css';
+@import '@fontsource/space-grotesk/700.css';
 
 :root {
   color-scheme: dark;
@@ -37,6 +39,14 @@
   --hd-gold-wash: rgb(224 179 87 / 0.09);
 
   --hd-gold-glow: rgb(224 179 87 / 0.25);
+  --hd-ember: #e08b57;
+
+  /* Velos sobre el arte: el texto encima siempre se apoya en el tramo más
+     oscuro (0.92), donde el contraste es el de la superficie base. */
+  --hd-veil-strong: rgb(11 12 16 / 0.92);
+  --hd-veil-dense: rgb(11 12 16 / 0.84);
+  --hd-veil: rgb(11 12 16 / 0.6);
+  --hd-veil-clear: rgb(11 12 16 / 0);
   --hd-gold-sheen: rgb(224 179 87 / 0.06);
 
   --hd-essence: #7fd6c0;
@@ -89,12 +99,13 @@
   --hd-focus: var(--hd-gold-300);
 
   /* ---- Tipografía ----
-     Cinzel 700 autoalojada (subconjunto latino, 15 KB, OFL) solo para títulos.
-     El cuerpo sigue en el stack del sistema: coste 0 KB. */
+     Las dos familias del juego (Theme.uss), autoalojadas en woff2 con
+     subconjunto latino (OFL): Cinzel 700 para títulos (15 KB) y Space Grotesk
+     400/700 para el texto (13 KB cada una). */
   --hd-font-display: 'Cinzel', 'Trajan Pro', Georgia, 'Times New Roman', serif;
   --hd-font-sans:
-    ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue',
-    Arial, sans-serif;
+    'Space Grotesk', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
   --hd-font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Consolas, monospace;
 
   /* Escala tipográfica fluida, razon 1.25 */

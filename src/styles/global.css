@@ -17,6 +17,8 @@
 html {
   -webkit-text-size-adjust: 100%;
   scroll-behavior: smooth;
+  /* La cabecera es fija: las anclas (#brakka) no deben quedar debajo. */
+  scroll-padding-block-start: 7.5rem;
 }
 
 body {
@@ -72,6 +74,13 @@ video {
   height: auto;
 }
 
+/* <Picture> de astro:assets envuelve cada <img> en un <picture>. Con
+   display: contents el tamaño y la colocación los decide la propia imagen,
+   también cuando es hija de un flex o de un grid. */
+picture {
+  display: contents;
+}
+
 a {
   color: var(--hd-accent);
   text-underline-offset: 0.2em;
@@ -118,6 +127,18 @@ main {
   flex: 1;
 }
 
+/* Grano de papel quemado sobre todo el sitio: rompe el negro plano sin pesar
+   nada (SVG en línea, permitido por la CSP con data:). Decorativo. */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
 /* ---- Piezas compartidas de maquetación ----
    Viven aquí y no en cada componente porque las usan todas las páginas de
    contenido; duplicarlas por página multiplicaría el CSS sin ganar nada. */
@@ -144,15 +165,6 @@ main {
 
 .page-head h1 {
   color: var(--hd-accent);
-}
-
-.eyebrow {
-  margin-block-end: var(--hd-space-3);
-  color: var(--hd-text-muted);
-  font-size: var(--hd-text-xs);
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
 }
 
 .lead {
@@ -215,6 +227,16 @@ main {
   list-style: none;
 }
 
+/* En las rejillas de texto, columnas con filo dorado en vez de tarjetas: el
+   arte del juego ya aporta el peso visual y las cajas idénticas lo diluyen. */
+.grid > .panel {
+  padding: var(--hd-space-4) 0 0;
+  background: none;
+  border: 0;
+  border-block-start: 1px solid var(--hd-border-gold);
+  border-radius: 0;
+}
+
 /* Listas de pasos numerados con la cifra en oro. */
 .steps {
   display: grid;
@@ -245,6 +267,12 @@ main {
   color: var(--hd-accent);
   font-family: var(--hd-font-display);
   font-weight: 700;
+}
+
+/* El emblema del juego trae su propio fondo casi negro: la máscara radial lo
+   funde con cualquier superficie en vez de dejar ver un recuadro. */
+.emblem-fade {
+  mask-image: radial-gradient(closest-side, #000 62%, transparent 100%);
 }
 
 .visually-hidden {

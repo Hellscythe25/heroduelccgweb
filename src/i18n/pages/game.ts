@@ -15,7 +15,6 @@ export interface TextBlock {
 
 export interface GameCopy {
   meta: { title: string; description: string };
-  eyebrow: string;
   title: string;
   lead: string;
   pillars: { title: string; items: TextBlock[] };
@@ -27,6 +26,7 @@ export interface GameCopy {
     types: TextBlock[];
     rarities: { title: string; note: string; items: { name: string; copies: string }[] };
   };
+  currencies: { title: string; intro: string; items: TextBlock[] };
   fair: { title: string; items: TextBlock[] };
   platforms: TextBlock;
 }
@@ -38,7 +38,6 @@ export const gameCopy: Record<Lang, GameCopy> = {
       description:
         'Qué es Hero Duel CCG: un juego de cartas coleccionables 1 contra 1 sin tablero de criaturas, con equipo, energía y héroes con habilidades propias.',
     },
-    eyebrow: 'El juego',
     title: 'Un duelo, dos héroes',
     lead: 'Hero Duel CCG es un juego de cartas coleccionables competitivo, 1 contra 1 y por turnos. Cada duelo enfrenta a dos héroes, y todo el daño va directo al héroe rival.',
     pillars: {
@@ -116,6 +115,15 @@ export const gameCopy: Record<Lang, GameCopy> = {
         ],
       },
     },
+    currencies: {
+      title: 'Tres monedas',
+      intro: 'Cada una tiene un papel distinto, y ninguna compra poder.',
+      items: [
+        { title: 'Monedas', body: 'Se ganan jugando partidas y campañas, y sirven para abrir sobres.' },
+        { title: 'Esencia', body: 'Sale de las cartas repetidas. Con ella creas la carta exacta que buscas.' },
+        { title: 'Gemas', body: 'La moneda de pago. Compra sobres o cartas sueltas, nunca nada que no se pueda ganar jugando.' },
+      ],
+    },
     fair: {
       title: 'Justo por diseño',
       items: [
@@ -148,7 +156,6 @@ export const gameCopy: Record<Lang, GameCopy> = {
       description:
         'What Hero Duel CCG is: a one-on-one collectible card game with no creature board, built on equipment, energy and heroes with their own abilities.',
     },
-    eyebrow: 'The game',
     title: 'One duel, two heroes',
     lead: 'Hero Duel CCG is a competitive, one-on-one, turn-based collectible card game. Every duel pits two heroes against each other, and all damage goes straight to the enemy hero.',
     pillars: {
@@ -225,6 +232,15 @@ export const gameCopy: Record<Lang, GameCopy> = {
           { name: 'Legendary', copies: '1' },
         ],
       },
+    },
+    currencies: {
+      title: 'Three currencies',
+      intro: 'Each one has its own role, and none of them buys power.',
+      items: [
+        { title: 'Coins', body: 'Earned by playing matches and campaigns, and spent on packs.' },
+        { title: 'Essence', body: 'Comes from duplicate cards. Use it to craft the exact card you want.' },
+        { title: 'Gems', body: 'The paid currency. Buys packs or single cards, never anything you could not earn by playing.' },
+      ],
     },
     fair: {
       title: 'Fair by design',

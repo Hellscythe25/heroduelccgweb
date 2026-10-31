@@ -21,7 +21,7 @@ export interface HeroPresentation {
 export const heroPresentation: Record<string, HeroPresentation> = {
   brakka: {
     glyph: 'blade',
-    role: { es: 'Agresivo · Pilar del arma', en: 'Aggro · Weapon pillar' },
+    role: { es: 'Agresión con el arma', en: 'Aggro through the weapon' },
     style: {
       es: 'Acumula furia turno a turno y la descarga en un golpe devastador. Cada ataque atraviesa parte de la armadura rival.',
       en: 'Builds fury turn after turn and unleashes it in one devastating blow. Every attack cuts through part of the enemy armor.',
@@ -29,7 +29,7 @@ export const heroPresentation: Record<string, HeroPresentation> = {
   },
   sable: {
     glyph: 'shield',
-    role: { es: 'Tanque · Pilar de la armadura', en: 'Tank · Armor pillar' },
+    role: { es: 'Tanque con la armadura', en: 'Tank through armor' },
     style: {
       es: 'La vida más alta del juego. Su armadura dura más, la remacha cada turno y, cuando llega el momento, embiste con su propio muro.',
       en: 'The highest life in the game. Armor lasts longer, gets riveted back every turn and, when the time comes, the wall itself becomes the battering ram.',
@@ -37,7 +37,7 @@ export const heroPresentation: Record<string, HeroPresentation> = {
   },
   yrenna: {
     glyph: 'rune',
-    role: { es: 'Control · Trinkets y energía', en: 'Control · Trinkets and energy' },
+    role: { es: 'Control con trinkets y energía', en: 'Control through trinkets and energy' },
     style: {
       es: 'Convierte sus trinkets en energía extra, golpea sin que la armadura sirva de nada y rehace la mano entera cuando la necesita.',
       en: 'Turns trinkets into extra energy, strikes straight past armor and rebuilds the whole hand when it is needed.',
@@ -45,7 +45,7 @@ export const heroPresentation: Record<string, HeroPresentation> = {
   },
   shouny: {
     glyph: 'crescent',
-    role: { es: 'Disrupción · Mano rival', en: 'Disruption · Enemy hand' },
+    role: { es: 'Disrupción de la mano rival', en: 'Disrupting the enemy hand' },
     style: {
       es: 'Vacía la mano rival y se alimenta de cada descarte. Tiene la vida más baja del juego: debe ganar antes de que la atrapen.',
       en: "Empties the enemy's hand and feeds on every discard. With the lowest life in the game, Shouny has to win before getting caught.",
@@ -53,7 +53,7 @@ export const heroPresentation: Record<string, HeroPresentation> = {
   },
   krunk: {
     glyph: 'hammer',
-    role: { es: 'Demolición · Rompe-equipo', en: 'Demolition · Equipment breaker' },
+    role: { es: 'Demolición del equipo rival', en: 'Demolishing enemy gear' },
     style: {
       es: 'Abolla y rompe el equipo rival, roba una carta por cada pieza destrozada y remata con todo lo que acabó en el descarte.',
       en: 'Dents and breaks enemy gear, draws a card for every piece wrecked and finishes with everything that ended up in the discard pile.',
@@ -63,7 +63,6 @@ export const heroPresentation: Record<string, HeroPresentation> = {
 
 export interface HeroesPageCopy {
   meta: { title: string; description: string };
-  eyebrow: string;
   title: string;
   lead: string;
   /** `{version}` se sustituye por la versión del juego de la que salen los datos. */
@@ -77,7 +76,6 @@ export const heroesPageCopy: Record<Lang, HeroesPageCopy> = {
       description:
         'Los cinco héroes de Hero Duel CCG: Brakka, Sable, Yrenna, Shouny y Krunk. Su vida, su pasiva y sus habilidades.',
     },
-    eyebrow: 'Héroes',
     title: 'Cinco héroes, cinco formas de ganar',
     lead: 'Cada héroe tiene su propia vida, una pasiva, dos habilidades que no son cartas y su campaña. Al empezar eliges uno; a los demás los desbloqueas jugando.',
     dataNote:
@@ -89,7 +87,6 @@ export const heroesPageCopy: Record<Lang, HeroesPageCopy> = {
       description:
         'The five heroes of Hero Duel CCG: Brakka, Sable, Yrenna, Shouny and Krunk. Their life, passive and abilities.',
     },
-    eyebrow: 'Heroes',
     title: 'Five heroes, five ways to win',
     lead: 'Every hero has their own life total, a passive, two abilities that are not cards, and a campaign. You pick one to start; the rest you unlock by playing.',
     dataNote: 'Values match game version {version} and may change with balancing before launch.',
