@@ -9,7 +9,7 @@
 **Fase actual: 1 — Landing.**
 Criterio de salida: producción en vivo y la prensa puede citar el juego.
 
-**Última actualización:** 2026-08-06 (cierre de sesión 3)
+**Última actualización:** 2026-10-31 (sesión 4, rama `feat/landing-game-heroes`)
 
 ---
 
@@ -81,10 +81,37 @@ Estado medido en la última verificación: build en verde, 4 páginas,
   límites de copias por rareza son balance. El validador exige reglas reales en
   cuanto haya un solo héroe cargado.
 
+- **Decisiones del dueño del 2026-10-31** (sesión 4):
+  - El nombre comercial es **Hero Duel CCG**. *TCGMaster* es solo el nombre
+    interno del proyecto de Unity y no aparece en el sitio. La editorial es
+    Inca Games (inca.games); no se enlaza salvo que el dueño lo pida.
+  - Se continúa **este** repositorio (no se reconstruye de cero) con el
+    despliegue actual de cPanel.
+  - Alcance de la fase 1: inicio, el juego, cómo se juega, héroes, esqueleto
+    del devlog y borradores de Privacidad y Términos. Compendio y deckbuilder
+    siguen fuera.
+  - **No se publica el arte provisional** generado por IA. Mientras no haya
+    arte aprobado, los héroes se representan con emblemas geométricos.
+  - El responsable de los datos en los legales es **Inca Games** (Nueva
+    Jersey, EE. UU.).
+- **Los datos del juego no publicables todavía** (decisión del juego, no de la
+  web): fechas internas de la beta y del lanzamiento, nombres de rango (copian
+  a World of Warcraft y se van a sustituir), precios y número de cartas.
+
 ---
 
 ## PROPUESTO
 
+- **ADR-005 — Héroes importados del `ContentDatabase.json`** con
+  `scripts/import-game-data.mjs`. Ver `docs/adr/ADR-005-datos-del-juego-desde-contentdatabase.md`.
+- **Solo tema oscuro, con el sistema "Forja Oscura" del juego** (GDD §14 y
+  `Theme.uss`): carbón `#0b0c10`, oro `#e0b357`, Cinzel 700 autoalojada para
+  h1/h2 (15 KB, `@fontsource/cinzel`, OFL). El tema claro se retiró porque los
+  colores de héroe obligarían a verificar cada par dos veces. Contrastes
+  anotados en `src/styles/tokens.css`.
+- **Legales y devlog con interruptor de publicación**, como el kit de prensa:
+  `src/legal.ts` (`draft` / `published`) y `src/devlog.ts` (hay entradas o no).
+  En borrador: `noindex`, fuera del sitemap y sin enlace.
 - **Cloudflare gratis por delante del dominio.** Caché global, absorción de picos
   el día del lanzamiento, DDoS. Requiere mover los nameservers en Namecheap.
   Pendiente de decidir. Si se hace: SSL en modo *Full (strict)*, y dejar el
@@ -120,12 +147,20 @@ Ordenados por lo que bloquean.
    llegue **a staging** automáticamente. Con la vía actual el despliegue va a
    producción y requiere dos clics manuales, así que la fase 0 cierra con una
    salvedad registrada, no con el criterio literal cumplido.
-3. **¿Existe pipeline de exportación de datos desde Unity, o hay que
+3. *(Parcialmente resuelto el 2026-10-31 por ADR-005 para los héroes; las
+   cartas y las reglas de construcción siguen pendientes.)*
+   **¿Existe pipeline de exportación de datos desde Unity, o hay que
    construirlo?** *Bloquea las fases 3 y 4 por completo.* Sin export, el
    compendio y el deckbuilder no pueden existir sin inventar balance, y eso está
    prohibido. Si la respuesta es "hay que construirlo", el interino aceptable es
    un JSON mantenido a mano **con fecha límite registrada aquí**.
-4. **¿Qué entidad legal figura como responsable del tratamiento de datos?**
+4. *(2026-10-31: el dueño decidió que es Inca Games. Faltan la razón social
+   exacta, la dirección, los correos de privacidad y de contacto, la edad
+   mínima, la ley aplicable y la revisión legal. Los borradores están en
+   `src/content/legal/`, con cada hueco marcado `[PENDIENTE]`. Además, el
+   juego debe resolver antes de publicarlos el consentimiento real de
+   Analytics y una vía de borrado de cuenta; ver la bitácora de la sesión 4.)*
+   **¿Qué entidad legal figura como responsable del tratamiento de datos?**
    *Bloquea las páginas legales de la fase 1.* No se publica una política de
    privacidad con un responsable inventado: un documento legal falso es peor que
    su ausencia. Hace falta razón social exacta, identificador fiscal, domicilio
@@ -329,6 +364,47 @@ banner para los lectores de pantalla.
 
 **Faltan los 11 campos obligatorios.** La página los lista con su motivo; se
 rellenan en `src/press.ts`.
+
+### 2026-10-31 — Sesión 4: contenido real de la fase 1
+
+Sesión abierta desde el proyecto del juego a petición del dueño. Producción
+seguía en `acace91` (6 de agosto); la rama `deploy` ya tenía el kit de prensa
+(`985445b`) sin publicar en cPanel.
+
+Construido en `feat/landing-game-heroes` (sin fusionar ni desplegar):
+
+- Portada nueva y páginas **El juego**, **Cómo se juega** y **Héroes**, en
+  español e inglés. Los textos largos viven en `src/i18n/pages/` con paridad
+  forzada por TypeScript y por `tests/pages.test.ts`.
+- Héroes importados del juego (versión 0.6.0, ADR-005). Emblemas geométricos
+  en SVG en lugar de retratos.
+- Esqueleto del devlog (`/es/devlog/`, `/en/devlog/`), oculto hasta la primera
+  entrada.
+- Borradores de **Política de privacidad** y **Términos de uso** en
+  `src/content/legal/`, redactados a partir de un inventario de lo que el juego
+  hace de verdad (código y documentos del repositorio del juego), con aviso
+  visible de borrador y de que no son asesoramiento legal.
+- Sistema visual Forja Oscura, imagen OG nueva y menú que entra en dos líneas
+  en un teléfono de 375 px.
+
+Estado medido: 18 páginas, **0 KB de JavaScript**, 6.8 KB de CSS comprimido,
+28 tests en verde, sin desbordamiento horizontal a 375 px.
+
+**Hallazgos del inventario de datos que bloquean publicar los legales** (son
+trabajo del juego, no de la web; los dos primeros y el tercero ya figuran en
+su `CHECKLIST_Beta.md` o en su roadmap, el resto no):
+
+- El cliente concede el consentimiento de Analytics sin preguntar
+  (`GameAnalytics.cs`); la analítica solo está apagada en el panel de Unity.
+- No hay borrado de cuenta ni exportación de datos.
+- Datos de partida antiguos en la clase Default de Cloud Save son legibles por
+  cualquier jugador hasta aplicar el `Deny Read`.
+- El cliente recibe el PlayerId del rival en cada vista de partida.
+- Los nombres visibles no tienen filtro ni moderación.
+- La tienda no avisa en pantalla de que las compras son de prueba.
+
+**El repositorio es público.** Hacer push de esta rama publica en GitHub los
+borradores y los textos antes de que el dueño los apruebe. Se espera su OK.
 
 ---
 
