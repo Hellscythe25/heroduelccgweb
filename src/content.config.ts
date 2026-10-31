@@ -57,4 +57,19 @@ const news = defineCollection({
   }),
 });
 
-export const collections = { blog, news };
+/**
+ * Documentos legales en Markdown, uno por idioma: es el formato que mejor
+ * revisa un abogado. Si están en borrador o publicados lo decide src/legal.ts.
+ */
+const legal = defineCollection({
+  loader: glob({ pattern: '**/[^_]*.md', base: './src/content/legal' }),
+  schema: z.object({
+    title: z.string().min(1).max(80),
+    description: z.string().min(1).max(200),
+    lang: locale,
+    doc: z.enum(['privacy', 'terms']),
+    updatedAt: z.coerce.date(),
+  }),
+});
+
+export const collections = { blog, news, legal };

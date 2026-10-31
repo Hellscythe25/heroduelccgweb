@@ -27,7 +27,7 @@ describe('diccionario de interfaz', () => {
 
   it('no deja cadenas idénticas al español por olvido de traducir', () => {
     // Los nombres propios del juego no se traducen: son glosario, no descuido.
-    const glossary = new Set(['site.name', 'home.title', 'nav.deckbuilder', 'nav.blog']);
+    const glossary = new Set(['site.name', 'home.title', 'nav.deckbuilder', 'nav.blog', 'devlog.title']);
 
     const untranslated = Object.keys(ui.es).filter(
       (key) =>

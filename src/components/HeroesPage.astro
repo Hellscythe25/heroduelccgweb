@@ -1,0 +1,81 @@
+---
+import PageHead from '~/components/PageHead.astro';
+import HeroEmblem from '~/components/HeroEmblem.astro';
+import HeroProfile from '~/components/HeroProfile.astro';
+import { DATA_VERSION, heroes } from '~/data';
+import { heroPresentation, heroesPageCopy } from '~/i18n/pages/heroes';
+import type { Lang } from '~/i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const copy = heroesPageCopy[lang];
+const maxLife = Math.max(...heroes.map((hero) => hero.life));
+---
+
+<PageHead eyebrow={copy.eyebrow} title={copy.title} lead={copy.lead}>
+  <nav class="roster" aria-label={copy.eyebrow}>
+    <ul>
+      {
+        heroes.map((hero) => (
+          <li>
+            <a href={`#${hero.id}`}>
+              <HeroEmblem heroId={hero.id} glyph={heroPresentation[hero.id]!.glyph} size={40} />
+              <span>{hero.name[lang].split(' ')[0]}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+</PageHead>
+
+<div class="section container">
+  <div class="profiles">
+    {heroes.map((hero) => <HeroProfile hero={hero} lang={lang} maxLife={maxLife} />)}
+  </div>
+  <p class="note">{copy.dataNote.replace('{version}', DATA_VERSION)}</p>
+</div>
+
+<style>
+  .roster ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--hd-space-3);
+    margin-block-start: var(--hd-space-8);
+    padding: 0;
+    list-style: none;
+  }
+
+  .roster a {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--hd-space-2);
+    min-block-size: 2.75rem;
+    padding: var(--hd-space-1) var(--hd-space-4) var(--hd-space-1) var(--hd-space-1);
+    border: 1px solid var(--hd-border);
+    border-radius: var(--hd-radius-full);
+    background: var(--hd-surface-raised);
+    color: var(--hd-text);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .roster a:hover {
+    border-color: var(--hd-border-gold);
+  }
+
+  .profiles {
+    display: grid;
+    gap: var(--hd-space-6);
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 30rem), 1fr));
+  }
+
+  .note {
+    margin-block-start: var(--hd-space-8);
+    color: var(--hd-text-muted);
+    font-size: var(--hd-text-sm);
+  }
+</style>

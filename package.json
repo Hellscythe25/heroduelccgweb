@@ -23,6 +23,7 @@
     "verify": "npm run placeholders && npm run data:validate && npm run check && npm test"
   },
   "dependencies": {
+    "@fontsource/cinzel": "^5.3.0",
     "astro": "^7.1.6",
     "zod": "^4.4.3"
   },
