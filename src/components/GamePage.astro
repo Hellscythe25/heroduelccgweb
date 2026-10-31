@@ -1,5 +1,7 @@
 ---
+import { Picture } from 'astro:assets';
 import PageHead from '~/components/PageHead.astro';
+import { cardTypeArt, currencyIcons, scenes } from '~/art';
 import CtaLink from '~/components/CtaLink.astro';
 import { gameCopy } from '~/i18n/pages/game';
 import { howToPlayCopy } from '~/i18n/pages/howToPlay';
@@ -14,7 +16,7 @@ const t = useTranslations(lang);
 const copy = gameCopy[lang];
 ---
 
-<PageHead eyebrow={copy.eyebrow} title={copy.title} lead={copy.lead} />
+<PageHead title={copy.title} lead={copy.lead} art={scenes.duel} />
 
 <section class="section container" aria-labelledby="pillars">
   <h2 id="pillars">{copy.pillars.title}</h2>
@@ -47,6 +49,15 @@ const copy = gameCopy[lang];
       </dl>
     </div>
     <div class="panel pve">
+      <Picture
+        src={scenes.campaign}
+        alt=""
+        formats={['avif', 'webp']}
+        widths={[480, 800]}
+        sizes="(min-width: 52rem) 34rem, 100vw"
+        loading="lazy"
+        class="pve-art"
+      />
       <h3>{copy.modes.pve.title}</h3>
       <p>{copy.modes.pve.body}</p>
       <h3 class="pve-start">{copy.start.title}</h3>
@@ -58,10 +69,21 @@ const copy = gameCopy[lang];
 <section class="section container" aria-labelledby="collection">
   <h2 id="collection">{copy.collection.title}</h2>
   <p class="intro">{copy.collection.intro}</p>
-  <ul class="grid types">
+  <ul class="card-types">
     {
-      copy.collection.types.map((item) => (
-        <li class="panel">
+      copy.collection.types.map((item, index) => (
+        <li class="card-frame">
+          {cardTypeArt[index] && (
+            <Picture
+              src={cardTypeArt[index]}
+              alt=""
+              formats={['avif', 'webp']}
+              widths={[320, 560]}
+              sizes="(min-width: 52rem) 16rem, 50vw"
+              loading="lazy"
+              class="card-art"
+            />
+          )}
           <h3>{item.title}</h3>
           <p>{item.body}</p>
         </li>
@@ -82,12 +104,40 @@ const copy = gameCopy[lang];
   </ul>
 </section>
 
+<section class="section container" aria-labelledby="currencies">
+  <h2 id="currencies">{copy.currencies.title}</h2>
+  <p class="intro">{copy.currencies.intro}</p>
+  <ul class="currencies">
+    {
+      copy.currencies.items.map((item, index) => (
+        <li class={`currency currency-${index}`}>
+          {currencyIcons[index] && (
+            <Picture
+              src={currencyIcons[index]}
+              alt=""
+              formats={['avif', 'webp']}
+              widths={[96, 192]}
+              sizes="4.5rem"
+              loading="lazy"
+              class="currency-icon"
+            />
+          )}
+          <div>
+            <h3>{item.title}</h3>
+            <p>{item.body}</p>
+          </div>
+        </li>
+      ))
+    }
+  </ul>
+</section>
+
 <section class="section container" aria-labelledby="fair">
   <h2 id="fair">{copy.fair.title}</h2>
   <ul class="grid">
     {
       copy.fair.items.map((item) => (
-        <li class="panel fair">
+        <li class="panel">
           <h3>{item.title}</h3>
           <p>{item.body}</p>
         </li>
@@ -106,6 +156,106 @@ const copy = gameCopy[lang];
 </section>
 
 <style>
+  /* ---- Tipos de carta como marcos de carta del juego ---- */
+  .card-types {
+    display: grid;
+    gap: var(--hd-space-4);
+    /* 9.5rem: dos cartas por fila en un teléfono, cuatro en escritorio. */
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 9.5rem), 1fr));
+    margin-block-end: var(--hd-space-8);
+    padding: 0;
+    list-style: none;
+  }
+
+  .card-frame {
+    display: grid;
+    align-content: start;
+    gap: var(--hd-space-2);
+    padding: var(--hd-space-2) var(--hd-space-2) var(--hd-space-4);
+    border: 1px solid var(--hd-border-gold);
+    border-radius: var(--hd-radius-lg);
+    background:
+      linear-gradient(180deg, var(--hd-gold-sheen), transparent 40%),
+      var(--hd-surface-raised);
+    box-shadow:
+      inset 0 0 0 4px var(--hd-surface-raised),
+      inset 0 0 0 5px var(--hd-gold-wash);
+    transition:
+      transform var(--hd-motion-fast) var(--hd-motion-ease),
+      border-color var(--hd-motion-fast) var(--hd-motion-ease);
+  }
+
+  .card-frame:hover {
+    transform: translateY(-3px);
+    border-color: var(--hd-accent);
+  }
+
+  .card-frame :global(.card-art) {
+    inline-size: 100%;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    border-radius: var(--hd-radius-md);
+    margin-block-end: var(--hd-space-2);
+  }
+
+  .card-frame h3,
+  .card-frame p {
+    padding-inline: var(--hd-space-3);
+  }
+
+  .card-frame h3 {
+    font-family: var(--hd-font-display);
+    color: var(--hd-accent);
+  }
+
+  .card-frame p {
+    color: var(--hd-text-muted);
+  }
+
+  /* ---- Monedas: píldoras como las de la billetera del juego ---- */
+  .currencies {
+    display: grid;
+    gap: var(--hd-space-4);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+    padding: 0;
+    list-style: none;
+  }
+
+  .currency {
+    display: flex;
+    align-items: center;
+    gap: var(--hd-space-4);
+    padding: var(--hd-space-4);
+    border: 1px solid var(--currency);
+    border-radius: var(--hd-radius-full) var(--hd-radius-lg) var(--hd-radius-lg) var(--hd-radius-full);
+    background: linear-gradient(90deg, color-mix(in srgb, var(--currency) 12%, transparent), transparent 70%);
+  }
+
+  .currency-0 {
+    --currency: var(--hd-accent);
+  }
+  .currency-1 {
+    --currency: var(--hd-essence);
+  }
+  .currency-2 {
+    --currency: var(--hd-gems);
+  }
+
+  .currency :global(.currency-icon) {
+    flex: none;
+    inline-size: 4.5rem;
+    block-size: 4.5rem;
+    filter: drop-shadow(0 0 12px color-mix(in srgb, var(--currency) 45%, transparent));
+  }
+
+  .currency h3 {
+    color: var(--currency);
+  }
+
+  .currency p {
+    color: var(--hd-text-muted);
+  }
+
   .modes {
     display: grid;
     gap: var(--hd-space-8);
@@ -137,7 +287,17 @@ const copy = gameCopy[lang];
   }
 
   .pve {
+    overflow: hidden;
     border-color: var(--hd-border-gold);
+  }
+
+  /* La ilustración ocupa el ancho del panel, de borde a borde. */
+  .pve :global(.pve-art) {
+    inline-size: calc(100% + 2 * var(--hd-space-6));
+    max-inline-size: none;
+    aspect-ratio: 16 / 7;
+    margin: calc(-1 * var(--hd-space-6)) calc(-1 * var(--hd-space-6)) var(--hd-space-6);
+    object-fit: cover;
   }
 
   .pve-start {
@@ -149,9 +309,6 @@ const copy = gameCopy[lang];
     color: var(--hd-text-muted);
   }
 
-  .types {
-    margin-block-end: var(--hd-space-4);
-  }
 
   /* Colores de rareza del juego (Theme.uss), solo como borde: el texto va
      siempre en el color de texto, que pasa AA. */
@@ -199,9 +356,6 @@ const copy = gameCopy[lang];
     font-variant-numeric: tabular-nums;
   }
 
-  .fair {
-    border-inline-start: 3px solid var(--hd-accent);
-  }
 
   .next {
     display: flex;

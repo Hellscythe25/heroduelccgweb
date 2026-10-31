@@ -1,23 +1,81 @@
 ---
 /**
- * Cabecera de las páginas interiores: antetítulo, h1, entradilla y el filo de
- * forja. Una sola h1 por página, siempre aquí.
+ * Cabecera de las páginas interiores: h1, entradilla, filo de forja y, si la
+ * página la tiene, una ilustración del juego de fondo. Una sola h1 por página,
+ * siempre aquí.
+ *
+ * La ilustración es decorativa (alt vacío) y va bajo un velo: el texto siempre
+ * se apoya en el tramo más oscuro, a la izquierda.
  */
+import { Picture } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
 interface Props {
-  eyebrow: string;
   title: string;
   lead?: string | undefined;
+  art?: ImageMetadata | undefined;
 }
 
-const { eyebrow, title, lead } = Astro.props;
+const { title, lead, art } = Astro.props;
 ---
 
-<header class="page-head">
+<header class:list={['page-head', { 'has-art': art }]}>
+  {
+    art && (
+      <Picture
+        src={art}
+        alt=""
+        formats={['avif', 'webp']}
+        widths={[640, 1024, 1536]}
+        sizes="100vw"
+        loading="eager"
+        fetchpriority="high"
+        class="page-art"
+      />
+    )
+  }
   <div class="container">
-    <p class="eyebrow">{eyebrow}</p>
     <h1>{title}</h1>
     {lead && <p class="lead">{lead}</p>}
     <div class="ornament" aria-hidden="true"><span></span></div>
     <slot />
   </div>
 </header>
+
+<style>
+  .has-art {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding-block: clamp(6rem, 16vw, 11rem) var(--hd-space-12);
+  }
+
+  .has-art :global(.page-art) {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+    object-position: center 35%;
+  }
+
+  .has-art::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background:
+      linear-gradient(0deg, var(--hd-surface) 0%, var(--hd-veil-clear) 45%),
+      linear-gradient(90deg, var(--hd-veil-strong) 0%, var(--hd-veil-strong) 55%, var(--hd-veil) 80%, var(--hd-veil-clear) 100%);
+  }
+
+  /* En un teléfono el texto ocupa todo el ancho: velo parejo y denso. */
+  @media (max-width: 40rem) {
+    .has-art::after {
+      background:
+        linear-gradient(0deg, var(--hd-surface) 0%, var(--hd-veil-clear) 50%),
+        var(--hd-veil-dense);
+    }
+  }
+</style>

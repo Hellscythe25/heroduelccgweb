@@ -1,4 +1,6 @@
 ---
+import { Picture } from 'astro:assets';
+import { brandEmblem } from '~/art';
 import { localizedPath, locales, languages, useTranslations, type Lang, type RouteKey } from '~/i18n/ui';
 import { isPressKitPublishable } from '~/press';
 import { hasDevlogPosts } from '~/devlog';
@@ -29,7 +31,15 @@ const nav: { key: RouteKey; label: string }[] = [
 <header class="site-header">
   <div class="container bar">
     <a class="brand" href={localizedPath(lang, 'home')} aria-current={routeKey === 'home' ? 'page' : undefined}>
-      <span class="brand-mark" aria-hidden="true">HD</span>
+      <Picture
+        src={brandEmblem}
+        alt=""
+        formats={['avif', 'webp']}
+        widths={[48, 96]}
+        sizes="48px"
+        loading="eager"
+        class="brand-mark emblem-fade"
+      />
       <span class="brand-name">{t('site.name')}</span>
     </a>
 
@@ -69,9 +79,14 @@ const nav: { key: RouteKey; label: string }[] = [
 </header>
 
 <style>
+  /* Fija y translúcida: el arte se intuye al pasar por debajo. */
   .site-header {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: 50;
     border-bottom: 1px solid var(--hd-border-gold);
-    background: var(--hd-surface-sunken);
+    background: var(--hd-veil-strong);
+    backdrop-filter: blur(12px) saturate(1.2);
   }
 
   .bar {
@@ -99,23 +114,22 @@ const nav: { key: RouteKey; label: string }[] = [
     text-decoration: none;
   }
 
-  /* Rombo dorado con las iniciales: gira el marco, no las letras. */
-  .brand-mark {
-    position: relative;
-    display: grid;
-    place-items: center;
-    inline-size: 2.25rem;
-    block-size: 2.25rem;
-    color: var(--hd-accent);
-    font-size: var(--hd-text-xs);
+  /* Emblema del juego (yunque y cartas), el mismo de la pantalla de carga. */
+  .brand :global(.brand-mark) {
+    inline-size: 2.5rem;
+    block-size: 2.5rem;
+    object-fit: contain;
   }
 
-  .brand-mark::before {
-    content: '';
-    position: absolute;
-    inset: 0.35rem;
-    border: 1px solid currentColor;
-    transform: rotate(45deg);
+  .brand-name {
+    white-space: nowrap;
+  }
+
+  @media (min-width: 52rem) {
+    .brand :global(.brand-mark) {
+      inline-size: 3rem;
+      block-size: 3rem;
+    }
   }
 
   .main-nav {

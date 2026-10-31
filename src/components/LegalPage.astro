@@ -27,7 +27,7 @@ const isDraft = !isLegalPublished(doc);
 const dateFormat = new Intl.DateTimeFormat(localeTags[lang], { dateStyle: 'long', timeZone: 'UTC' });
 ---
 
-<PageHead eyebrow={t('nav.legal')} title={entry.data.title}>
+<PageHead title={entry.data.title}>
   <p class="updated">
     {t('legal.updated')}:{' '}
     <time datetime={entry.data.updatedAt.toISOString().slice(0, 10)}>{dateFormat.format(entry.data.updatedAt)}</time>

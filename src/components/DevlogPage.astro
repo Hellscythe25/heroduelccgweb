@@ -22,7 +22,7 @@ const posts = hasDevlogPosts(lang)
 const dateFormat = new Intl.DateTimeFormat(localeTags[lang], { dateStyle: 'long', timeZone: 'UTC' });
 ---
 
-<PageHead eyebrow={t('devlog.title')} title={t('devlog.title')} lead={t('devlog.intro')} />
+<PageHead title={t('devlog.title')} lead={t('devlog.intro')} />
 
 <section class="section container">
   {

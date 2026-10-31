@@ -1,4 +1,6 @@
 ---
+import { Picture } from 'astro:assets';
+import { brandEmblem } from '~/art';
 import { localizedPath, useTranslations, type Lang } from '~/i18n/ui';
 import { isLegalPublished, legalDocs } from '~/legal';
 
@@ -19,9 +21,15 @@ const legalLinks = legalDocs.filter(isLegalPublished);
 
 <footer class="site-footer">
   <div class="container bar">
-    <p class="line">
-      &copy; {year} {t('site.name')}. {t('footer.rights')}
-    </p>
+    <div class="brand">
+      <Picture src={brandEmblem} alt="" formats={['avif', 'webp']} widths={[64, 128]} sizes="2.5rem" class="emblem emblem-fade" />
+      <div>
+        <p class="line">
+          &copy; {year} {t('site.name')}. {t('footer.rights')}
+        </p>
+        <p class="line">{t('footer.art')}</p>
+      </div>
+    </div>
     {
       legalLinks.length > 0 && (
         <nav aria-label={t('nav.legal')}>
@@ -52,6 +60,18 @@ const legalLinks = legalDocs.filter(isLegalPublished);
     align-items: center;
     justify-content: space-between;
     gap: var(--hd-space-4);
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: var(--hd-space-3);
+  }
+
+  .brand :global(.emblem) {
+    inline-size: 2.5rem;
+    block-size: 2.5rem;
+    object-fit: contain;
   }
 
   .line {

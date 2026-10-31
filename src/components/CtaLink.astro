@@ -55,18 +55,21 @@ const { href, variant = 'primary', external = false, ariaLabel } = Astro.props;
     min-block-size: 2.75rem;
     transition:
       background-color var(--hd-motion-fast) var(--hd-motion-ease),
-      border-color var(--hd-motion-fast) var(--hd-motion-ease);
+      border-color var(--hd-motion-fast) var(--hd-motion-ease),
+      box-shadow var(--hd-motion-fast) var(--hd-motion-ease);
   }
 
+  /* Oro fundido, como el botón Atacar del juego. El texto oscuro sobre el
+     tramo más claro del degradado da 10:1; sobre el más oscuro, 7.6:1. */
   .primary {
-    background: var(--hd-accent);
+    background: linear-gradient(180deg, var(--hd-gold-300), var(--hd-gold-400) 55%, var(--hd-gold-600));
     color: var(--hd-accent-contrast);
-    border: 1px solid var(--hd-accent);
+    border: 1px solid var(--hd-gold-300);
+    box-shadow: 0 0 0 0 var(--hd-gold-glow);
   }
 
   .primary:hover {
-    background: var(--hd-gold-600);
-    border-color: var(--hd-gold-600);
+    box-shadow: 0 0 24px 2px var(--hd-gold-glow);
   }
 
   .secondary {
@@ -76,8 +79,8 @@ const { href, variant = 'primary', external = false, ariaLabel } = Astro.props;
   }
 
   .secondary:hover {
-    border-color: var(--hd-text);
-    background: var(--hd-surface-raised);
+    border-color: var(--hd-accent);
+    background: var(--hd-gold-wash);
   }
 
   .ext {
