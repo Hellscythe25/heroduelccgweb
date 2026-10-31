@@ -371,7 +371,8 @@ Sesión abierta desde el proyecto del juego a petición del dueño. Producción
 seguía en `acace91` (6 de agosto); la rama `deploy` ya tenía el kit de prensa
 (`985445b`) sin publicar en cPanel.
 
-Construido en `feat/landing-game-heroes` (sin fusionar ni desplegar):
+Construido en `feat/landing-game-heroes`, fusionado como PR #4 (`a976434`) y
+publicado por el dueño en cPanel el mismo día (build `b5f720e`):
 
 - Portada nueva y páginas **El juego**, **Cómo se juega** y **Héroes**, en
   español e inglés. Los textos largos viven en `src/i18n/pages/` con paridad
@@ -403,12 +404,47 @@ su `CHECKLIST_Beta.md` o en su roadmap, el resto no):
 - Los nombres visibles no tienen filtro ni moderación.
 - La tienda no avisa en pantalla de que las compras son de prueba.
 
-**El repositorio es público.** Hacer push de esta rama publica en GitHub los
-borradores y los textos antes de que el dueño los apruebe. Se espera su OK.
+**El repositorio es público.** Hacer push de una rama publica en GitHub los
+borradores y los textos. El dueño aprobó los textos de esta sesión antes del
+push.
+
+Antes, el dueño publicó por error la build anterior (`985445b`, kit de prensa)
+al pulsar *Deploy* con el PR todavía abierto: la rama `deploy` solo cambia
+cuando algo entra en `main`. Sin daño, porque esa build también estaba
+pendiente, pero confirma la regla: **mirar el SHA del HEAD en cPanel antes de
+pulsar Deploy**.
+
+Verificado en vivo tras el despliegue: todas las rutas en 200 en los dos
+idiomas, `noindex` en devlog, legales y prensa, sitemap con las 8 páginas
+públicas y la raíz, Cinzel servida como `font/woff2`, las 7 cabeceras de
+seguridad y las redirecciones de `http` y `www`.
 
 ---
 
-## Cierre de sesión — 2026-08-06
+## Cierre de sesión — 2026-10-31
+
+### Estado al cerrar
+
+| | |
+|---|---|
+| Sitio en producción | <https://heroduelccg.com> — verificado |
+| Última versión desplegada | `b5f720e` (build de `a976434`, PR #4) |
+| `main` | Protegida; sin PR abiertos salvo este de memoria |
+| Ramas fusionadas sin borrar | `feat/landing-phase-1`, `feat/landing-presskit`, `feat/landing-game-heroes` |
+| Rama obsoleta | `docs/memoria-fase-1-desplegada` (su PR #2 ya está cerrado) |
+
+### Lo primero al retomar
+
+1. Rellenar los `[PENDIENTE]` de los legales con los datos del dueño (razón
+   social, dirección, correos, edad mínima, ley aplicable, plazos).
+2. Cuando el juego tenga el consentimiento de Analytics y la vía de borrado de
+   cuenta, revisión legal y paso a `published` en `src/legal.ts`.
+3. URLs de Steam y Discord en `src/site.ts` cuando existan.
+4. Contenido del kit de prensa (11 campos en `src/press.ts`).
+
+---
+
+## Cierre de sesión — 2026-08-06 (histórico)
 
 ### Estado al cerrar
 
