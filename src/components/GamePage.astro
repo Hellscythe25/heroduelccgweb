@@ -1,0 +1,212 @@
+---
+import PageHead from '~/components/PageHead.astro';
+import CtaLink from '~/components/CtaLink.astro';
+import { gameCopy } from '~/i18n/pages/game';
+import { howToPlayCopy } from '~/i18n/pages/howToPlay';
+import { localizedPath, useTranslations, type Lang } from '~/i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const copy = gameCopy[lang];
+---
+
+<PageHead eyebrow={copy.eyebrow} title={copy.title} lead={copy.lead} />
+
+<section class="section container" aria-labelledby="pillars">
+  <h2 id="pillars">{copy.pillars.title}</h2>
+  <ul class="grid">
+    {
+      copy.pillars.items.map((item) => (
+        <li class="panel">
+          <h3>{item.title}</h3>
+          <p>{item.body}</p>
+        </li>
+      ))
+    }
+  </ul>
+</section>
+
+<section class="section container" aria-labelledby="modes">
+  <h2 id="modes">{copy.modes.title}</h2>
+  <div class="modes">
+    <div>
+      <h3 class="subhead">{copy.modes.pvp.title}</h3>
+      <dl class="mode-list">
+        {
+          copy.modes.pvp.items.map((item) => (
+            <div>
+              <dt>{item.title}</dt>
+              <dd>{item.body}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+    <div class="panel pve">
+      <h3>{copy.modes.pve.title}</h3>
+      <p>{copy.modes.pve.body}</p>
+      <h3 class="pve-start">{copy.start.title}</h3>
+      <p>{copy.start.body}</p>
+    </div>
+  </div>
+</section>
+
+<section class="section container" aria-labelledby="collection">
+  <h2 id="collection">{copy.collection.title}</h2>
+  <p class="intro">{copy.collection.intro}</p>
+  <ul class="grid types">
+    {
+      copy.collection.types.map((item) => (
+        <li class="panel">
+          <h3>{item.title}</h3>
+          <p>{item.body}</p>
+        </li>
+      ))
+    }
+  </ul>
+  <h3 class="subhead">{copy.collection.rarities.title}</h3>
+  <p class="intro">{copy.collection.rarities.note}</p>
+  <ul class="rarities">
+    {
+      copy.collection.rarities.items.map((item, index) => (
+        <li class={`rarity rarity-${index}`}>
+          <span class="rarity-name">{item.name}</span>
+          <span class="rarity-copies">×{item.copies}</span>
+        </li>
+      ))
+    }
+  </ul>
+</section>
+
+<section class="section container" aria-labelledby="fair">
+  <h2 id="fair">{copy.fair.title}</h2>
+  <ul class="grid">
+    {
+      copy.fair.items.map((item) => (
+        <li class="panel fair">
+          <h3>{item.title}</h3>
+          <p>{item.body}</p>
+        </li>
+      ))
+    }
+  </ul>
+</section>
+
+<section class="section container" aria-labelledby="platforms">
+  <h2 id="platforms">{copy.platforms.title}</h2>
+  <p>{copy.platforms.body}</p>
+  <div class="next">
+    <CtaLink href={localizedPath(lang, 'howToPlay')}>{howToPlayCopy[lang].title}</CtaLink>
+    <CtaLink href={localizedPath(lang, 'heroes')} variant="secondary">{t('nav.heroes')}</CtaLink>
+  </div>
+</section>
+
+<style>
+  .modes {
+    display: grid;
+    gap: var(--hd-space-8);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+    align-items: start;
+  }
+
+  .subhead {
+    margin-block: var(--hd-space-8) var(--hd-space-3);
+    color: var(--hd-accent);
+  }
+
+  .modes .subhead {
+    margin-block-start: 0;
+  }
+
+  .mode-list {
+    display: grid;
+    gap: var(--hd-space-4);
+  }
+
+  .mode-list dt {
+    font-weight: 700;
+  }
+
+  .mode-list dd {
+    margin: 0;
+    color: var(--hd-text-muted);
+  }
+
+  .pve {
+    border-color: var(--hd-border-gold);
+  }
+
+  .pve-start {
+    margin-block-start: var(--hd-space-6);
+  }
+
+  .intro {
+    margin-block-end: var(--hd-space-4);
+    color: var(--hd-text-muted);
+  }
+
+  .types {
+    margin-block-end: var(--hd-space-4);
+  }
+
+  /* Colores de rareza del juego (Theme.uss), solo como borde: el texto va
+     siempre en el color de texto, que pasa AA. */
+  .rarities {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--hd-space-3);
+    padding: 0;
+    list-style: none;
+  }
+
+  .rarity {
+    display: flex;
+    align-items: baseline;
+    gap: var(--hd-space-3);
+    padding: var(--hd-space-2) var(--hd-space-4);
+    border: 1px solid var(--rarity);
+    border-inline-start-width: 4px;
+    border-radius: var(--hd-radius-md);
+    background: var(--hd-surface-raised);
+  }
+
+  .rarity-0 {
+    --rarity: var(--hd-rarity-common);
+  }
+  .rarity-1 {
+    --rarity: var(--hd-rarity-uncommon);
+  }
+  .rarity-2 {
+    --rarity: var(--hd-rarity-rare);
+  }
+  .rarity-3 {
+    --rarity: var(--hd-rarity-epic);
+  }
+  .rarity-4 {
+    --rarity: var(--hd-rarity-legendary);
+  }
+
+  .rarity-name {
+    font-weight: 600;
+  }
+
+  .rarity-copies {
+    color: var(--hd-text-muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .fair {
+    border-inline-start: 3px solid var(--hd-accent);
+  }
+
+  .next {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--hd-space-3);
+    margin-block-start: var(--hd-space-8);
+  }
+</style>

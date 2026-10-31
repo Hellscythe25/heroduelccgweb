@@ -14,6 +14,32 @@ convencionales. Las entradas no se escriben a mano.
 
 ## [No publicado]
 
+### Añadido — fase 1, contenido (2026-10-31, rama `feat/landing-game-heroes`)
+
+- Portada nueva y páginas El juego (`/es/juego/`, `/en/game/`), Cómo se juega
+  (`/es/como-se-juega/`, `/en/how-to-play/`) y Héroes (`/es/heroes/`,
+  `/en/heroes/`), con los textos largos en `src/i18n/pages/`.
+- Héroes importados del juego con `scripts/import-game-data.mjs` (ADR-005).
+  Versión de datos: **0.6.0**.
+- Emblemas geométricos por héroe (`HeroEmblem.astro`) en lugar de arte.
+- Esqueleto del devlog (`/es/devlog/`, `/en/devlog/`), oculto hasta la primera
+  entrada.
+- Borradores de Política de privacidad y Términos de uso
+  (`src/content/legal/`), con interruptor de publicación en `src/legal.ts`.
+- Tests de paridad de los textos largos, de presentación por héroe, del
+  importador y de los documentos legales.
+
+### Cambiado — fase 1, contenido
+
+- El nombre del sitio pasa a **Hero Duel CCG**.
+- Sistema visual "Forja Oscura" del juego: paleta de `Theme.uss`, Cinzel 700
+  autoalojada para h1/h2 y solo tema oscuro.
+- `HeroSchema` se ajusta al juego (id de texto, vida, campaña); `deckRules`
+  solo es obligatorio cuando hay cartas.
+- Menú principal sin "Inicio" (la marca ya enlaza a la portada) y con objetivos
+  táctiles de 44 px.
+- Imagen OG regenerada con la marca nueva.
+
 ### Añadido
 
 - Base del proyecto: Astro 7 con salida estática, i18n ES/EN desde el inicio.

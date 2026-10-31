@@ -1,5 +1,6 @@
 ---
-import { useTranslations, type Lang } from '~/i18n/ui';
+import { localizedPath, useTranslations, type Lang } from '~/i18n/ui';
+import { isLegalPublished, legalDocs } from '~/legal';
 
 interface Props {
   lang: Lang;
@@ -10,31 +11,72 @@ const t = useTranslations(lang);
 
 /* Ano de copyright fijado en build. El sitio es estático: no hay reloj en runtime. */
 const year = new Date().getFullYear();
+
+/* Los legales solo se enlazan publicados: un borrador enlazado desde el pie se
+   lee como la política vigente (src/legal.ts). */
+const legalLinks = legalDocs.filter(isLegalPublished);
 ---
 
 <footer class="site-footer">
-  <div class="container">
+  <div class="container bar">
     <p class="line">
       &copy; {year} {t('site.name')}. {t('footer.rights')}
     </p>
-    <p class="line muted">{t('footer.phase')}</p>
+    {
+      legalLinks.length > 0 && (
+        <nav aria-label={t('nav.legal')}>
+          <ul class="links">
+            {legalLinks.map((doc) => (
+              <li>
+                <a href={localizedPath(lang, doc)}>{t(`nav.${doc}`)}</a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      )
+    }
   </div>
 </footer>
 
 <style>
   .site-footer {
-    border-top: 1px solid var(--hd-border);
+    border-top: 1px solid var(--hd-border-gold);
     background: var(--hd-surface-sunken);
     padding-block: var(--hd-space-6);
     font-size: var(--hd-text-sm);
   }
 
+  .bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--hd-space-4);
+  }
+
   .line {
     margin: 0;
     max-width: none;
+    color: var(--hd-text-muted);
   }
 
-  .muted {
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--hd-space-4);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .links a {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: 2.75rem;
     color: var(--hd-text-muted);
+  }
+
+  .links a:hover {
+    color: var(--hd-text);
   }
 </style>

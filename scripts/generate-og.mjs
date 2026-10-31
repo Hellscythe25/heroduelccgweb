@@ -29,14 +29,17 @@ try {
 const WIDTH = 1200;
 const HEIGHT = 630;
 
-// Tokens copiados de src/styles/tokens.css. Se duplican a propósito: este
-// script corre fuera de Vite y no puede importar CSS.
-const INK_900 = '#0e0f14';
-const INK_800 = '#171922';
-const INK_300 = '#a8b0bf';
-const GOLD_400 = '#e8b44a';
+// Tokens copiados de src/styles/tokens.css (Forja Oscura). Se duplican a
+// propósito: este script corre fuera de Vite y no puede importar CSS.
+const INK_900 = '#0b0c10';
+const INK_800 = '#14161c';
+const INK_300 = '#a3a8b5';
+const GOLD_400 = '#e0b357';
 
+// El título usa Cinzel si está instalada en la máquina que genera la imagen
+// (librsvg no carga woff2); si no, cae a una serif del sistema.
 const FONT = "'Segoe UI', 'Helvetica Neue', Arial, sans-serif";
+const DISPLAY_FONT = "Cinzel, 'Trajan Pro', Georgia, 'Times New Roman', serif";
 
 const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${WIDTH}" height="${HEIGHT}" viewBox="0 0 ${WIDTH} ${HEIGHT}">
   <defs>
@@ -56,14 +59,14 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${WIDTH}" height="${
           fill="none" stroke="${GOLD_400}" stroke-width="4.5" stroke-linecap="round"/>
   </g>
 
-  <text x="264" y="300" font-family="${FONT}" font-size="104" font-weight="700" fill="${GOLD_400}"
-        letter-spacing="-2">Hero Duel</text>
+  <text x="264" y="300" font-family="${DISPLAY_FONT}" font-size="96" font-weight="700" fill="${GOLD_400}"
+        letter-spacing="1">Hero Duel CCG</text>
 
   <text x="266" y="360" font-family="${FONT}" font-size="30" font-weight="500" fill="${INK_300}"
-        letter-spacing="1">Juego de cartas coleccionables</text>
+        letter-spacing="1">Duelos de héroes, cartas y decisiones</text>
 
   <text x="266" y="410" font-family="${FONT}" font-size="22" font-weight="700" fill="${GOLD_400}"
-        letter-spacing="4">EN BETA</text>
+        letter-spacing="4">EN DESARROLLO · IN DEVELOPMENT</text>
 
   <text x="96" y="574" font-family="${FONT}" font-size="24" font-weight="500" fill="${INK_300}"
         letter-spacing="1">heroduelccg.com</text>

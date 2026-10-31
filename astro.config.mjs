@@ -2,6 +2,8 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import { isPressKitPublishable } from './src/press.ts';
+import { isLegalPublished, legalDocs } from './src/legal.ts';
+import { hasDevlogPosts } from './src/devlog.ts';
 import { locales, routes } from './src/i18n/ui.ts';
 
 /**
@@ -11,11 +13,16 @@ import { locales, routes } from './src/i18n/ui.ts';
  * le falten campos obligatorios va con `noindex` y fuera del sitemap. Un sitemap
  * es una declaración pública de "estas son mis páginas": incluir una que se
  * admite a sí misma incompleta invita a que la prensa la encuentre justo cuando
- * peor está.
+ * peor está. Lo mismo vale para los legales en borrador y el devlog sin entradas.
  */
-const excludedPaths = isPressKitPublishable
-  ? []
-  : locales.map((lang) => `/${lang}/${routes.presskit[lang]}/`);
+const sectionPath = (lang, key) => `/${lang}/${routes[key][lang]}/`;
+const excludedPaths = [
+  ...(isPressKitPublishable ? [] : locales.map((lang) => sectionPath(lang, 'presskit'))),
+  ...legalDocs
+    .filter((doc) => !isLegalPublished(doc))
+    .flatMap((doc) => locales.map((lang) => sectionPath(lang, doc))),
+  ...locales.filter((lang) => !hasDevlogPosts(lang)).map((lang) => sectionPath(lang, 'blog')),
+];
 
 /**
  * Dominio canónico de producción, decidido el 2026-08-04 (ADR-003).

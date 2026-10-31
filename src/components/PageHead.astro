@@ -1,0 +1,23 @@
+---
+/**
+ * Cabecera de las páginas interiores: antetítulo, h1, entradilla y el filo de
+ * forja. Una sola h1 por página, siempre aquí.
+ */
+interface Props {
+  eyebrow: string;
+  title: string;
+  lead?: string | undefined;
+}
+
+const { eyebrow, title, lead } = Astro.props;
+---
+
+<header class="page-head">
+  <div class="container">
+    <p class="eyebrow">{eyebrow}</p>
+    <h1>{title}</h1>
+    {lead && <p class="lead">{lead}</p>}
+    <div class="ornament" aria-hidden="true"><span></span></div>
+    <slot />
+  </div>
+</header>

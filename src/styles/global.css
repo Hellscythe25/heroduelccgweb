@@ -39,6 +39,15 @@ h3 {
   font-weight: 650;
 }
 
+/* Cinzel solo en h1 y h2: es una capital romana, legible en titulares y
+   cansada en párrafos. h3 se queda en el stack del sistema. */
+h1,
+h2 {
+  font-family: var(--hd-font-display);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
 h1 {
   font-size: var(--hd-text-3xl);
 }
@@ -107,6 +116,147 @@ a:hover {
 
 main {
   flex: 1;
+}
+
+/* ---- Piezas compartidas de maquetación ----
+   Viven aquí y no en cada componente porque las usan todas las páginas de
+   contenido; duplicarlas por página multiplicaría el CSS sin ganar nada. */
+
+.section {
+  padding-block: var(--hd-space-12);
+}
+
+.section + .section {
+  border-top: 1px solid var(--hd-border);
+}
+
+.section > h2 {
+  margin-block-end: var(--hd-space-6);
+}
+
+/* Cabecera de página interior: título, entradilla y ornamento de forja. */
+.page-head {
+  padding-block: var(--hd-space-16) var(--hd-space-8);
+  background:
+    radial-gradient(60rem 18rem at 50% -6rem, var(--hd-gold-wash), transparent 70%),
+    var(--hd-surface);
+}
+
+.page-head h1 {
+  color: var(--hd-accent);
+}
+
+.eyebrow {
+  margin-block-end: var(--hd-space-3);
+  color: var(--hd-text-muted);
+  font-size: var(--hd-text-xs);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.lead {
+  margin-block-start: var(--hd-space-4);
+  font-size: var(--hd-text-lg);
+  color: var(--hd-text-muted);
+}
+
+/* Filo de forja: línea dorada con un rombo al centro. Puramente decorativo. */
+.ornament {
+  display: flex;
+  align-items: center;
+  gap: var(--hd-space-3);
+  max-width: 14rem;
+  margin-block-start: var(--hd-space-6);
+  color: var(--hd-accent);
+}
+
+.ornament::before,
+.ornament::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--hd-accent));
+}
+
+.ornament::after {
+  background: linear-gradient(90deg, var(--hd-accent), transparent);
+}
+
+.ornament > span {
+  inline-size: 0.5rem;
+  block-size: 0.5rem;
+  background: currentColor;
+  transform: rotate(45deg);
+}
+
+.panel {
+  padding: var(--hd-space-6);
+  background: var(--hd-surface-raised);
+  border: 1px solid var(--hd-border);
+  border-radius: var(--hd-radius-lg);
+}
+
+.panel h3 {
+  margin-block-end: var(--hd-space-2);
+}
+
+.panel p {
+  color: var(--hd-text-muted);
+}
+
+.grid {
+  display: grid;
+  gap: var(--hd-space-4);
+  /* auto-fit y no auto-fill: con pocas piezas, se reparten el ancho en vez de
+     dejar columnas vacías a la derecha. */
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  padding: 0;
+  list-style: none;
+}
+
+/* Listas de pasos numerados con la cifra en oro. */
+.steps {
+  display: grid;
+  gap: var(--hd-space-4);
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+}
+
+.steps > li {
+  position: relative;
+  max-width: var(--hd-measure);
+  padding-inline-start: var(--hd-space-12);
+  counter-increment: step;
+}
+
+.steps > li::before {
+  content: counter(step);
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block-start: -0.1em;
+  display: grid;
+  place-items: center;
+  inline-size: 2rem;
+  block-size: 2rem;
+  border: 1px solid var(--hd-border-gold);
+  border-radius: var(--hd-radius-full);
+  color: var(--hd-accent);
+  font-family: var(--hd-font-display);
+  font-weight: 700;
+}
+
+.visually-hidden {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 @media (prefers-reduced-motion: reduce) {

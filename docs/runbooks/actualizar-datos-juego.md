@@ -20,10 +20,22 @@ cosas distintas.
 
 ## Antes de empezar
 
-- El artefacto exportado del juego: `cards.json` y `heroes.json`.
-- Publicado como GitHub Release con tag `game-data-vX.Y.Z`.
-- **Si no existe ese artefacto, este runbook se detiene aquí.** No se edita
-  `src/data/` a mano para adelantar un parche.
+- El `ContentDatabase.json` del build del juego (en el repositorio del juego,
+  `Assets/ContentAuthoring/ContentDatabase.json`) y su versión (`bundleVersion`,
+  ej. `0.6.0`). Ver ADR-005.
+- **No se edita `src/data/` a mano para adelantar un parche.** Los datos se
+  regeneran siempre con el script.
+
+### Importar (hoy solo héroes)
+
+```bash
+node scripts/import-game-data.mjs "<ruta>/ContentDatabase.json" 0.6.0
+```
+
+Escribe `src/data/heroes.json`, la versión de `src/data/cards.json` y
+`src/data/DATA_VERSION`. Después, salta al paso 3 (validar). Los pasos 1 y 2 de
+abajo describen el flujo previsto para cuando el juego publique un artefacto
+propio como GitHub Release (`game-data-vX.Y.Z`).
 
 ---
 
@@ -80,7 +92,7 @@ Errores frecuentes y qué significan:
 | `duplicate-card-id` | Dos cartas con el mismo id. **Grave:** los ids viajan dentro de los deck codes ya compartidos |
 | `unit-without-stats` | Una unidad sin ataque o vida |
 | `unknown-hero-reference` | Una carta apunta a un héroe que no existe |
-| `missing-deck-rules` | Hay héroes pero `deckRules` sigue en `null` |
+| `missing-deck-rules` | Hay cartas pero `deckRules` sigue en `null` |
 
 Los avisos de `missing-art` no bloquean: la carta se publica sin arte.
 

@@ -6,35 +6,87 @@
  * /es/prensa/ y /en/presskit/ son la misma página. `getStaticPaths` los saca de
  * la tabla `routes`, así que la URL pública y la navegación no pueden divergir.
  *
- * Cuando aparezca una segunda sección de un solo segmento, se añade aquí su par
- * de rutas con su `props.section` y se ramifica el render. Dos archivos con
- * parámetro dinámico al mismo nivel producirían rutas ambiguas.
+ * Cada sección tiene su componente de página; aquí solo se decide cuál se
+ * pinta y con qué metadatos. Dos archivos con parámetro dinámico al mismo nivel
+ * producirían rutas ambiguas.
  */
+import { getCollection } from 'astro:content';
 import BaseLayout from '~/layouts/BaseLayout.astro';
 import PressKitPage from '~/components/PressKitPage.astro';
+import GamePage from '~/components/GamePage.astro';
+import HowToPlayPage from '~/components/HowToPlayPage.astro';
+import HeroesPage from '~/components/HeroesPage.astro';
+import DevlogPage from '~/components/DevlogPage.astro';
+import LegalPage from '~/components/LegalPage.astro';
 import { locales, routes, useTranslations, type Lang } from '~/i18n/ui';
+import { gameCopy } from '~/i18n/pages/game';
+import { howToPlayCopy } from '~/i18n/pages/howToPlay';
+import { heroesPageCopy } from '~/i18n/pages/heroes';
 import { isPressKitPublishable, pressKit } from '~/press';
+import { isLegalPublished } from '~/legal';
+import { hasDevlogPosts } from '~/devlog';
+
+type Section = 'game' | 'howToPlay' | 'heroes' | 'blog' | 'presskit' | 'privacy' | 'terms';
 
 export function getStaticPaths() {
-  return locales.map((lang) => ({
-    params: { lang, section: routes.presskit[lang] },
-    props: { section: 'presskit' as const },
-  }));
+  // Astro aísla getStaticPaths del resto del frontmatter: la lista vive aquí dentro.
+  const sections: Section[] = ['game', 'howToPlay', 'heroes', 'blog', 'presskit', 'privacy', 'terms'];
+  return sections.flatMap((section) =>
+    locales.map((lang) => ({
+      params: { lang, section: routes[section][lang] },
+      props: { section },
+    })),
+  );
 }
 
 const lang = Astro.params.lang as Lang;
+const { section } = Astro.props as { section: Section };
 const t = useTranslations(lang);
+const siteName = t('site.name');
 
-const title = `${t('press.title')} — ${pressKit.game.title}`;
-const description = isPressKitPublishable ? pressKit.description.short[lang] : t('press.intro');
+let title: string;
+let description: string;
+let noindex = false;
+
+switch (section) {
+  case 'game':
+    title = `${gameCopy[lang].meta.title} — ${siteName}`;
+    description = gameCopy[lang].meta.description;
+    break;
+  case 'howToPlay':
+    title = `${howToPlayCopy[lang].meta.title} — ${siteName}`;
+    description = howToPlayCopy[lang].meta.description;
+    break;
+  case 'heroes':
+    title = `${heroesPageCopy[lang].meta.title} — ${siteName}`;
+    description = heroesPageCopy[lang].meta.description;
+    break;
+  case 'blog':
+    title = `${t('devlog.title')} — ${siteName}`;
+    description = t('devlog.intro');
+    noindex = !hasDevlogPosts(lang);
+    break;
+  case 'presskit':
+    title = `${t('press.title')} — ${pressKit.game.title}`;
+    description = isPressKitPublishable ? pressKit.description.short[lang] : t('press.intro');
+    noindex = !isPressKitPublishable;
+    break;
+  case 'privacy':
+  case 'terms': {
+    const [entry] = await getCollection('legal', (item) => item.data.lang === lang && item.data.doc === section);
+    title = `${entry?.data.title ?? t(`nav.${section}`)} — ${siteName}`;
+    description = entry?.data.description ?? '';
+    noindex = !isLegalPublished(section);
+    break;
+  }
+}
 ---
 
-<BaseLayout
-  title={title}
-  description={description}
-  lang={lang}
-  routeKey="presskit"
-  noindex={!isPressKitPublishable}
->
-  <PressKitPage lang={lang} />
+<BaseLayout title={title} description={description} lang={lang} routeKey={section} noindex={noindex}>
+  {section === 'game' && <GamePage lang={lang} />}
+  {section === 'howToPlay' && <HowToPlayPage lang={lang} />}
+  {section === 'heroes' && <HeroesPage lang={lang} />}
+  {section === 'blog' && <DevlogPage lang={lang} />}
+  {section === 'presskit' && <PressKitPage lang={lang} />}
+  {(section === 'privacy' || section === 'terms') && <LegalPage lang={lang} doc={section} />}
 </BaseLayout>

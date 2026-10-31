@@ -3,9 +3,14 @@
  *
  * i18n desde el commit 1 (docs/DEPLOY.md §11.5): retrofitearlo cuesta 5-10× más.
  *
+ * Aquí viven las cadenas cortas de interfaz. Los textos largos de cada página
+ * están en src/i18n/pages/, con la misma regla de paridad: un objeto por
+ * idioma y TypeScript exige la misma forma en los dos.
+ *
  * Regla del glosario: los nombres propios del juego (héroes, cartas, mecánicas)
  * NO se traducen sin una decisión explícita registrada. El agente `localizador`
- * es el dueño de esa regla.
+ * es el dueño de esa regla. Los nombres en inglés de héroes y habilidades son
+ * los del propio juego (ContentDatabase.json), no traducciones de esta web.
  */
 
 export const languages = {
@@ -31,24 +36,32 @@ export const localeTags: Record<Lang, string> = {
  */
 export const routes = {
   home: { es: '', en: '' },
-  news: { es: 'noticias', en: 'news' },
-  blog: { es: 'blog', en: 'blog' },
+  game: { es: 'juego', en: 'game' },
+  howToPlay: { es: 'como-se-juega', en: 'how-to-play' },
   heroes: { es: 'heroes', en: 'heroes' },
+  news: { es: 'noticias', en: 'news' },
+  // La colección se llama `blog`; de cara al público es el devlog.
+  blog: { es: 'devlog', en: 'devlog' },
   cards: { es: 'cartas', en: 'cards' },
   deckbuilder: { es: 'deckbuilder', en: 'deckbuilder' },
   presskit: { es: 'prensa', en: 'presskit' },
+  privacy: { es: 'privacidad', en: 'privacy' },
+  terms: { es: 'terminos', en: 'terms' },
 } as const;
 
 export type RouteKey = keyof typeof routes;
 
 export const ui = {
   es: {
-    'site.name': 'Hero Duel',
+    'site.name': 'Hero Duel CCG',
     'site.tagline': 'Duelos de héroes, cartas y decisiones',
     'site.description':
-      'Hero Duel es un juego de cartas coleccionables en desarrollo. Sigue la beta, lee el devlog y construye tus mazos.',
+      'Hero Duel CCG es un juego de cartas coleccionables de duelos héroe contra héroe, en desarrollo para PC. Conoce a los héroes y cómo se juega un duelo.',
     'nav.skipToContent': 'Saltar al contenido',
+    'nav.main': 'Principal',
     'nav.home': 'Inicio',
+    'nav.game': 'El juego',
+    'nav.howToPlay': 'Cómo se juega',
     'nav.news': 'Noticias',
     'nav.blog': 'Devlog',
     'nav.heroes': 'Héroes',
@@ -56,21 +69,37 @@ export const ui = {
     'nav.deckbuilder': 'Deckbuilder',
     'nav.presskit': 'Prensa',
     'nav.language': 'Idioma',
-    'home.badge': 'En beta',
-    'home.title': 'Hero Duel',
-    // Afirmación deliberadamente mínima: nombre, género y estado. Todo lo demás
-    // (mecánicas, plataformas, fechas) necesita confirmación del estudio antes
-    // de publicarse. Ver docs/MEMORIA.md.
-    'home.subtitle': 'Un juego de cartas coleccionables en desarrollo.',
+    'nav.legal': 'Legal',
+    'nav.privacy': 'Privacidad',
+    'nav.terms': 'Términos',
+    'home.badge': 'En desarrollo',
+    'home.title': 'Hero Duel CCG',
+    'home.subtitle':
+      'Un duelo héroe contra héroe, sin tablero de criaturas: instantáneas, equipo y energía en lugar de maná. Tu héroe, tu mazo, un duelo.',
+    'home.cta.game': 'Descubre el juego',
+    'home.cta.howToPlay': 'Aprende a jugar',
     'home.cta.steam': 'Añadir a deseados en Steam',
     'home.cta.discord': 'Únete al Discord',
     'home.cta.itch': 'Verlo en itch.io',
-    'home.building.title': 'Estamos construyendo esto',
-    'home.building.body':
-      'El sitio crece a la vez que el juego. Pronto habrá devlog, compendio de cartas y constructor de mazos.',
+    'home.duel.versus': 'contra',
+    'hero.life': 'Vida',
+    'hero.passive': 'Pasiva',
+    'hero.abilities': 'Habilidades',
+    'hero.cost': 'Coste',
+    'hero.energy': 'de energía',
+    'hero.campaign': 'Campaña',
+    'devlog.title': 'Devlog',
+    'devlog.intro':
+      'Notas del equipo sobre cómo se hace Hero Duel CCG: diseño, decisiones y avances.',
+    'devlog.empty': 'Todavía no hay entradas. La primera llegará pronto.',
+    'devlog.published': 'Publicado el',
+    'legal.updated': 'Última actualización',
+    'legal.draft.title': 'Borrador pendiente de revisión legal',
+    'legal.draft.body':
+      'Este documento es un borrador y todavía no está en vigor. No es asesoramiento legal: debe revisarlo un profesional antes de publicarse. Los datos marcados como [PENDIENTE] faltan por confirmar.',
     'press.title': 'Kit de prensa',
     'press.intro':
-      'Todo lo necesario para escribir sobre Hero Duel. Los materiales pueden usarse libremente en cobertura editorial y vídeos.',
+      'Todo lo necesario para escribir sobre Hero Duel CCG. Los materiales pueden usarse libremente en cobertura editorial y vídeos.',
     'press.draft.title': 'Kit de prensa incompleto',
     'press.draft.body':
       'Esta página está en borrador: no aparece en el menú, no se indexa y no debería compartirse todavía. Falta esto:',
@@ -97,19 +126,20 @@ export const ui = {
     'press.zip': 'Descargar todo el material',
     'press.contact': 'Contacto',
     'footer.rights': 'Todos los derechos reservados.',
-    // Sin número de fase: es jerga interna y se queda obsoleta sin que nadie lo note.
-    'footer.phase': 'Sitio en construcción',
     '404.title': 'Esta carta no está en el mazo',
     '404.body': 'La página que buscas no existe o cambió de sitio.',
     '404.back': 'Volver al inicio',
   },
   en: {
-    'site.name': 'Hero Duel',
+    'site.name': 'Hero Duel CCG',
     'site.tagline': 'Heroes, cards, and the calls you make',
     'site.description':
-      'Hero Duel is a collectible card game in development. Follow the beta, read the devlog, and build your decks.',
+      'Hero Duel CCG is a hero-versus-hero collectible card game in development for PC. Meet the heroes and learn how a duel plays out.',
     'nav.skipToContent': 'Skip to content',
+    'nav.main': 'Main',
     'nav.home': 'Home',
+    'nav.game': 'The game',
+    'nav.howToPlay': 'How to play',
     'nav.news': 'News',
     'nav.blog': 'Devlog',
     'nav.heroes': 'Heroes',
@@ -117,18 +147,36 @@ export const ui = {
     'nav.deckbuilder': 'Deckbuilder',
     'nav.presskit': 'Press kit',
     'nav.language': 'Language',
-    'home.badge': 'In beta',
-    'home.title': 'Hero Duel',
-    'home.subtitle': 'A collectible card game in development.',
+    'nav.legal': 'Legal information',
+    'nav.privacy': 'Privacy',
+    'nav.terms': 'Terms',
+    'home.badge': 'In development',
+    'home.title': 'Hero Duel CCG',
+    'home.subtitle':
+      'A hero-versus-hero duel with no creature board: instants, equipment and energy instead of mana. Your hero, your deck, one duel.',
+    'home.cta.game': 'Discover the game',
+    'home.cta.howToPlay': 'Learn to play',
     'home.cta.steam': 'Wishlist on Steam',
     'home.cta.discord': 'Join the Discord',
     'home.cta.itch': 'View on itch.io',
-    'home.building.title': 'We are building this',
-    'home.building.body':
-      'The site grows alongside the game. A devlog, a card compendium and a deckbuilder are on the way.',
+    'home.duel.versus': 'versus',
+    'hero.life': 'Life',
+    'hero.passive': 'Passive',
+    'hero.abilities': 'Abilities',
+    'hero.cost': 'Cost',
+    'hero.energy': 'energy',
+    'hero.campaign': 'Campaign',
+    'devlog.title': 'Devlog',
+    'devlog.intro': 'Notes from the team on how Hero Duel CCG is made: design, decisions and progress.',
+    'devlog.empty': 'No posts yet. The first one is coming soon.',
+    'devlog.published': 'Published on',
+    'legal.updated': 'Last updated',
+    'legal.draft.title': 'Draft pending legal review',
+    'legal.draft.body':
+      'This document is a draft and is not yet in effect. It is not legal advice: a qualified professional must review it before it is published. Items marked [PENDING] are still to be confirmed.',
     'press.title': 'Press kit',
     'press.intro':
-      'Everything you need to write about Hero Duel. These materials may be used freely in editorial coverage and videos.',
+      'Everything you need to write about Hero Duel CCG. These materials may be used freely in editorial coverage and videos.',
     'press.draft.title': 'Press kit incomplete',
     'press.draft.body':
       'This page is a draft: it is not in the menu, it is not indexed, and it should not be shared yet. Missing:',
@@ -155,7 +203,6 @@ export const ui = {
     'press.zip': 'Download all assets',
     'press.contact': 'Contact',
     'footer.rights': 'All rights reserved.',
-    'footer.phase': 'Site under construction',
     '404.title': 'That card is not in the deck',
     '404.body': 'The page you are looking for does not exist or has moved.',
     '404.back': 'Back to home',

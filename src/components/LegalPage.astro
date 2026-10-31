@@ -1,0 +1,122 @@
+---
+/**
+ * Página de un documento legal. El texto vive en src/content/legal/{lang}/;
+ * el estado (borrador o publicado) en src/legal.ts.
+ */
+import { getCollection, render } from 'astro:content';
+import PageHead from '~/components/PageHead.astro';
+import { isLegalPublished, type LegalDoc } from '~/legal';
+import { localeTags, useTranslations, type Lang } from '~/i18n/ui';
+
+interface Props {
+  lang: Lang;
+  doc: LegalDoc;
+}
+
+const { lang, doc } = Astro.props;
+const t = useTranslations(lang);
+
+const [entry] = await getCollection('legal', (item) => item.data.lang === lang && item.data.doc === doc);
+if (!entry) {
+  // Sin su par en el otro idioma el documento no se publica a medias: el build se rompe.
+  throw new Error(`Falta src/content/legal/${lang}/ para "${doc}".`);
+}
+
+const { Content } = await render(entry);
+const isDraft = !isLegalPublished(doc);
+const dateFormat = new Intl.DateTimeFormat(localeTags[lang], { dateStyle: 'long', timeZone: 'UTC' });
+---
+
+<PageHead eyebrow={t('nav.legal')} title={entry.data.title}>
+  <p class="updated">
+    {t('legal.updated')}:{' '}
+    <time datetime={entry.data.updatedAt.toISOString().slice(0, 10)}>{dateFormat.format(entry.data.updatedAt)}</time>
+  </p>
+</PageHead>
+
+<div class="section container">
+  {
+    isDraft && (
+      <aside class="draft" role="note" aria-labelledby="draft-title">
+        <p id="draft-title" class="draft-title">{t('legal.draft.title')}</p>
+        <p>{t('legal.draft.body')}</p>
+      </aside>
+    )
+  }
+  <article class="legal">
+    <Content />
+  </article>
+</div>
+
+<style>
+  .updated {
+    margin-block-start: var(--hd-space-4);
+    color: var(--hd-text-muted);
+    font-size: var(--hd-text-sm);
+  }
+
+  .draft {
+    max-width: var(--hd-measure);
+    margin-block-end: var(--hd-space-8);
+    padding: var(--hd-space-4) var(--hd-space-6);
+    border: 1px solid var(--hd-danger);
+    border-inline-start-width: 4px;
+    border-radius: var(--hd-radius-md);
+    background: var(--hd-surface-raised);
+  }
+
+  .draft-title {
+    margin-block-end: var(--hd-space-2);
+    color: var(--hd-danger);
+    font-weight: 700;
+  }
+
+  /* El Markdown no lleva clases: se estiliza por elemento dentro del artículo. */
+  .legal {
+    max-width: var(--hd-measure);
+  }
+
+  .legal :global(h2) {
+    margin-block: var(--hd-space-12) var(--hd-space-4);
+    font-size: var(--hd-text-xl);
+    color: var(--hd-accent);
+  }
+
+  .legal :global(h3) {
+    margin-block: var(--hd-space-6) var(--hd-space-2);
+    font-size: var(--hd-text-lg);
+  }
+
+  .legal :global(p),
+  .legal :global(ul),
+  .legal :global(ol),
+  .legal :global(table) {
+    margin-block-end: var(--hd-space-4);
+  }
+
+  .legal :global(li) {
+    margin-block-end: var(--hd-space-2);
+  }
+
+  .legal :global(table) {
+    inline-size: 100%;
+    border-collapse: collapse;
+    font-size: var(--hd-text-sm);
+  }
+
+  .legal :global(th),
+  .legal :global(td) {
+    padding: var(--hd-space-2);
+    border: 1px solid var(--hd-border);
+    text-align: start;
+    vertical-align: top;
+  }
+
+  .legal :global(th) {
+    background: var(--hd-surface-raised);
+  }
+
+  .legal :global(strong) {
+    color: var(--hd-text);
+  }
+</style>

@@ -1,16 +1,23 @@
 ---
 /**
  * Landing. Una sola plantilla para todos los idiomas: el contenido vive en
- * src/i18n/ui.ts, no duplicado por locale. Así la paridad ES/EN es estructural
- * y no depende de que alguien recuerde actualizar dos archivos.
+ * src/i18n/ (ui.ts y pages/home.ts), no duplicado por locale. Así la paridad
+ * ES/EN es estructural y no depende de que alguien recuerde actualizar dos
+ * archivos.
  *
- * Los CTA se renderizan solo si su URL existe en src/site.ts. Un botón que
- * lleva a ninguna parte es peor que la ausencia del botón: gasta la atención
- * del visitante una sola vez y la gasta mal.
+ * Los CTA externos se renderizan solo si su URL existe en src/site.ts. Un botón
+ * que lleva a ninguna parte es peor que la ausencia del botón: gasta la atención
+ * del visitante una sola vez y la gasta mal. Mientras no existan, los CTA
+ * llevan al interior del sitio.
  */
 import BaseLayout from '~/layouts/BaseLayout.astro';
 import CtaLink from '~/components/CtaLink.astro';
-import { locales, useTranslations, type Lang, type UiKey } from '~/i18n/ui';
+import HeroEmblem from '~/components/HeroEmblem.astro';
+import { heroes } from '~/data';
+import { gameCopy } from '~/i18n/pages/game';
+import { heroPresentation } from '~/i18n/pages/heroes';
+import { homeCopy } from '~/i18n/pages/home';
+import { localizedPath, locales, useTranslations, type Lang, type UiKey } from '~/i18n/ui';
 import { activeLinks } from '~/site';
 
 export function getStaticPaths() {
@@ -19,6 +26,7 @@ export function getStaticPaths() {
 
 const lang = Astro.params.lang as Lang;
 const t = useTranslations(lang);
+const copy = homeCopy[lang];
 
 const links = activeLinks();
 const ctaLabels: Record<string, UiKey> = {
@@ -26,6 +34,12 @@ const ctaLabels: Record<string, UiKey> = {
   discord: 'home.cta.discord',
   itch: 'home.cta.itch',
 };
+
+const shortName = (name: string) => name.split(' ')[0];
+
+// Ilustración del duelo: los dos primeros héroes del juego, con su vida real.
+const [left, right] = heroes;
+const slots = gameCopy[lang].collection.types.slice(1).map((type) => type.title);
 ---
 
 <BaseLayout
@@ -34,33 +48,130 @@ const ctaLabels: Record<string, UiKey> = {
   lang={lang}
   routeKey="home"
 >
-  <section class="hero container">
-    <p class="badge">{t('home.badge')}</p>
-    <h1>{t('home.title')}</h1>
-    <p class="subtitle">{t('home.subtitle')}</p>
-
-    {
-      links.length > 0 && (
+  <section class="hero">
+    <div class="container hero-grid">
+      <div class="hero-copy">
+        <p class="badge">{t('home.badge')}</p>
+        <h1>{t('home.title')}</h1>
+        <p class="subtitle">{t('home.subtitle')}</p>
         <div class="actions">
-          {links.map((link, index) => (
-            <CtaLink href={link.url} external variant={index === 0 ? 'primary' : 'secondary'}>
-              {t(ctaLabels[link.key]!)}
-            </CtaLink>
-          ))}
+          {
+            links.map((link, index) => (
+              <CtaLink href={link.url} external variant={index === 0 ? 'primary' : 'secondary'}>
+                {t(ctaLabels[link.key]!)}
+              </CtaLink>
+            ))
+          }
+          <CtaLink href={localizedPath(lang, 'game')} variant={links.length > 0 ? 'secondary' : 'primary'}>
+            {t('home.cta.game')}
+          </CtaLink>
+          <CtaLink href={localizedPath(lang, 'howToPlay')} variant="secondary">{t('home.cta.howToPlay')}</CtaLink>
         </div>
-      )
-    }
+      </div>
+
+      {
+        left && right && (
+          <div class="duel" aria-hidden="true">
+            <div class="duelists">
+              {[left, right].map((hero) => (
+                <div class="duelist" style={`--hero: var(--hd-hero-${hero.id})`}>
+                  <HeroEmblem heroId={hero.id} glyph={heroPresentation[hero.id]!.glyph} size={112} />
+                  <p class="duelist-name">{shortName(hero.name[lang])}</p>
+                  <p class="duelist-life">
+                    {t('hero.life')} <span>{hero.life}</span>
+                  </p>
+                </div>
+              ))}
+              <p class="versus">VS</p>
+            </div>
+            <div class="energy">
+              {Array.from({ length: 10 }, (_, index) => (
+                <span class:list={['pip', { lit: index < 4 }]} />
+              ))}
+            </div>
+            <ul class="slots">
+              {slots.map((slot) => (
+                <li>{slot}</li>
+              ))}
+            </ul>
+          </div>
+        )
+      }
+    </div>
   </section>
 
-  <section class="container building">
-    <h2>{t('home.building.title')}</h2>
-    <p>{t('home.building.body')}</p>
+  <section class="section container" aria-label={t('nav.game')}>
+    <ul class="grid pillars">
+      {
+        copy.pillars.map((pillar) => (
+          <li class="panel">
+            <h2 class="pillar-title">{pillar.title}</h2>
+            <p>{pillar.body}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section class="section container" aria-labelledby="home-heroes">
+    <h2 id="home-heroes">{copy.heroes.title}</h2>
+    <p class="section-lead">{copy.heroes.body}</p>
+    <ul class="roster">
+      {
+        heroes.map((hero) => (
+          <li>
+            <a href={`${localizedPath(lang, 'heroes')}#${hero.id}`} style={`--hero: var(--hd-hero-${hero.id})`}>
+              <HeroEmblem heroId={hero.id} glyph={heroPresentation[hero.id]!.glyph} size={56} />
+              <span class="roster-name">{shortName(hero.name[lang])}</span>
+              <span class="roster-role">{heroPresentation[hero.id]!.role[lang]}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+    <p class="more"><a href={localizedPath(lang, 'heroes')}>{copy.heroes.link}</a></p>
+  </section>
+
+  <section class="section container columns">
+    <div>
+      <h2>{copy.turn.title}</h2>
+      <ol class="steps">
+        {copy.turn.steps.map((step) => <li>{step}</li>)}
+      </ol>
+      <p class="more"><a href={localizedPath(lang, 'howToPlay')}>{t('home.cta.howToPlay')}</a></p>
+    </div>
+    <div>
+      <h2>{copy.fair.title}</h2>
+      <ul class="fair">
+        {copy.fair.items.map((item) => <li>{item}</li>)}
+      </ul>
+      <p class="more"><a href={localizedPath(lang, 'game')}>{copy.fair.link}</a></p>
+    </div>
+  </section>
+
+  <section class="section container" aria-labelledby="home-status">
+    <div class="panel status">
+      <h2 id="home-status">{copy.status.title}</h2>
+      <p>{copy.status.body}</p>
+    </div>
   </section>
 </BaseLayout>
 
 <style>
   .hero {
-    padding-block: var(--hd-space-16) var(--hd-space-8);
+    padding-block: var(--hd-space-16) var(--hd-space-12);
+    background:
+      radial-gradient(50rem 26rem at 75% 10%, var(--hd-gold-wash), transparent 70%),
+      radial-gradient(40rem 20rem at 0% 100%, var(--hd-essence-wash), transparent 70%),
+      var(--hd-surface);
+    border-block-end: 1px solid var(--hd-border);
+  }
+
+  .hero-grid {
+    display: grid;
+    gap: var(--hd-space-12);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr));
+    align-items: center;
   }
 
   .badge {
@@ -76,10 +187,17 @@ const ctaLabels: Record<string, UiKey> = {
     text-transform: uppercase;
   }
 
+  h1 {
+    font-size: var(--hd-text-display);
+    line-height: 1;
+    color: var(--hd-accent);
+    text-shadow: 0 0 40px var(--hd-gold-glow);
+  }
+
   .subtitle {
-    margin-block-start: var(--hd-space-4);
+    margin-block-start: var(--hd-space-6);
     font-size: var(--hd-text-lg);
-    color: var(--hd-text-muted);
+    color: var(--hd-text);
   }
 
   .actions {
@@ -89,15 +207,205 @@ const ctaLabels: Record<string, UiKey> = {
     margin-block-start: var(--hd-space-8);
   }
 
-  .building {
-    padding-block: var(--hd-space-8) var(--hd-space-16);
+  /* ---- Ilustración del duelo (decorativa) ---- */
+  .duel {
+    display: grid;
+    gap: var(--hd-space-6);
+    padding: var(--hd-space-8) var(--hd-space-6);
+    border: 1px solid var(--hd-border-gold);
+    border-radius: var(--hd-radius-lg);
+    background:
+      linear-gradient(180deg, var(--hd-gold-sheen), transparent 60%),
+      var(--hd-surface-raised);
+    box-shadow: var(--hd-shadow-lg);
   }
 
-  .building h2 {
+  .duelists {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--hd-space-8);
+    text-align: center;
+  }
+
+  .duelist {
+    display: grid;
+    justify-items: center;
+    gap: var(--hd-space-2);
+  }
+
+  .duelist :global(.emblem) {
+    inline-size: clamp(5rem, 18vw, 7rem);
+    block-size: auto;
+  }
+
+  .duelist-name {
+    font-family: var(--hd-font-display);
+    font-size: var(--hd-text-xl);
+    font-weight: 700;
+  }
+
+  .duelist-life {
+    color: var(--hd-text-muted);
+    font-size: var(--hd-text-sm);
+  }
+
+  .duelist-life span {
+    color: var(--hd-text);
+    font-weight: 700;
+  }
+
+  .versus {
+    position: absolute;
+    inset-block-start: 30%;
+    inset-inline-start: 50%;
+    translate: -50% -50%;
+    color: var(--hd-accent);
+    font-family: var(--hd-font-display);
+    font-size: var(--hd-text-2xl);
+    font-weight: 700;
+  }
+
+  .energy {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: var(--hd-space-1);
+  }
+
+  .pip {
+    block-size: 0.5rem;
+    border-radius: var(--hd-radius-full);
+    background: var(--hd-surface-sunken);
+    border: 1px solid var(--hd-border);
+  }
+
+  .pip.lit {
+    background: var(--hd-essence);
+    border-color: var(--hd-essence);
+    box-shadow: 0 0 8px var(--hd-essence-glow);
+  }
+
+  .slots {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--hd-space-2);
+    padding: 0;
+    list-style: none;
+  }
+
+  .slots li {
+    padding: var(--hd-space-2);
+    border: 1px dashed var(--hd-border-strong);
+    border-radius: var(--hd-radius-md);
+    color: var(--hd-text-muted);
+    font-size: var(--hd-text-xs);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  /* ---- Secciones ---- */
+  .pillar-title {
+    margin-block-end: var(--hd-space-2);
+    font-size: var(--hd-text-xl);
+    color: var(--hd-accent);
+  }
+
+  .section-lead {
+    margin-block-end: var(--hd-space-6);
+    color: var(--hd-text-muted);
+  }
+
+  .roster {
+    display: grid;
+    gap: var(--hd-space-3);
+    /* 9.5rem: dos columnas en un teléfono de 375 px, cinco en escritorio. */
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 9.5rem), 1fr));
+    padding: 0;
+    list-style: none;
+  }
+
+  .roster a {
+    display: grid;
+    justify-items: center;
+    gap: var(--hd-space-1);
+    block-size: 100%;
+    padding: var(--hd-space-6) var(--hd-space-3);
+    border: 1px solid var(--hd-border);
+    border-block-start: 3px solid var(--hero);
+    border-radius: var(--hd-radius-lg);
+    background: var(--hd-surface-raised);
+    color: var(--hd-text);
+    text-align: center;
+    text-decoration: none;
+    transition: border-color var(--hd-motion-fast) var(--hd-motion-ease);
+  }
+
+  .roster a:hover {
+    border-color: var(--hero);
+  }
+
+  .roster-name {
+    margin-block-start: var(--hd-space-2);
+    font-family: var(--hd-font-display);
+    font-size: var(--hd-text-lg);
+    font-weight: 700;
+  }
+
+  .roster-role {
+    color: var(--hd-text-muted);
+    font-size: var(--hd-text-xs);
+  }
+
+  .more {
+    margin-block-start: var(--hd-space-6);
+    font-weight: 600;
+  }
+
+  .columns {
+    display: grid;
+    gap: var(--hd-space-12);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+  }
+
+  .columns h2 {
+    margin-block-end: var(--hd-space-6);
+  }
+
+  .fair {
+    display: grid;
+    gap: var(--hd-space-3);
+    padding: 0;
+    list-style: none;
+  }
+
+  .fair li {
+    position: relative;
+    padding-inline-start: var(--hd-space-6);
+  }
+
+  .fair li::before {
+    content: '';
+    position: absolute;
+    inset-inline-start: 0.2rem;
+    inset-block-start: 0.55em;
+    inline-size: 0.45rem;
+    block-size: 0.45rem;
+    background: var(--hd-accent);
+    transform: rotate(45deg);
+  }
+
+  .status {
+    border-color: var(--hd-border-gold);
+    text-align: center;
+  }
+
+  .status h2 {
     margin-block-end: var(--hd-space-3);
   }
 
-  .building p {
-    color: var(--hd-text-muted);
+  .status p {
+    margin-inline: auto;
   }
 </style>

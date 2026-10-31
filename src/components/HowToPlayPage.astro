@@ -1,0 +1,161 @@
+---
+import PageHead from '~/components/PageHead.astro';
+import CtaLink from '~/components/CtaLink.astro';
+import { howToPlayCopy } from '~/i18n/pages/howToPlay';
+import { localizedPath, type Lang } from '~/i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const copy = howToPlayCopy[lang];
+---
+
+<PageHead eyebrow={copy.eyebrow} title={copy.title} lead={copy.lead} />
+
+<section class="section container" aria-labelledby="setup">
+  <h2 id="setup">{copy.setup.title}</h2>
+  <div class="prose">
+    {copy.setup.items.map((item) => <p>{item}</p>)}
+  </div>
+</section>
+
+<section class="section container split" aria-labelledby="turn">
+  <div>
+    <h2 id="turn">{copy.turn.title}</h2>
+    <ol class="steps">
+      {copy.turn.steps.map((step) => <li>{step}</li>)}
+    </ol>
+  </div>
+  <div class="panel">
+    <h3 id="energy">{copy.energy.title}</h3>
+    <table aria-labelledby="energy">
+      <tbody>
+        {
+          copy.energy.rows.map((row) => (
+            <tr>
+              <th scope="row">{row.label}</th>
+              <td>{row.value}</td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="section container" aria-labelledby="attack">
+  <h2 id="attack">{copy.attack.title}</h2>
+  <ol class="steps">
+    {copy.attack.steps.map((step) => <li>{step}</li>)}
+  </ol>
+</section>
+
+<section class="section container" aria-labelledby="equipment">
+  <h2 id="equipment">{copy.equipment.title}</h2>
+  <p class="intro">{copy.equipment.intro}</p>
+  <ul class="grid">
+    {
+      copy.equipment.slots.map((slot) => (
+        <li class="panel slot">
+          <h3>{slot.title}</h3>
+          <p class="stats">{slot.stats}</p>
+          <p>{slot.body}</p>
+        </li>
+      ))
+    }
+  </ul>
+</section>
+
+<section class="section container" aria-labelledby="more">
+  <h2 id="more" class="visually-hidden">{copy.instants.title} · {copy.abilities.title}</h2>
+  <div class="grid">
+    <div class="panel">
+      <h3>{copy.instants.title}</h3>
+      <p>{copy.instants.body}</p>
+    </div>
+    <div class="panel">
+      <h3>{copy.abilities.title}</h3>
+      <p>{copy.abilities.body}</p>
+    </div>
+    <div class="panel">
+      <h3>{copy.timer.title}</h3>
+      <p>{copy.timer.body}</p>
+    </div>
+    <div class="panel">
+      <h3>{copy.end.title}</h3>
+      <p>{copy.end.body}</p>
+    </div>
+  </div>
+  <div class="next">
+    <CtaLink href={localizedPath(lang, 'heroes')}>{copy.abilities.link}</CtaLink>
+  </div>
+</section>
+
+<style>
+  .prose {
+    display: grid;
+    gap: var(--hd-space-4);
+  }
+
+  .split {
+    display: grid;
+    gap: var(--hd-space-8);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+    align-items: start;
+  }
+
+  .split h2 {
+    margin-block-end: var(--hd-space-6);
+  }
+
+  table {
+    inline-size: 100%;
+    margin-block-start: var(--hd-space-3);
+    border-collapse: collapse;
+  }
+
+  th,
+  td {
+    padding: var(--hd-space-2) 0;
+    border-block-end: 1px solid var(--hd-border);
+    text-align: start;
+    vertical-align: top;
+  }
+
+  th {
+    padding-inline-end: var(--hd-space-4);
+    color: var(--hd-text-muted);
+    font-weight: 500;
+  }
+
+  td {
+    font-weight: 600;
+  }
+
+  tr:last-child th,
+  tr:last-child td {
+    border-block-end: 0;
+  }
+
+  .intro {
+    margin-block-end: var(--hd-space-6);
+    color: var(--hd-text-muted);
+  }
+
+  .slot {
+    border-block-start: 3px solid var(--hd-accent);
+  }
+
+  .stats {
+    margin-block-end: var(--hd-space-2);
+    color: var(--hd-accent);
+    font-size: var(--hd-text-sm);
+    font-weight: 600;
+  }
+
+  .next {
+    margin-block-start: var(--hd-space-8);
+  }
+</style>
