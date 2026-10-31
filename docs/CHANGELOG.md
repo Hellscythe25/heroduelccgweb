@@ -14,6 +14,12 @@ convencionales. Las entradas no se escriben a mano.
 
 ## [No publicado]
 
+### Corregido — imagen para redes (2026-10-31, rama `fix/seo-og-image-cache`)
+
+- La imagen OG lleva el hash del contenido en su URL. WhatsApp seguía
+  mostrando la imagen anterior porque la URL era la misma
+  (`/og/default.png`) y la caché duraba una semana.
+
 ### Añadido — arte del juego (2026-10-31, rama `feat/landing-game-art`)
 
 - Ilustraciones del juego en el sitio: los cinco retratos, sus arenas, escenas
