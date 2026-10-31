@@ -85,7 +85,7 @@ export const pressKit: PressKit = {
     website: 'https://heroduelccg.com',
   },
   game: {
-    title: 'Hero Duel',
+    title: 'Hero Duel CCG',
     releaseDate: { es: '', en: '' },
     platforms: [],
     price: { es: '', en: '' },

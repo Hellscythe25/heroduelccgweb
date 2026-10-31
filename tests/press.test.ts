@@ -51,7 +51,7 @@ describe('regla de publicación', () => {
         website: 'https://heroduelccg.com',
       },
       game: {
-        title: 'Hero Duel',
+        title: 'Hero Duel CCG',
         releaseDate: { es: 'Por anunciar', en: 'To be announced' },
         platforms: ['PC'],
         price: { es: 'Por anunciar', en: 'To be announced' },
