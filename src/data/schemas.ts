@@ -50,7 +50,7 @@ export const CardSchema = z
       })
       .optional(),
     /** Si está presente, la carta solo puede ir en mazos de ese héroe. */
-    heroId: z.number().int().positive().optional(),
+    heroId: z.string().min(1).optional(),
     keywords: z.array(z.string()).default([]),
     /** Ruta del arte relativa a src/assets/. Ausente = arte pendiente. */
     art: z.string().optional(),
@@ -76,23 +76,36 @@ export const DeckRulesSchema = z
 
 export type DeckRules = z.infer<typeof DeckRulesSchema>;
 
+/**
+ * Héroe tal como lo exporta scripts/import-game-data.mjs desde el
+ * ContentDatabase.json del juego (ADR-005). El id es el del juego ("brakka"):
+ * ya es un slug estable, así que sirve también para la URL y las anclas.
+ */
 export const HeroSchema = z
   .object({
-    id: z.number().int().positive(),
-    slug: z
+    id: z
       .string()
-      .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'El slug es kebab-case en minusculas.'),
+      .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'El id es kebab-case en minusculas.'),
+    /** Nombre completo con epíteto, ej. "Brakka Furia de Hierro". */
     name: LocalizedTextSchema,
+    /** Vida inicial. En PVP el segundo jugador suma la compensación del juego. */
+    life: z.number().int().positive(),
     passive: z.object({ name: LocalizedTextSchema, text: LocalizedTextSchema }),
+    /** Habilidades activas: no son cartas, siempre disponibles, cuestan energía. */
     actives: z
       .array(
-        z.object({
-          name: LocalizedTextSchema,
-          text: LocalizedTextSchema,
-          cost: z.number().int().min(0),
-        }),
+        z
+          .object({
+            id: z.string().min(1),
+            name: LocalizedTextSchema,
+            text: LocalizedTextSchema,
+            cost: z.number().int().min(0),
+          })
+          .strict(),
       )
       .default([]),
+    /** Campaña PVE propia del héroe; superarla lo desbloquea. */
+    campaign: z.object({ name: LocalizedTextSchema }).strict().optional(),
     /** Sobrescribe las reglas globales solo para mazos de este héroe. */
     deckRulesOverride: DeckRulesSchema.partial().optional(),
     art: z.string().optional(),
@@ -203,7 +216,7 @@ export function checkGameDataConsistency(
     }
   }
 
-  const seenHeroIds = new Set<number>();
+  const seenHeroIds = new Set<string>();
   for (const hero of heroesFile.heroes) {
     if (seenHeroIds.has(hero.id)) {
       issues.push({
@@ -215,12 +228,14 @@ export function checkGameDataConsistency(
     seenHeroIds.add(hero.id);
   }
 
-  if (heroesFile.heroes.length > 0 && heroesFile.deckRules === null) {
+  // Las reglas de construcción solo hacen falta cuando hay cartas que validar:
+  // la página de héroes no las usa, el deckbuilder sí.
+  if (cardsFile.cards.length > 0 && heroesFile.deckRules === null) {
     issues.push({
       severity: 'error',
       code: 'missing-deck-rules',
       message:
-        'Hay héroes cargados pero deckRules sigue en null. El deckbuilder no puede validar mazos sin reglas exportadas por el juego.',
+        'Hay cartas cargadas pero deckRules sigue en null. El deckbuilder no puede validar mazos sin reglas exportadas por el juego.',
     });
   }
 

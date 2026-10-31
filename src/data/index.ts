@@ -41,8 +41,8 @@ export function findCardById(id: number): Card | undefined {
   return cards.find((card) => card.id === id);
 }
 
-export function findHeroBySlug(slug: string): Hero | undefined {
-  return heroes.find((hero) => hero.slug === slug);
+export function findHeroById(id: string): Hero | undefined {
+  return heroes.find((hero) => hero.id === id);
 }
 
 export * from './schemas';

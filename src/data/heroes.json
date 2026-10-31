@@ -1,5 +1,256 @@
 {
-  "dataVersion": "0.0.0",
+  "dataVersion": "0.6.0",
   "deckRules": null,
-  "heroes": []
+  "heroes": [
+    {
+      "id": "brakka",
+      "name": {
+        "es": "Brakka Furia de Hierro",
+        "en": "Brakka Iron Fury"
+      },
+      "life": 28,
+      "passive": {
+        "name": {
+          "es": "Filo Implacable",
+          "en": "Relentless Edge"
+        },
+        "text": {
+          "es": "los ataques de Brakka ignoran 1 punto de armadura enemiga.",
+          "en": "Brakka's attacks ignore 1 point of enemy armor."
+        }
+      },
+      "actives": [
+        {
+          "id": "h1_buff",
+          "name": {
+            "es": "Furia Desatada",
+            "en": "Unleashed Fury"
+          },
+          "text": {
+            "es": "Tu próximo ataque este turno inflige +1 de daño. Acumulable: puedes usarla varias veces en el mismo turno. No consume tu acción del turno.",
+            "en": "Your next attack this turn deals +1 damage. Stacks: you can use it several times in the same turn. Does not consume your turn action."
+          },
+          "cost": 2
+        },
+        {
+          "id": "h1_strike",
+          "name": {
+            "es": "Golpe Devastador",
+            "en": "Devastating Blow"
+          },
+          "text": {
+            "es": "Atacas ya mismo con +5 de daño adicional. Cuenta como tu ataque del turno.",
+            "en": "Attack immediately with +5 bonus damage. Counts as your attack for the turn."
+          },
+          "cost": 6
+        }
+      ],
+      "campaign": {
+        "name": {
+          "es": "La Prueba del Hierro",
+          "en": "The Iron Trial"
+        }
+      }
+    },
+    {
+      "id": "sable",
+      "name": {
+        "es": "Sable la Guardiana",
+        "en": "Sable the Guardian"
+      },
+      "life": 32,
+      "passive": {
+        "name": {
+          "es": "Templanza",
+          "en": "Temper"
+        },
+        "text": {
+          "es": "la armadura que equipa Sable gana +1 de durabilidad extra.",
+          "en": "armor Sable equips gains +1 extra durability."
+        }
+      },
+      "actives": [
+        {
+          "id": "h2_repair",
+          "name": {
+            "es": "Remachar",
+            "en": "Rivet"
+          },
+          "text": {
+            "es": "Repara 1 de durabilidad de tu armadura equipada, sin superar su durabilidad original. Máximo un uso por turno; no consume tu acción del turno.",
+            "en": "Repairs 1 durability on your equipped armor, never above its original durability. One use per turn; does not consume your turn action."
+          },
+          "cost": 1
+        },
+        {
+          "id": "h2_slam",
+          "name": {
+            "es": "Embate del Coloso",
+            "en": "Colossus Slam"
+          },
+          "text": {
+            "es": "Atacas con +2 de daño más el valor de tu armadura equipada. Cuenta como tu ataque del turno.",
+            "en": "Attack with +2 bonus damage plus your equipped armor's value. Counts as your attack for the turn."
+          },
+          "cost": 6
+        }
+      ],
+      "campaign": {
+        "name": {
+          "es": "El Juramento del Escudo",
+          "en": "The Shield's Oath"
+        }
+      }
+    },
+    {
+      "id": "yrenna",
+      "name": {
+        "es": "Yrenna Tejedora Arcana",
+        "en": "Yrenna the Arcane Weaver"
+      },
+      "life": 26,
+      "passive": {
+        "name": {
+          "es": "Resonancia",
+          "en": "Resonance"
+        },
+        "text": {
+          "es": "al inicio de su turno, si tiene un trinket con cargas, gana +1 de energía extra ese turno.",
+          "en": "at the start of her turn, if she has a trinket with charges left, she gains +1 extra energy that turn."
+        }
+      },
+      "actives": [
+        {
+          "id": "h3_lance",
+          "name": {
+            "es": "Lanza del Vacío",
+            "en": "Void Lance"
+          },
+          "text": {
+            "es": "Inflige 2 de daño directo al héroe rival; el daño directo ignora la armadura. Máximo un uso por turno; no consume tu acción del turno.",
+            "en": "Deals 2 direct damage to the enemy hero; direct damage ignores armor. One use per turn; does not consume your turn action."
+          },
+          "cost": 3
+        },
+        {
+          "id": "h3_reweave",
+          "name": {
+            "es": "Retejer",
+            "en": "Reweave"
+          },
+          "text": {
+            "es": "Devuelve tu mano al mazo, barájalo y roba la misma cantidad. Máximo un uso por turno; no consume tu acción del turno.",
+            "en": "Return your hand to your deck, shuffle it and draw the same number of cards. One use per turn; does not consume your turn action."
+          },
+          "cost": 6
+        }
+      ],
+      "campaign": {
+        "name": {
+          "es": "El Telar de lo Posible",
+          "en": "The Loom of the Possible"
+        }
+      }
+    },
+    {
+      "id": "shouny",
+      "name": {
+        "es": "Shouny la Sombra Letal",
+        "en": "Shouny the Deadly Shadow"
+      },
+      "life": 24,
+      "passive": {
+        "name": {
+          "es": "Sifón de Sombras",
+          "en": "Shadow Siphon"
+        },
+        "text": {
+          "es": "cuando el rival descarta cartas de forma forzada en tu turno, Shouny gana 1 de energía este turno (una vez por acción de descarte, no por carta).",
+          "en": "when the enemy hero is forced to discard cards on your turn, Shouny gains 1 energy this turn (once per discard action, not per card)."
+        }
+      },
+      "actives": [
+        {
+          "id": "h4_unravel",
+          "name": {
+            "es": "Deshilar",
+            "en": "Unravel"
+          },
+          "text": {
+            "es": "El rival descarta 1 carta al azar. Máximo un uso por turno; no consume tu acción del turno.",
+            "en": "The enemy hero discards 1 random card. One use per turn; does not consume your turn action."
+          },
+          "cost": 2
+        },
+        {
+          "id": "h4_execution",
+          "name": {
+            "es": "Ejecución de Medianoche",
+            "en": "Midnight Execution"
+          },
+          "text": {
+            "es": "Atacas ya mismo con +2 de daño adicional, más +1 por cada carta que le falte al rival para tener 5 en la mano (máximo +7 en total). Cuenta como tu ataque del turno.",
+            "en": "Attack immediately with +2 bonus damage, plus +1 for each card the enemy hero is missing to reach 5 in hand (up to +7 total). Counts as your attack for the turn."
+          },
+          "cost": 6
+        }
+      ],
+      "campaign": {
+        "name": {
+          "es": "El Precio del Silencio",
+          "en": "The Price of Silence"
+        }
+      }
+    },
+    {
+      "id": "krunk",
+      "name": {
+        "es": "Krunk Puño de Demolición",
+        "en": "Krunk Fist of Demolition"
+      },
+      "life": 30,
+      "passive": {
+        "name": {
+          "es": "Botín del Destrozo",
+          "en": "Wreckage Spoils"
+        },
+        "text": {
+          "es": "cuando un equipo del rival se rompe, Krunk roba 1 carta (las tres vías cuentan; el equipo propio nunca lo dispara).",
+          "en": "whenever the enemy's equipment breaks, Krunk draws 1 card (all three ways count; his own equipment never triggers it)."
+        }
+      },
+      "actives": [
+        {
+          "id": "h5_dent",
+          "name": {
+            "es": "Abollar",
+            "en": "Dent"
+          },
+          "text": {
+            "es": "El arma rival pierde 1 de durabilidad. Máximo un uso por turno; no consume tu acción del turno.",
+            "en": "The enemy weapon loses 1 durability. One use per turn; does not consume your turn action."
+          },
+          "cost": 2
+        },
+        {
+          "id": "h5_demolition",
+          "name": {
+            "es": "Golpe de Demolición",
+            "en": "Demolition Strike"
+          },
+          "text": {
+            "es": "Atacas ya mismo con +2 de daño adicional, más +1 por cada carta de equipo en el descarte del rival (máximo +7 en total). Cuenta como tu ataque del turno.",
+            "en": "Attack immediately with +2 bonus damage, plus +1 for each equipment card in the enemy's discard pile (up to +7 total). Counts as your attack for the turn."
+          },
+          "cost": 6
+        }
+      ],
+      "campaign": {
+        "name": {
+          "es": "El Desprecio del Forjado",
+          "en": "Contempt for the Forged"
+        }
+      }
+    }
+  ]
 }
