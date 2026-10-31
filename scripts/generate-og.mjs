@@ -1,5 +1,6 @@
 /**
- * Genera la imagen OG por defecto a partir de los tokens del sistema de diseño.
+ * Genera la imagen OG por defecto: el emblema y el título a la izquierda, y la
+ * alineación de los cinco héroes a la derecha, como en la portada.
  *
  * Se ejecuta A MANO, no en cada build: el resultado es un asset estable que se
  * versiona en public/og/. Regenerarlo en CI gastaría segundos en cada despliegue
@@ -7,9 +8,8 @@
  *
  *   node scripts/generate-og.mjs
  *
- * Usa `sharp`, que ya viene con Astro para optimizar imágenes. No se declara
- * como dependencia propia porque este script no forma parte del build; si algún
- * día Astro deja de traerlo, el script avisa en vez de fallar de forma críptica.
+ * Lee el arte de src/assets/art/ (scripts/import-game-art.mjs). Usa `sharp`,
+ * que ya viene con Astro.
  *
  * Por qué existe: `docs/DEPLOY.md` §13 exige que ninguna página se publique sin
  * imagen OG. Cuando alguien pega un enlace del sitio en Discord o en X, lo que
@@ -31,51 +31,87 @@ const HEIGHT = 630;
 
 // Tokens copiados de src/styles/tokens.css (Forja Oscura). Se duplican a
 // propósito: este script corre fuera de Vite y no puede importar CSS.
-const INK_900 = '#0b0c10';
-const INK_800 = '#14161c';
+const INK_950 = '#0b0c10';
 const INK_300 = '#a3a8b5';
 const GOLD_400 = '#e0b357';
+const HERO_COLORS = {
+  brakka: '#e08b57',
+  sable: '#9aa0ad',
+  yrenna: '#b45fd0',
+  shouny: '#4a7edb',
+  krunk: '#c97a3f',
+};
 
 // El título usa Cinzel si está instalada en la máquina que genera la imagen
 // (librsvg no carga woff2); si no, cae a una serif del sistema.
-const FONT = "'Segoe UI', 'Helvetica Neue', Arial, sans-serif";
+const FONT = "'Space Grotesk', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif";
 const DISPLAY_FONT = "Cinzel, 'Trajan Pro', Georgia, 'Times New Roman', serif";
 
-const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${WIDTH}" height="${HEIGHT}" viewBox="0 0 ${WIDTH} ${HEIGHT}">
+// ---- Alineación de héroes: franjas verticales en la mitad derecha ----
+const LINEUP_X = 560;
+const heroIds = Object.keys(HERO_COLORS);
+const sliceWidth = Math.ceil((WIDTH - LINEUP_X) / heroIds.length);
+
+const slices = await Promise.all(
+  heroIds.map(async (id, index) => ({
+    input: await sharp(`src/assets/art/heroes/${id}.jpg`)
+      .resize(sliceWidth, HEIGHT, { fit: 'cover', position: 'north' })
+      .modulate({ brightness: 0.85 })
+      .toBuffer(),
+    left: LINEUP_X + index * sliceWidth,
+    top: 0,
+  })),
+);
+
+// Velo, filos de color por héroe y textos, en una sola capa SVG.
+const overlay = `<svg xmlns="http://www.w3.org/2000/svg" width="${WIDTH}" height="${HEIGHT}">
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="${INK_900}"/>
-      <stop offset="100%" stop-color="${INK_800}"/>
+    <linearGradient id="fade" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="${INK_950}" stop-opacity="1"/>
+      <stop offset="0.47" stop-color="${INK_950}" stop-opacity="1"/>
+      <stop offset="0.6" stop-color="${INK_950}" stop-opacity="0.15"/>
+      <stop offset="1" stop-color="${INK_950}" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="floor" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0.6" stop-color="${INK_950}" stop-opacity="0"/>
+      <stop offset="1" stop-color="${INK_950}" stop-opacity="0.85"/>
     </linearGradient>
   </defs>
+  <rect width="${WIDTH}" height="${HEIGHT}" fill="url(#floor)"/>
+  <rect width="${WIDTH}" height="${HEIGHT}" fill="url(#fade)"/>
+  ${heroIds
+    .map(
+      (id, index) =>
+        `<rect x="${LINEUP_X + index * sliceWidth}" y="${HEIGHT - 6}" width="${sliceWidth}" height="6" fill="${HERO_COLORS[id]}"/>`,
+    )
+    .join('\n  ')}
+  <rect x="0" y="0" width="${WIDTH}" height="6" fill="${GOLD_400}"/>
 
-  <rect width="${WIDTH}" height="${HEIGHT}" fill="url(#bg)"/>
-  <rect x="0" y="0" width="${WIDTH}" height="8" fill="${GOLD_400}"/>
-
-  <g transform="translate(96, 214) scale(2.1)">
-    <path d="M32 7 54 16v18c0 13-9 20-22 24C19 54 10 47 10 34V16Z"
-          fill="none" stroke="${GOLD_400}" stroke-width="3.5" stroke-linejoin="round"/>
-    <path d="M24 24v16M40 24v16M24 32h16"
-          fill="none" stroke="${GOLD_400}" stroke-width="4.5" stroke-linecap="round"/>
-  </g>
-
-  <text x="264" y="300" font-family="${DISPLAY_FONT}" font-size="96" font-weight="700" fill="${GOLD_400}"
-        letter-spacing="1">Hero Duel CCG</text>
-
-  <text x="266" y="360" font-family="${FONT}" font-size="30" font-weight="500" fill="${INK_300}"
-        letter-spacing="1">Duelos de héroes, cartas y decisiones</text>
-
-  <text x="266" y="410" font-family="${FONT}" font-size="22" font-weight="700" fill="${GOLD_400}"
-        letter-spacing="4">EN DESARROLLO · IN DEVELOPMENT</text>
-
-  <text x="96" y="574" font-family="${FONT}" font-size="24" font-weight="500" fill="${INK_300}"
-        letter-spacing="1">heroduelccg.com</text>
+  <text x="72" y="330" font-family="${DISPLAY_FONT}" font-size="76" font-weight="700" fill="${GOLD_400}">Hero Duel</text>
+  <text x="72" y="410" font-family="${DISPLAY_FONT}" font-size="76" font-weight="700" fill="${GOLD_400}">CCG</text>
+  <text x="74" y="462" font-family="${FONT}" font-size="26" fill="${INK_300}">Duelos de héroes, cartas y decisiones</text>
+  <text x="74" y="560" font-family="${FONT}" font-size="22" fill="${INK_300}">heroduelccg.com</text>
 </svg>`;
+
+// El emblema trae su propio fondo casi negro: una máscara radial lo funde con
+// el carbón de la imagen en vez de dejar ver un recuadro.
+const EMBLEM = 170;
+const emblemMask = Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="${EMBLEM}" height="${EMBLEM}">
+  <defs><radialGradient id="m"><stop offset="0.62" stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient></defs>
+  <rect width="100%" height="100%" fill="url(#m)"/>
+</svg>`);
+const emblem = await sharp('src/assets/art/brand/emblem.png')
+  .resize(EMBLEM, EMBLEM, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
+  .composite([{ input: emblemMask, blend: 'dest-in' }])
+  .png()
+  .toBuffer();
 
 await mkdir('public/og', { recursive: true });
 
-const png = await sharp(Buffer.from(svg)).png({ compressionLevel: 9 }).toBuffer();
+const png = await sharp({ create: { width: WIDTH, height: HEIGHT, channels: 3, background: INK_950 } })
+  .composite([...slices, { input: Buffer.from(overlay), left: 0, top: 0 }, { input: emblem, left: 56, top: 96 }])
+  .png({ compressionLevel: 9, palette: true, quality: 90 })
+  .toBuffer();
 await writeFile('public/og/default.png', png);
 
-const { size } = await sharp(png).metadata().then(async (m) => ({ ...m, size: png.length }));
-console.log(`  generate-og: public/og/default.png — ${WIDTH}x${HEIGHT}, ${(size / 1024).toFixed(1)} KB`);
+console.log(`  generate-og: public/og/default.png — ${WIDTH}x${HEIGHT}, ${(png.length / 1024).toFixed(1)} KB`);
