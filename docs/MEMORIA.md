@@ -97,6 +97,13 @@ Estado medido en la última verificación: build en verde, 4 páginas,
     respaldo para un héroe sin retrato.
   - El responsable de los datos en los legales es **Inca Games** (Nueva
     Jersey, EE. UU.).
+  - El pie acredita al estudio: **"Desarrollado por" Wildcat Games**, con su
+    logo oficial (kit de marca de Wildcat) y enlace a wildcatgames.net.
+  - **El número de héroes es abierto**: llega un sexto y habrá más. Ningún
+    diseño ni texto fija cuántos son; un héroe nuevo entra al aparecer en
+    `src/data/heroes.json` (con su retrato y su color en `tokens.css`, o con el
+    emblema y el oro de respaldo mientras no los tenga). `tests/heroes.test.ts`
+    lo vigila.
 - **Los datos del juego no publicables todavía** (decisión del juego, no de la
   web): fechas internas de la beta y del lanzamiento, nombres de rango (copian
   a World of Warcraft y se van a sustituir), precios y número de cartas.

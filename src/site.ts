@@ -26,6 +26,15 @@ export const externalLinks: ExternalLinks = {
   itch: '',
 };
 
+/**
+ * Estudio que desarrolla el juego, acreditado en el pie con su logo oficial
+ * (kit de marca de Wildcat Games). Inca Games lo publica.
+ */
+export const developer = {
+  name: 'Wildcat Games',
+  url: 'https://wildcatgames.net/',
+};
+
 /** Correo de contacto para prensa. Vacío hasta que exista uno del dominio. */
 export const pressContact = '';
 
