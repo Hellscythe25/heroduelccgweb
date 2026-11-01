@@ -14,6 +14,24 @@ convencionales. Las entradas no se escriben a mano.
 
 ## [No publicado]
 
+### Cambiado — héroes sin número fijo (2026-10-31, rama `feat/landing-visual-polish`)
+
+- Los retratos de la portada se ven nítidos: el navegador bajaba una versión
+  cuatro veces más pequeña que la franja donde se pintaba.
+- La alineación de la portada admite cualquier número de héroes; en el
+  teléfono se desliza en horizontal y muestra los nombres.
+- "Elige a tu héroe" pasa de lista de texto a cartas con retrato, en una
+  rejilla que reparte las columnas según cuántos héroes haya.
+- El turno y el juego limpio se leen sobre el tablero del juego.
+- Los textos ya no dicen "cinco héroes"; la descripción de la página de héroes
+  toma los nombres de los datos.
+- Un héroe nuevo sin color propio usa el oro de la marca; la imagen OG toma los
+  héroes de los datos.
+
+### Añadido — crédito del estudio
+
+- Pie con "Desarrollado por" y el logo oficial de Wildcat Games.
+
 ### Añadido — arte del juego (2026-10-31, rama `feat/landing-game-art`)
 
 - Ilustraciones del juego en el sitio: los cinco retratos, sus arenas, escenas

@@ -16,7 +16,8 @@
  * aparece es esto — es distribución gratis, y sin la imagen el enlace se ve como
  * spam.
  */
-import { mkdir, writeFile } from 'node:fs/promises';
+import { existsSync } from 'node:fs';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
 
 let sharp;
 try {
@@ -49,7 +50,11 @@ const DISPLAY_FONT = "Cinzel, 'Trajan Pro', Georgia, 'Times New Roman', serif";
 
 // ---- Alineación de héroes: franjas verticales en la mitad derecha ----
 const LINEUP_X = 560;
-const heroIds = Object.keys(HERO_COLORS);
+// Los héroes salen de los datos, no de la lista de colores: uno nuevo entra en
+// la imagen en cuanto tiene retrato, y usa el oro de la marca si aún no tiene
+// color propio.
+const { heroes } = JSON.parse(await readFile('src/data/heroes.json', 'utf8'));
+const heroIds = heroes.map((hero) => hero.id).filter((id) => existsSync(`src/assets/art/heroes/${id}.jpg`));
 const sliceWidth = Math.ceil((WIDTH - LINEUP_X) / heroIds.length);
 
 const slices = await Promise.all(
@@ -82,7 +87,7 @@ const overlay = `<svg xmlns="http://www.w3.org/2000/svg" width="${WIDTH}" height
   ${heroIds
     .map(
       (id, index) =>
-        `<rect x="${LINEUP_X + index * sliceWidth}" y="${HEIGHT - 6}" width="${sliceWidth}" height="6" fill="${HERO_COLORS[id]}"/>`,
+        `<rect x="${LINEUP_X + index * sliceWidth}" y="${HEIGHT - 6}" width="${sliceWidth}" height="6" fill="${HERO_COLORS[id] ?? GOLD_400}"/>`,
     )
     .join('\n  ')}
   <rect x="0" y="0" width="${WIDTH}" height="6" fill="${GOLD_400}"/>
