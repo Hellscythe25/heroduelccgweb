@@ -45,13 +45,15 @@ RewriteRule ^ https://__SITE_DOMAIN__%{REQUEST_URI} [L,R=301]
 
 # --- 3. Cache ---
 <IfModule mod_headers.c>
-  # Assets con hash de contenido -> inmutables un año
-  <FilesMatch "\.[0-9a-zA-Z_-]{8}\.(js|css|woff2|avif|webp|png|jpe?g|svg|gif)$">
+  # Assets con hash de contenido -> inmutables un año.
+  # Astro nombra `nombre.HASH.ext` (CSS, fuentes, originales) y, a las imágenes
+  # optimizadas, `nombre.HASH_VARIANTE.ext`. tests/htaccess.test.ts lo vigila.
+  <FilesMatch "\.[0-9a-zA-Z_-]{8}(_[0-9a-zA-Z_-]+)?\.(js|css|woff2?|avif|webp|png|jpe?g|svg|gif)$">
     Header set Cache-Control "public, max-age=31536000, immutable"
   </FilesMatch>
 
   # Assets sin hash (favicon, OG, arte en /public) -> una semana
-  <FilesMatch "\.(woff2|avif|webp|png|jpe?g|svg|gif|ico)$">
+  <FilesMatch "\.(woff2?|avif|webp|png|jpe?g|svg|gif|ico)$">
     Header setifempty Cache-Control "public, max-age=604800"
   </FilesMatch>
 

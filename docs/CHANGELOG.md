@@ -14,6 +14,13 @@ convencionales. Las entradas no se escriben a mano.
 
 ## [No publicado]
 
+### Corregido — caché de assets (2026-11-02, rama `fix/deploy-asset-cache`)
+
+- Las imágenes optimizadas y las fuentes `.woff` quedan en caché un año,
+  como el resto de los assets con hash. La regla del `.htaccess` solo
+  reconocía `nombre.HASH.ext` y dejaba fuera `nombre.HASH_VARIANTE.ext`: 15 de
+  299 archivos tenían la caché larga.
+
 ### Corregido — alineación de la portada (2026-11-02, rama `fix/landing-lineup-hover`)
 
 - En pantalla ancha, el bloque de texto de la portada tapaba las franjas de
