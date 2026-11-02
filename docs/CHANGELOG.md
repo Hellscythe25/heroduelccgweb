@@ -14,6 +14,11 @@ convencionales. Las entradas no se escriben a mano.
 
 ## [No publicado]
 
+### Corregido — cartas de héroe (2026-11-02, rama `fix/landing-hero-card-life`)
+
+- En "Elige a tu héroe", la vida va al pie de cada carta y queda a la misma
+  altura en todas; antes seguía al rol y bajaba cuando este ocupaba dos líneas.
+
 ### Añadido — iconos del juego (2026-11-02, rama `feat/ui-game-icons`)
 
 - "Cómo se juega" muestra los iconos de la interfaz del juego junto a la
