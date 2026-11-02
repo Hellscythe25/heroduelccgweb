@@ -14,6 +14,13 @@ convencionales. Las entradas no se escriben a mano.
 
 ## [No publicado]
 
+### Añadido — iconos del juego (2026-11-02, rama `feat/ui-game-icons`)
+
+- "Cómo se juega" muestra los iconos de la interfaz del juego junto a la
+  energía y a cada hueco de equipo (arma, armadura, trinket). Son los mismos
+  trazos de `VectorIcons.cs`, en SVG en línea y sin JavaScript
+  (`src/gameIcons.ts`, `GameIcon.astro`).
+
 ### Añadido — sexto héroe anunciado (2026-11-02, rama `feat/heroes-coming-soon`)
 
 - Vhassa aparece como "Próximamente" en la página de Héroes (selector y un
