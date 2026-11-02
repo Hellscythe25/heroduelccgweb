@@ -593,8 +593,8 @@ const heroesPath = localizedPath(lang, 'heroes');
   .card-body {
     position: relative;
     z-index: 1;
-    display: grid;
-    align-content: start;
+    display: flex;
+    flex-direction: column;
     gap: var(--hd-space-1);
     margin-block-start: -2.25rem;
     padding: 0 var(--hd-space-4) var(--hd-space-4);
@@ -612,8 +612,11 @@ const heroesPath = localizedPath(lang, 'heroes');
     font-size: var(--hd-text-sm);
   }
 
+  /* La vida va al pie de la carta: así queda a la misma altura en todas,
+     ocupe el rol una línea o dos. */
   .card-life {
-    margin-block-start: var(--hd-space-2);
+    margin-block-start: auto;
+    padding-block-start: var(--hd-space-2);
     color: var(--hero-text);
     font-size: var(--hd-text-sm);
     font-weight: 700;
