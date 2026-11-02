@@ -14,6 +14,11 @@ convencionales. Las entradas no se escriben a mano.
 
 ## [No publicado]
 
+### Añadido — sobre de Vhassa (2026-11-02, rama `feat/heroes-vhassa-booster`)
+
+- El bloque de Vhassa en Héroes nombra su sobre: «Las Ofrendas del Pacto» /
+  «The Pact's Offerings», tal como lo localiza el juego.
+
 ### Añadido — sexto héroe anunciado (2026-11-02, rama `feat/heroes-coming-soon`)
 
 - Vhassa aparece como "Próximamente" en la página de Héroes (selector y un

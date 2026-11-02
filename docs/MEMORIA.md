@@ -110,8 +110,9 @@ Estado medido en la última verificación: build en verde, 4 páginas,
     confirmado. Todavía no hay arte, rol, vida ni color aprobados, y no está en
     los datos del juego. Vive en `upcomingHeroes` (`src/i18n/pages/heroes.ts`)
     hasta que llegue a `src/data/heroes.json`; un test obliga a sacarla de ahí
-    cuando eso pase. El nombre de su sobre («Las Ofrendas del Pacto») existe
-    en el juego, pero el dueño no aprobó usarlo en la web.
+    cuando eso pase. El mismo día el dueño aprobó publicar el nombre de su
+    sobre, tal como lo localiza el juego: «Las Ofrendas del Pacto» / «The
+    Pact's Offerings».
 - **Los datos del juego no publicables todavía** (decisión del juego, no de la
   web): fechas internas de la beta y del lanzamiento, nombres de rango (copian
   a World of Warcraft y se van a sustituir), precios y número de cartas.
