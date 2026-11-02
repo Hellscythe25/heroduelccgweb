@@ -14,6 +14,12 @@ convencionales. Las entradas no se escriben a mano.
 
 ## [No publicado]
 
+### Corregido — alineación de la portada (2026-11-02, rama `fix/landing-lineup-hover`)
+
+- En pantalla ancha, el bloque de texto de la portada tapaba las franjas de
+  los héroes: solo la última, que asoma fuera del contenedor, se ampliaba al
+  pasar el puntero y se podía pulsar.
+
 ### Cambiado — héroes sin número fijo (2026-10-31, rama `feat/landing-visual-polish`)
 
 - Los retratos de la portada se ven nítidos: el navegador bajaba una versión
