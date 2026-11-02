@@ -14,6 +14,13 @@ convencionales. Las entradas no se escriben a mano.
 
 ## [No publicado]
 
+### Añadido — iconos del juego (2026-11-02, rama `feat/ui-game-icons`)
+
+- "Cómo se juega" muestra los iconos de la interfaz del juego junto a la
+  energía y a cada hueco de equipo (arma, armadura, trinket). Son los mismos
+  trazos de `VectorIcons.cs`, en SVG en línea y sin JavaScript
+  (`src/gameIcons.ts`, `GameIcon.astro`).
+
 ### Añadido — sobre de Vhassa (2026-11-02, rama `feat/heroes-vhassa-booster`)
 
 - El bloque de Vhassa en Héroes nombra su sobre: «Las Ofrendas del Pacto» /

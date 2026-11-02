@@ -1,0 +1,37 @@
+---
+/**
+ * Un icono de la interfaz del juego (src/gameIcons.ts), en SVG en línea y sin
+ * JavaScript. Toma el color del texto que lo rodea. Es decorativo: siempre va
+ * junto a un texto que dice lo mismo.
+ */
+import { gameIcons, type GameIconId } from '~/gameIcons';
+
+interface Props {
+  id: GameIconId;
+  size?: number;
+  class?: string;
+}
+
+const { id, size = 24, class: className } = Astro.props;
+
+const strokes = gameIcons[id].map((points) => {
+  const closed = points[0] === points.at(-2) && points[1] === points.at(-1);
+  return { closed, points: (closed ? points.slice(0, -2) : points).join(' ') };
+});
+---
+
+<svg
+  class:list={['game-icon', className]}
+  viewBox="0 0 24 24"
+  width={size}
+  height={size}
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.6"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden="true"
+  focusable="false"
+>
+  {strokes.map((stroke) => (stroke.closed ? <polygon points={stroke.points} /> : <polyline points={stroke.points} />))}
+</svg>

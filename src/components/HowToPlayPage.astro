@@ -2,6 +2,8 @@
 import PageHead from '~/components/PageHead.astro';
 import { scenes } from '~/art';
 import CtaLink from '~/components/CtaLink.astro';
+import GameIcon from '~/components/GameIcon.astro';
+import { equipmentIcons } from '~/gameIcons';
 import { howToPlayCopy } from '~/i18n/pages/howToPlay';
 import { localizedPath, type Lang } from '~/i18n/ui';
 
@@ -30,7 +32,7 @@ const copy = howToPlayCopy[lang];
     </ol>
   </div>
   <div class="panel">
-    <h3 id="energy">{copy.energy.title}</h3>
+    <h3 id="energy" class="with-icon"><GameIcon id="energy" size={28} />{copy.energy.title}</h3>
     <table aria-labelledby="energy">
       <tbody>
         {
@@ -58,9 +60,12 @@ const copy = howToPlayCopy[lang];
   <p class="intro">{copy.equipment.intro}</p>
   <ul class="grid">
     {
-      copy.equipment.slots.map((slot) => (
+      copy.equipment.slots.map((slot, index) => (
         <li class="panel slot">
-          <h3>{slot.title}</h3>
+          <h3 class="with-icon">
+            {equipmentIcons[index] && <GameIcon id={equipmentIcons[index]} size={28} />}
+            {slot.title}
+          </h3>
           <p class="stats">{slot.stats}</p>
           <p>{slot.body}</p>
         </li>
@@ -147,6 +152,18 @@ const copy = howToPlayCopy[lang];
 
   .slot {
     border-block-start: 3px solid var(--hd-accent);
+  }
+
+  /* Los mismos iconos que el juego pinta en sus huecos de equipo y su energía. */
+  .with-icon {
+    display: flex;
+    align-items: center;
+    gap: var(--hd-space-2);
+  }
+
+  .with-icon :global(.game-icon) {
+    flex: none;
+    color: var(--hd-accent);
   }
 
   .stats {
