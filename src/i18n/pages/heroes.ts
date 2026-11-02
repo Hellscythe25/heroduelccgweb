@@ -61,6 +61,23 @@ export const heroPresentation: Record<string, HeroPresentation> = {
   },
 };
 
+/**
+ * Héroes anunciados que todavía no están en los datos del juego. Llevan solo el
+ * nombre firmado por el dueño: sin arte, rol, vida ni color hasta que se
+ * aprueben. Cuando el héroe llega a src/data/heroes.json sale de aquí (un test
+ * lo exige) y pasa a heroPresentation.
+ */
+export interface UpcomingHero {
+  id: string;
+  name: Record<Lang, string>;
+}
+
+export const upcomingHeroes: UpcomingHero[] = [
+  // Nombre firmado en el GDD §4.2 (2026-08-02). El epíteto en inglés sigue sin
+  // confirmar, así que en inglés va solo el nombre.
+  { id: 'vhassa', name: { es: 'Vhassa, la Pactada', en: 'Vhassa' } },
+];
+
 export interface HeroesPageCopy {
   /** `{names}` se sustituye por los nombres de los héroes publicados: el texto no fija cuántos son. */
   meta: { title: string; description: string };
