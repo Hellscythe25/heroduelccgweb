@@ -104,6 +104,14 @@ Estado medido en la última verificación: build en verde, 4 páginas,
     `src/data/heroes.json` (con su retrato y su color en `tokens.css`, o con el
     emblema y el oro de respaldo mientras no los tenga). `tests/heroes.test.ts`
     lo vigila.
+  - **Vhassa, sexto héroe, se anuncia como "Próximamente"** (dueño,
+    2026-11-02). Solo se publica el nombre firmado en el GDD §4.2: «Vhassa, la
+    Pactada» en español y «Vhassa» en inglés, porque el epíteto inglés no está
+    confirmado. Todavía no hay arte, rol, vida ni color aprobados, y no está en
+    los datos del juego. Vive en `upcomingHeroes` (`src/i18n/pages/heroes.ts`)
+    hasta que llegue a `src/data/heroes.json`; un test obliga a sacarla de ahí
+    cuando eso pase. El nombre de su sobre («Las Ofrendas del Pacto») existe
+    en el juego, pero el dueño no aprobó usarlo en la web.
 - **Los datos del juego no publicables todavía** (decisión del juego, no de la
   web): fechas internas de la beta y del lanzamiento, nombres de rango (copian
   a World of Warcraft y se van a sustituir), precios y número de cartas.

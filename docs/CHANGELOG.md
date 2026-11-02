@@ -14,6 +14,14 @@ convencionales. Las entradas no se escriben a mano.
 
 ## [No publicado]
 
+### Añadido — sexto héroe anunciado (2026-11-02, rama `feat/heroes-coming-soon`)
+
+- Vhassa aparece como "Próximamente" en la página de Héroes (selector y un
+  bloque propio tras las fichas) y en las cartas de la portada: solo el
+  nombre, con el emblema del juego apagado en lugar de arte, sin vida ni rol.
+- `upcomingHeroes` admite cualquier número de héroes anunciados; un test exige
+  sacarlos de la lista cuando lleguen a los datos del juego.
+
 ### Corregido — caché de assets (2026-11-02, rama `fix/deploy-asset-cache`)
 
 - Las imágenes optimizadas y las fuentes `.woff` quedan en caché un año,

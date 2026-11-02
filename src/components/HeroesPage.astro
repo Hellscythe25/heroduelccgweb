@@ -3,18 +3,20 @@ import { Picture } from 'astro:assets';
 import PageHead from '~/components/PageHead.astro';
 import HeroEmblem from '~/components/HeroEmblem.astro';
 import HeroProfile from '~/components/HeroProfile.astro';
-import { heroPortrait } from '~/art';
+import { brandEmblem, heroPortrait } from '~/art';
 import { heroColorStyle } from '~/heroColors';
 import { DATA_VERSION, heroes } from '~/data';
-import { heroPresentation, heroesPageCopy } from '~/i18n/pages/heroes';
-import type { Lang } from '~/i18n/ui';
+import { heroPresentation, heroesPageCopy, upcomingHeroes } from '~/i18n/pages/heroes';
+import { useTranslations, type Lang } from '~/i18n/ui';
 
 interface Props {
   lang: Lang;
 }
 
 const { lang } = Astro.props;
+const t = useTranslations(lang);
 const copy = heroesPageCopy[lang];
+const shortName = (name: string) => name.split(/[\s,]/)[0];
 const maxLife = Math.max(...heroes.map((hero) => hero.life));
 ---
 
@@ -39,11 +41,22 @@ const maxLife = Math.max(...heroes.map((hero) => hero.life));
                 ) : (
                   <HeroEmblem heroId={hero.id} glyph={heroPresentation[hero.id]!.glyph} size={40} />
                 )}
-                <span>{hero.name[lang].split(' ')[0]}</span>
+                <span>{shortName(hero.name[lang])}</span>
               </a>
             </li>
           );
         })
+      }
+      {
+        upcomingHeroes.map((hero) => (
+          <li>
+            <a href={`#${hero.id}`} class="upcoming-link" style={heroColorStyle(hero.id)}>
+              <span class="seal" aria-hidden="true">?</span>
+              <span>{shortName(hero.name[lang])}</span>
+              <span class="soon">{t('hero.comingSoon')}</span>
+            </a>
+          </li>
+        ))
       }
     </ul>
   </nav>
@@ -51,6 +64,25 @@ const maxLife = Math.max(...heroes.map((hero) => hero.life));
 
 <div class="container">
   {heroes.map((hero, index) => <HeroProfile hero={hero} lang={lang} maxLife={maxLife} flip={index % 2 === 1} />)}
+  {
+    upcomingHeroes.map((hero) => (
+      <article class="upcoming" id={hero.id} style={heroColorStyle(hero.id)}>
+        <Picture
+          src={brandEmblem}
+          alt=""
+          formats={['avif', 'webp']}
+          widths={[160, 320]}
+          sizes="7rem"
+          loading="lazy"
+          class="sealed"
+        />
+        <div>
+          <h2>{hero.name[lang]}</h2>
+          <p class="soon">{t('hero.comingSoon')}</p>
+        </div>
+      </article>
+    ))
+  }
   <p class="note">{copy.dataNote.replace('{version}', DATA_VERSION)}</p>
 </div>
 
@@ -89,6 +121,57 @@ const maxLife = Math.max(...heroes.map((hero) => hero.life));
     border: 2px solid var(--hero);
     object-fit: cover;
     object-position: 50% 15%;
+  }
+
+  /* Héroe anunciado: hueco sellado, con borde discontinuo y el emblema del
+     juego apagado, porque todavía no tiene arte ni datos que mostrar. */
+  .upcoming-link {
+    border-style: dashed;
+  }
+
+  .seal {
+    display: grid;
+    place-items: center;
+    inline-size: 2.5rem;
+    block-size: 2.5rem;
+    border: 2px dashed var(--hero);
+    border-radius: var(--hd-radius-full);
+    color: var(--hero-text);
+    font-family: var(--hd-font-display);
+  }
+
+  .soon {
+    color: var(--hd-text-muted);
+    font-size: var(--hd-text-sm);
+    font-weight: 400;
+  }
+
+  .upcoming {
+    display: flex;
+    align-items: center;
+    gap: var(--hd-space-6);
+    padding-block: var(--hd-space-12);
+    border-block-start: 1px solid var(--hd-border);
+    scroll-margin-block-start: var(--hd-space-6);
+  }
+
+  .upcoming :global(.sealed) {
+    flex: none;
+    inline-size: clamp(4rem, 16vw, 7rem);
+    block-size: auto;
+    opacity: 0.4;
+    filter: grayscale(0.5);
+  }
+
+  .upcoming h2 {
+    font-size: var(--hd-text-3xl);
+  }
+
+  .upcoming .soon {
+    margin-block-start: var(--hd-space-2);
+    color: var(--hero-text);
+    font-size: var(--hd-text-lg);
+    font-weight: 700;
   }
 
   .note {
