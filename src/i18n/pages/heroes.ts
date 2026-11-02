@@ -70,12 +70,19 @@ export const heroPresentation: Record<string, HeroPresentation> = {
 export interface UpcomingHero {
   id: string;
   name: Record<Lang, string>;
+  /** Nombre de su sobre, tal como lo localiza el juego (`ui.collection.booster_name.<id>`). */
+  booster?: Record<Lang, string>;
 }
 
 export const upcomingHeroes: UpcomingHero[] = [
   // Nombre firmado en el GDD §4.2 (2026-08-02). El epíteto en inglés sigue sin
-  // confirmar, así que en inglés va solo el nombre.
-  { id: 'vhassa', name: { es: 'Vhassa, la Pactada', en: 'Vhassa' } },
+  // confirmar, así que en inglés va solo el nombre. El dueño aprobó publicar el
+  // nombre del sobre el 2026-11-02.
+  {
+    id: 'vhassa',
+    name: { es: 'Vhassa, la Pactada', en: 'Vhassa' },
+    booster: { es: 'Las Ofrendas del Pacto', en: "The Pact's Offerings" },
+  },
 ];
 
 export interface HeroesPageCopy {
