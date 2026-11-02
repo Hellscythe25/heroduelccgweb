@@ -3,8 +3,10 @@
  * alineación de los cinco héroes a la derecha, como en la portada.
  *
  * Se ejecuta A MANO, no en cada build: el resultado es un asset estable que se
- * versiona en public/og/. Regenerarlo en CI gastaría segundos en cada despliegue
- * para producir siempre el mismo archivo.
+ * versiona en src/assets/og/. Regenerarlo en CI gastaría segundos en cada
+ * despliegue para producir siempre el mismo archivo. Vive en src/assets y no en
+ * public/ para que Astro le ponga el hash del contenido en el nombre: así cada
+ * versión nueva tiene otra URL y las redes no reutilizan la anterior.
  *
  *   node scripts/generate-og.mjs
  *
@@ -106,12 +108,12 @@ const emblem = await sharp('src/assets/art/brand/emblem.png')
   .png()
   .toBuffer();
 
-await mkdir('public/og', { recursive: true });
+await mkdir('src/assets/og', { recursive: true });
 
 const png = await sharp({ create: { width: WIDTH, height: HEIGHT, channels: 3, background: INK_950 } })
   .composite([...slices, { input: Buffer.from(overlay), left: 0, top: 0 }, { input: emblem, left: 56, top: 96 }])
   .png({ compressionLevel: 9, palette: true, quality: 90 })
   .toBuffer();
-await writeFile('public/og/default.png', png);
+await writeFile('src/assets/og/default.png', png);
 
-console.log(`  generate-og: public/og/default.png — ${WIDTH}x${HEIGHT}, ${(png.length / 1024).toFixed(1)} KB`);
+console.log(`  generate-og: src/assets/og/default.png — ${WIDTH}x${HEIGHT}, ${(png.length / 1024).toFixed(1)} KB`);
