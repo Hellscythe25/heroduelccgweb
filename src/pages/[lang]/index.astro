@@ -455,14 +455,19 @@ const heroesPath = localizedPath(lang, 'heroes');
       pointer-events: none;
     }
 
+    /* El bloque de texto ocupa todo el contenedor y queda encima de la
+       alineación: sin esto tapaba las franjas y solo la que asoma fuera del
+       contenedor respondía al puntero. Solo su contenido recibe eventos. */
     .intro-copy {
       position: relative;
       z-index: 1;
       padding-block: var(--hd-space-16);
+      pointer-events: none;
     }
 
     .intro-copy > * {
       max-inline-size: 30rem;
+      pointer-events: auto;
     }
   }
 
