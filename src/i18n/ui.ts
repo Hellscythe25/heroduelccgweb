@@ -89,6 +89,7 @@ export const ui = {
     'hero.campaign': 'Campaña',
     'hero.portrait': 'Ilustración de {name}',
     'hero.comingSoon': 'Próximamente',
+    'hero.booster': 'Sobre',
     'devlog.title': 'Devlog',
     'devlog.intro':
       'Notas del equipo sobre cómo se hace Hero Duel CCG: diseño, decisiones y avances.',
@@ -170,6 +171,7 @@ export const ui = {
     'hero.campaign': 'Campaign',
     'hero.portrait': 'Illustration of {name}',
     'hero.comingSoon': 'Coming soon',
+    'hero.booster': 'Booster',
     'devlog.title': 'Devlog',
     'devlog.intro': 'Notes from the team on how Hero Duel CCG is made: design, decisions and progress.',
     'devlog.empty': 'No posts yet. The first one is coming soon.',

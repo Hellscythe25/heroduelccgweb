@@ -79,6 +79,14 @@ const maxLife = Math.max(...heroes.map((hero) => hero.life));
         <div>
           <h2>{hero.name[lang]}</h2>
           <p class="soon">{t('hero.comingSoon')}</p>
+          {
+            hero.booster && (
+              <p class="booster">
+                <span class="label">{t('hero.booster')}</span>
+                <em>{hero.booster[lang]}</em>
+              </p>
+            )
+          }
         </div>
       </article>
     ))
@@ -172,6 +180,21 @@ const maxLife = Math.max(...heroes.map((hero) => hero.life));
     color: var(--hero-text);
     font-size: var(--hd-text-lg);
     font-weight: 700;
+  }
+
+  /* Mismo tratamiento que la campaña en la ficha de héroe. */
+  .booster {
+    margin-block-start: var(--hd-space-4);
+  }
+
+  .booster .label {
+    display: block;
+    color: var(--hd-text-muted);
+    font-size: var(--hd-text-sm);
+  }
+
+  .booster em {
+    font-size: var(--hd-text-lg);
   }
 
   .note {
