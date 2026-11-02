@@ -5,10 +5,15 @@
  * Regla: ninguna página se publica sin título, descripción e imagen OG.
  *
  * La imagen por defecto la genera `node scripts/generate-og.mjs` a partir de
- * los tokens del sistema de diseño. Una página puede pasar la suya propia —lo
- * hará el compendio, con una imagen por carta—, pero nunca puede quedarse sin
- * ninguna: un enlace sin previsualización en Discord o X se lee como spam.
+ * los tokens del sistema de diseño. Se importa como asset para que su URL lleve
+ * el hash del contenido: WhatsApp, Discord y X guardan la previsualización por
+ * URL, y con un nombre fijo seguían mostrando la imagen anterior tras cambiarla.
+ *
+ * Una página puede pasar la suya propia —lo hará el compendio, con una imagen
+ * por carta—, pero nunca puede quedarse sin ninguna: un enlace sin
+ * previsualización en Discord o X se lee como spam.
  */
+import defaultOgImage from '~/assets/og/default.png';
 import { alternates, localeTags, type Lang, type RouteKey } from '~/i18n/ui';
 
 interface Props {
@@ -22,13 +27,11 @@ interface Props {
   noindex?: boolean;
 }
 
-const DEFAULT_OG_IMAGE = '/og/default.png';
-
 const { title, description, lang, routeKey, image, noindex = false } = Astro.props;
 
 const site = Astro.site;
 const canonical = new URL(Astro.url.pathname, site ?? Astro.url.origin);
-const imageUrl = new URL(image ?? DEFAULT_OG_IMAGE, site ?? Astro.url.origin);
+const imageUrl = new URL(image ?? defaultOgImage.src, site ?? Astro.url.origin);
 const links = alternates(routeKey);
 ---
 
