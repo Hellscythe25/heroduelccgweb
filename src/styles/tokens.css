@@ -67,6 +67,9 @@
   --hd-hero-yrenna-text: #c27ddb;
   --hd-hero-shouny-text: #6f98e6;
   --hd-hero-krunk-text: #c97a3f;
+  /* Respaldo para un héroe que aún no tiene color aquí (src/heroColors.ts). */
+  --hd-hero-fallback: var(--hd-gold-400);
+  --hd-hero-fallback-text: var(--hd-gold-400);
 
   /* Colores de rareza del juego. Solo para bordes y marcas, nunca para texto. */
   --hd-rarity-common: #9aa0ad;

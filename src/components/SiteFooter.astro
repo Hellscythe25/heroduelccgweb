@@ -1,8 +1,10 @@
 ---
 import { Picture } from 'astro:assets';
 import { brandEmblem } from '~/art';
+import wildcatLogo from '~/assets/brand/wildcat-games.png';
 import { localizedPath, useTranslations, type Lang } from '~/i18n/ui';
 import { isLegalPublished, legalDocs } from '~/legal';
+import { developer } from '~/site';
 
 interface Props {
   lang: Lang;
@@ -30,6 +32,17 @@ const legalLinks = legalDocs.filter(isLegalPublished);
         <p class="line">{t('footer.art')}</p>
       </div>
     </div>
+    <a class="studio" href={developer.url}>
+      <span>{t('footer.developer')}</span>
+      <Picture
+        src={wildcatLogo}
+        alt={developer.name}
+        formats={['avif', 'webp']}
+        widths={[96, 192]}
+        sizes="5.5rem"
+        class="studio-logo"
+      />
+    </a>
     {
       legalLinks.length > 0 && (
         <nav aria-label={t('nav.legal')}>
@@ -71,6 +84,26 @@ const legalLinks = legalDocs.filter(isLegalPublished);
   .brand :global(.emblem) {
     inline-size: 2.5rem;
     block-size: 2.5rem;
+    object-fit: contain;
+  }
+
+  /* El lettering del logo es el nombre del estudio: va como imagen, nunca como
+     texto, y su texto alternativo completa "Desarrollado por". */
+  .studio {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--hd-space-3);
+    color: var(--hd-text-muted);
+    text-decoration: none;
+  }
+
+  .studio:hover {
+    color: var(--hd-text);
+  }
+
+  .studio :global(.studio-logo) {
+    inline-size: 5.5rem;
+    block-size: 5.5rem;
     object-fit: contain;
   }
 

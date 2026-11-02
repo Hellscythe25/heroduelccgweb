@@ -5,9 +5,10 @@
  * ES/EN es estructural y no depende de que alguien recuerde actualizar dos
  * archivos.
  *
- * La pieza fuerte es la alineación de los cinco héroes, como una pantalla de
- * selección: cada franja lleva a la ficha del héroe. Todo lo demás es sobrio a
- * propósito para no competir con el arte.
+ * La pieza fuerte es la alineación de héroes, como una pantalla de selección:
+ * cada franja lleva a la ficha del héroe. Nada aquí supone cuántos héroes hay;
+ * uno nuevo entra en la alineación y en las cartas de más abajo con solo
+ * aparecer en src/data/heroes.json.
  *
  * Los CTA externos se renderizan solo si su URL existe en src/site.ts. Un botón
  * que lleva a ninguna parte es peor que la ausencia del botón. Mientras no
@@ -17,8 +18,9 @@ import { Picture } from 'astro:assets';
 import BaseLayout from '~/layouts/BaseLayout.astro';
 import CtaLink from '~/components/CtaLink.astro';
 import HeroEmblem from '~/components/HeroEmblem.astro';
-import { brandEmblem, heroPortrait } from '~/art';
+import { brandEmblem, heroPortrait, scenes } from '~/art';
 import { heroes } from '~/data';
+import { heroColorStyle } from '~/heroColors';
 import { heroPresentation } from '~/i18n/pages/heroes';
 import { homeCopy } from '~/i18n/pages/home';
 import { localizedPath, locales, useTranslations, type Lang, type UiKey } from '~/i18n/ui';
@@ -55,16 +57,16 @@ const heroesPath = localizedPath(lang, 'heroes');
         heroes.map((hero, index) => {
           const portrait = heroPortrait(hero.id);
           return (
-            <li style={`--hero: var(--hd-hero-${hero.id})`}>
+            <li style={`${heroColorStyle(hero.id)}; --i: ${index}`}>
               <a href={`${heroesPath}#${hero.id}`}>
                 {portrait ? (
                   <Picture
                     src={portrait}
                     alt=""
                     formats={['avif', 'webp']}
-                    widths={[240, 400, 640]}
-                    sizes="(min-width: 52rem) 16vw, 20vw"
-                    loading={index < 3 ? 'eager' : 'lazy'}
+                    widths={[480, 768, 1024]}
+                    sizes="(min-width: 52rem) 46rem, 22rem"
+                    loading={index < 4 ? 'eager' : 'lazy'}
                     fetchpriority={index === 0 ? 'high' : 'auto'}
                     class="slice-art"
                   />
@@ -130,36 +132,69 @@ const heroesPath = localizedPath(lang, 'heroes');
       <h2 id="home-heroes">{copy.heroes.title}</h2>
       <p>{copy.heroes.body}</p>
     </div>
-    <ul class="roster">
+    <ul class="hero-cards">
       {
-        heroes.map((hero) => (
-          <li style={`--hero: var(--hd-hero-${hero.id}); --hero-text: var(--hd-hero-${hero.id}-text)`}>
-            <a href={`${heroesPath}#${hero.id}`}>{shortName(hero.name[lang])}</a>
-            <span class="roster-role">{heroPresentation[hero.id]!.role[lang]}</span>
-            <span class="roster-life">
-              {t('hero.life')} {hero.life}
-            </span>
-          </li>
-        ))
+        heroes.map((hero) => {
+          const portrait = heroPortrait(hero.id);
+          return (
+            <li style={heroColorStyle(hero.id)}>
+              <a class="hero-card" href={`${heroesPath}#${hero.id}`}>
+                <span class="card-art">
+                  {portrait ? (
+                    <Picture
+                      src={portrait}
+                      alt=""
+                      formats={['avif', 'webp']}
+                      widths={[320, 480, 640, 800]}
+                      sizes="(min-width: 64rem) 18rem, (min-width: 36rem) 38vw, 55vw"
+                      loading="lazy"
+                      class="card-portrait"
+                    />
+                  ) : (
+                    <HeroEmblem heroId={hero.id} glyph={heroPresentation[hero.id]!.glyph} size={96} />
+                  )}
+                </span>
+                <span class="card-body">
+                  <span class="card-name">{shortName(hero.name[lang])}</span>
+                  <span class="card-role">{heroPresentation[hero.id]!.role[lang]}</span>
+                  <span class="card-life">
+                    {t('hero.life')} {hero.life}
+                  </span>
+                </span>
+              </a>
+            </li>
+          );
+        })
       }
     </ul>
     <p class="more"><a href={heroesPath}>{copy.heroes.link}</a></p>
   </section>
 
-  <section class="section container columns">
-    <div>
-      <h2>{copy.turn.title}</h2>
-      <ol class="steps">
-        {copy.turn.steps.map((step) => <li>{step}</li>)}
-      </ol>
-      <p class="more"><a href={localizedPath(lang, 'howToPlay')}>{t('home.cta.howToPlay')}</a></p>
-    </div>
-    <div>
-      <h2>{copy.fair.title}</h2>
-      <ul class="fair">
-        {copy.fair.items.map((item) => <li>{item}</li>)}
-      </ul>
-      <p class="more"><a href={localizedPath(lang, 'game')}>{copy.fair.link}</a></p>
+  <section class="band">
+    <Picture
+      src={scenes.board}
+      alt=""
+      formats={['avif', 'webp']}
+      widths={[768, 1280, 1536]}
+      sizes="100vw"
+      loading="lazy"
+      class="band-art"
+    />
+    <div class="container columns">
+      <div>
+        <h2>{copy.turn.title}</h2>
+        <ol class="steps">
+          {copy.turn.steps.map((step) => <li>{step}</li>)}
+        </ol>
+        <p class="more"><a href={localizedPath(lang, 'howToPlay')}>{t('home.cta.howToPlay')}</a></p>
+      </div>
+      <div>
+        <h2>{copy.fair.title}</h2>
+        <ul class="fair">
+          {copy.fair.items.map((item) => <li>{item}</li>)}
+        </ul>
+        <p class="more"><a href={localizedPath(lang, 'game')}>{copy.fair.link}</a></p>
+      </div>
     </div>
   </section>
 
@@ -179,35 +214,30 @@ const heroesPath = localizedPath(lang, 'heroes');
     border-block-end: 1px solid var(--hd-border-gold);
   }
 
+  /* Con muchos héroes la alineación se desplaza en horizontal en lugar de
+     estrechar las franjas hasta que las caras no se reconozcan. */
   .lineup {
     display: flex;
-    block-size: clamp(16rem, 62vw, 22rem);
+    block-size: 22rem;
     margin: 0;
     padding: 0;
     list-style: none;
-    overflow: hidden;
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
   }
 
   .lineup li {
     position: relative;
-    flex: 1 1 0;
-    min-inline-size: 0;
+    flex: 1 0 9rem;
+    scroll-snap-align: start;
     transition: flex-grow 320ms var(--hd-motion-ease);
+    /* Entrada escalonada: el único momento animado de la página. --i es la
+       posición del héroe, así que vale para cualquier número de héroes. */
     animation: slice-in 700ms var(--hd-motion-ease) both;
-  }
-
-  /* Entrada escalonada de los héroes: el único momento animado de la página. */
-  .lineup li:nth-child(2) {
-    animation-delay: 90ms;
-  }
-  .lineup li:nth-child(3) {
-    animation-delay: 180ms;
-  }
-  .lineup li:nth-child(4) {
-    animation-delay: 270ms;
-  }
-  .lineup li:nth-child(5) {
-    animation-delay: 360ms;
+    animation-delay: calc(var(--i, 0) * 90ms);
   }
 
   @keyframes slice-in {
@@ -308,6 +338,9 @@ const heroesPath = localizedPath(lang, 'heroes');
     box-shadow: inset 0 -3px 0 var(--hero);
   }
 
+  /* La franja es estrecha pero alta: el retrato cuadrado se pinta a la altura
+     de la franja, y por eso `sizes` declara la altura y no el ancho. Con el
+     ancho, el navegador bajaba una versión cuatro veces más pequeña. */
   .lineup :global(.slice-art) {
     position: absolute;
     inset: 0;
@@ -333,21 +366,6 @@ const heroesPath = localizedPath(lang, 'heroes');
     font-weight: 700;
     font-size: var(--hd-text-lg);
     letter-spacing: 0.04em;
-  }
-
-  /* En un teléfono las franjas miden ~75 px y el nombre no cabe: se oculta a la
-     vista pero sigue siendo el nombre accesible del enlace. La lista de héroes
-     de más abajo los muestra completos. */
-  @media (max-width: 51.99rem) {
-    .slice-name {
-      position: absolute;
-      inline-size: 1px;
-      block-size: 1px;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0 0 0 0);
-      white-space: nowrap;
-    }
   }
 
   /* El héroe señalado se adelanta: responde al puntero y al teclado. */
@@ -417,6 +435,11 @@ const heroesPath = localizedPath(lang, 'heroes');
       z-index: -1;
     }
 
+    .lineup li {
+      flex: 1 1 0;
+      min-inline-size: 6.5rem;
+    }
+
     .lineup li:first-child a {
       clip-path: polygon(2.5rem 0, 100% 0, calc(100% - 2.5rem) 100%, 0 100%);
     }
@@ -477,54 +500,132 @@ const heroesPath = localizedPath(lang, 'heroes');
     color: var(--hd-text-muted);
   }
 
-  .roster {
+  /* Cartas de héroe: la rejilla reparte las columnas según cuántos héroes haya. */
+  .hero-cards {
     display: grid;
-    gap: 0;
+    gap: var(--hd-space-3);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 9.5rem), 1fr));
     padding: 0;
     list-style: none;
   }
 
-  .roster li {
+  .hero-card {
+    position: relative;
     display: grid;
-    grid-template-columns: 9rem 1fr auto;
-    align-items: baseline;
-    gap: var(--hd-space-4);
-    padding-block: var(--hd-space-4);
-    padding-inline-start: var(--hd-space-4);
-    border-block-end: 1px solid var(--hd-border);
-    border-inline-start: 3px solid var(--hero);
+    grid-template-rows: auto 1fr;
+    block-size: 100%;
+    overflow: hidden;
+    border: 1px solid var(--hd-border);
+    border-radius: var(--hd-radius-md);
+    background: var(--hd-surface-raised);
+    color: var(--hd-text);
+    text-decoration: none;
+    transition:
+      border-color 200ms var(--hd-motion-ease),
+      transform 200ms var(--hd-motion-ease);
   }
 
-  .roster a {
+  .hero-card::before {
+    content: '';
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline: 0;
+    z-index: 2;
+    block-size: 3px;
+    background: var(--hero);
+  }
+
+  .card-art {
+    position: relative;
+    display: grid;
+    place-items: center;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    background: var(--hd-surface-high);
+  }
+
+  .card-art::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(0deg, var(--hd-surface-raised) 0%, var(--hd-veil-clear) 40%);
+  }
+
+  .card-art :global(.card-portrait) {
+    position: absolute;
+    inset: 0;
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+    object-position: 50% 15%;
+    transition: transform 400ms var(--hd-motion-ease);
+  }
+
+  .card-body {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    align-content: start;
+    gap: var(--hd-space-1);
+    margin-block-start: -2.25rem;
+    padding: 0 var(--hd-space-4) var(--hd-space-4);
+  }
+
+  .card-name {
     font-family: var(--hd-font-display);
     font-size: var(--hd-text-xl);
     font-weight: 700;
-    color: var(--hd-text);
-    text-decoration: none;
+    line-height: 1.15;
   }
 
-  .roster a:hover {
+  .card-role {
+    color: var(--hd-text-muted);
+    font-size: var(--hd-text-sm);
+  }
+
+  .card-life {
+    margin-block-start: var(--hd-space-2);
     color: var(--hero-text);
-  }
-
-  .roster-role {
-    color: var(--hd-text-muted);
-  }
-
-  .roster-life {
-    color: var(--hd-text-muted);
+    font-size: var(--hd-text-sm);
+    font-weight: 700;
     font-variant-numeric: tabular-nums;
   }
 
-  @media (max-width: 36rem) {
-    .roster li {
-      grid-template-columns: 1fr auto;
-    }
+  .hero-card:hover,
+  .hero-card:focus-visible {
+    border-color: var(--hero);
+    transform: translateY(-3px);
+  }
 
-    .roster-role {
-      grid-column: 1 / -1;
-      grid-row: 2;
-    }
+  .hero-card:hover :global(.card-portrait),
+  .hero-card:focus-visible :global(.card-portrait) {
+    transform: scale(1.04);
+  }
+
+  /* Turno y juego limpio, sobre el tablero del juego tras un velo denso. */
+  .band {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding-block: var(--hd-space-16);
+    border-block: 1px solid var(--hd-border-gold);
+  }
+
+  .band :global(.band-art) {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+  }
+
+  .band::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(90deg, var(--hd-veil-strong) 0%, var(--hd-veil-dense) 100%);
   }
 
   .more {

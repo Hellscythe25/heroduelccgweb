@@ -62,6 +62,7 @@ export const heroPresentation: Record<string, HeroPresentation> = {
 };
 
 export interface HeroesPageCopy {
+  /** `{names}` se sustituye por los nombres de los héroes publicados: el texto no fija cuántos son. */
   meta: { title: string; description: string };
   title: string;
   lead: string;
@@ -73,10 +74,9 @@ export const heroesPageCopy: Record<Lang, HeroesPageCopy> = {
   es: {
     meta: {
       title: 'Héroes',
-      description:
-        'Los cinco héroes de Hero Duel CCG: Brakka, Sable, Yrenna, Shouny y Krunk. Su vida, su pasiva y sus habilidades.',
+      description: 'Los héroes de Hero Duel CCG ({names}): su vida, su pasiva y sus habilidades.',
     },
-    title: 'Cinco héroes, cinco formas de ganar',
+    title: 'Un héroe para cada forma de ganar',
     lead: 'Cada héroe tiene su propia vida, una pasiva, dos habilidades que no son cartas y su campaña. Al empezar eliges uno; a los demás los desbloqueas jugando.',
     dataNote:
       'Los valores son los del juego en su versión {version} y pueden cambiar con el balance antes del lanzamiento.',
@@ -84,10 +84,9 @@ export const heroesPageCopy: Record<Lang, HeroesPageCopy> = {
   en: {
     meta: {
       title: 'Heroes',
-      description:
-        'The five heroes of Hero Duel CCG: Brakka, Sable, Yrenna, Shouny and Krunk. Their life, passive and abilities.',
+      description: 'The heroes of Hero Duel CCG ({names}): their life, passive and abilities.',
     },
-    title: 'Five heroes, five ways to win',
+    title: 'A hero for every way to win',
     lead: 'Every hero has their own life total, a passive, two abilities that are not cards, and a campaign. You pick one to start; the rest you unlock by playing.',
     dataNote: 'Values match game version {version} and may change with balancing before launch.',
   },

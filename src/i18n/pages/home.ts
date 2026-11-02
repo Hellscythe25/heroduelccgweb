@@ -40,8 +40,8 @@ export const homeCopy: Record<Lang, HomeCopy> = {
     },
     heroes: {
       title: 'Elige a tu héroe',
-      body: 'Cinco héroes con vida, pasiva y habilidades propias. Empiezas con uno y desbloqueas a los demás jugando su campaña.',
-      link: 'Ver los cinco héroes',
+      body: 'Cada héroe tiene vida, pasiva y habilidades propias. Empiezas con uno y desbloqueas a los demás jugando su campaña.',
+      link: 'Ver todos los héroes',
     },
     fair: {
       title: 'Justo por diseño',
@@ -83,8 +83,8 @@ export const homeCopy: Record<Lang, HomeCopy> = {
     },
     heroes: {
       title: 'Choose your hero',
-      body: 'Five heroes with their own life, passive and abilities. You start with one and unlock the rest by playing their campaign.',
-      link: 'See all five heroes',
+      body: 'Every hero has their own life, passive and abilities. You start with one and unlock the rest by playing their campaign.',
+      link: 'See all heroes',
     },
     fair: {
       title: 'Fair by design',

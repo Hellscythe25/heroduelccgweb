@@ -4,6 +4,7 @@ import PageHead from '~/components/PageHead.astro';
 import HeroEmblem from '~/components/HeroEmblem.astro';
 import HeroProfile from '~/components/HeroProfile.astro';
 import { heroPortrait } from '~/art';
+import { heroColorStyle } from '~/heroColors';
 import { DATA_VERSION, heroes } from '~/data';
 import { heroPresentation, heroesPageCopy } from '~/i18n/pages/heroes';
 import type { Lang } from '~/i18n/ui';
@@ -25,7 +26,7 @@ const maxLife = Math.max(...heroes.map((hero) => hero.life));
           const portrait = heroPortrait(hero.id);
           return (
             <li>
-              <a href={`#${hero.id}`} style={`--hero: var(--hd-hero-${hero.id})`}>
+              <a href={`#${hero.id}`} style={heroColorStyle(hero.id)}>
                 {portrait ? (
                   <Picture
                     src={portrait}
