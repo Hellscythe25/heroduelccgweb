@@ -113,6 +113,28 @@ Estado medido en la última verificación: build en verde, 4 páginas,
     cuando eso pase. El mismo día el dueño aprobó publicar el nombre de su
     sobre, tal como lo localiza el juego: «Las Ofrendas del Pacto» / «The
     Pact's Offerings».
+  - **Vhassa pasa a ficha completa con los datos de la 0.8.0** (dueño,
+    2026-11-03). La 0.8.0 todavía no está repartida a jugadores (solo en el
+    entorno development de UGS, según el equipo del juego); el dueño decidió
+    mostrarla igual, porque la web ya advierte que los valores pueden cambiar
+    con el balance. Detalles:
+    - En inglés va «Vhassa, the Pactbound», el texto que lleva la 0.8.0.
+    - La fuente es el espejo estable `TCGMaster-github`, commit `aa6cb84`
+      (Plastic cs87), leído con `git show`. No se usa el árbol de trabajo de
+      Plastic, que puede tener cambios sin registrar.
+    - La campaña es la de los datos («El Precio del Pacto», 4 peleas contra
+      Vhassa). No se toma del GDD §4.2, que todavía pone a Sable de jefe.
+    - El rol sale del territorio firmado («la vida como recurso»). El estilo
+      resume el kit como lo cuenta CHANGELOG_Jugadores 0.8.0. El lema «Todo
+      tiene precio. Ella paga primero.» sigue siendo propuesta y no se usa.
+    - El color es el del juego, `#8e3a4f`. Para texto se usa `#c7758a`, el
+      mismo tono aclarado, que da 5,0:1 o más.
+  - **Cada ficha de héroe nombra su sobre** (dueño, 2026-11-03), con el
+    nombre exacto de la localización del juego
+    (`ui.collection.booster_name.<id>`).
+  - El arte PVP del lobby (`Sprites/PVPBanner.png`, fuente de
+    `scenes/duel.jpg`) cambió en la 0.8.0. La web sigue con el anterior: el
+    cambio no se pidió y queda para cuando el dueño lo decida.
 - **Los datos del juego no publicables todavía** (decisión del juego, no de la
   web): fechas internas de la beta y del lanzamiento, nombres de rango (copian
   a World of Warcraft y se van a sustituir), precios y número de cartas.

@@ -14,6 +14,18 @@ convencionales. Las entradas no se escriben a mano.
 
 ## [No publicado]
 
+### Añadido — Vhassa, sexto héroe (2026-11-03, rama `feat/heroes-vhassa`)
+
+- Vhassa, la Pactada, deja de ser "Próximamente". Tiene ficha completa en
+  Héroes: retrato sobre su arena, vida, pasiva, habilidades, campaña y su
+  color. También entra en la alineación de la portada y en sus cartas.
+- Datos del juego importados de la versión **0.8.0** (antes 0.6.0). Los otros
+  cinco héroes no cambian.
+- Cada ficha de héroe nombra su sobre, tal como lo localiza el juego.
+- La imagen para redes muestra a los seis héroes.
+- Emblema de respaldo nuevo para Vhassa (gota de sangre) y nombres de héroe
+  con coma bien partidos en todo el sitio (`heroShortName`, `heroEpithet`).
+
 ### Corregido — cartas de héroe (2026-11-02, rama `fix/landing-hero-card-life`)
 
 - En "Elige a tu héroe", la vida va al pie de cada carta y queda a la misma

@@ -11,7 +11,7 @@ import { Picture } from 'astro:assets';
 import HeroEmblem from '~/components/HeroEmblem.astro';
 import { heroArena, heroPortrait } from '~/art';
 import { heroColorStyle } from '~/heroColors';
-import { heroPresentation } from '~/i18n/pages/heroes';
+import { heroEpithet, heroPresentation, heroShortName } from '~/i18n/pages/heroes';
 import { useTranslations, type Lang } from '~/i18n/ui';
 import type { Hero } from '~/data';
 
@@ -32,8 +32,8 @@ const arena = heroArena(hero.id);
 
 // "Brakka Furia de Hierro" -> "Brakka" + "Furia de Hierro". El nombre completo
 // sigue en el h2 para lectores de pantalla; la partición es solo visual.
-const [shortName, ...rest] = hero.name[lang].split(' ');
-const epithet = rest.join(' ');
+const shortName = heroShortName(hero.name[lang]);
+const epithet = heroEpithet(hero.name[lang]);
 const lifePercent = Math.round((hero.life / maxLife) * 100);
 ---
 
@@ -60,7 +60,7 @@ const lifePercent = Math.round((hero.life / maxLife) * 100);
       portrait ? (
         <Picture
           src={portrait}
-          alt={t('hero.portrait').replace('{name}', shortName!)}
+          alt={t('hero.portrait').replace('{name}', shortName)}
           formats={['avif', 'webp']}
           widths={[320, 480, 720]}
           sizes="(min-width: 60rem) 22rem, 80vw"
@@ -129,6 +129,10 @@ const lifePercent = Math.round((hero.life / maxLife) * 100);
         </p>
       )
     }
+    <p class="booster">
+      <span class="label">{t('hero.booster')}</span>
+      <em>{presentation.booster[lang]}</em>
+    </p>
   </div>
 </article>
 
@@ -335,7 +339,13 @@ const lifePercent = Math.round((hero.life / maxLife) * 100);
     border-block-start: 1px solid var(--hd-border);
   }
 
-  .campaign em {
+  .campaign em,
+  .booster em {
     font-size: var(--hd-text-lg);
+  }
+
+  /* Sin borde propio: va pegado a la campaña o, si no hay campaña, tras las habilidades. */
+  .booster {
+    padding-block-start: var(--hd-space-3);
   }
 </style>

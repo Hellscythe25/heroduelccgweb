@@ -6,7 +6,7 @@ import HeroProfile from '~/components/HeroProfile.astro';
 import { brandEmblem, heroPortrait } from '~/art';
 import { heroColorStyle } from '~/heroColors';
 import { DATA_VERSION, heroes } from '~/data';
-import { heroPresentation, heroesPageCopy, upcomingHeroes } from '~/i18n/pages/heroes';
+import { heroPresentation, heroShortName, heroesPageCopy, upcomingHeroes } from '~/i18n/pages/heroes';
 import { useTranslations, type Lang } from '~/i18n/ui';
 
 interface Props {
@@ -16,7 +16,6 @@ interface Props {
 const { lang } = Astro.props;
 const t = useTranslations(lang);
 const copy = heroesPageCopy[lang];
-const shortName = (name: string) => name.split(/[\s,]/)[0];
 const maxLife = Math.max(...heroes.map((hero) => hero.life));
 ---
 
@@ -41,7 +40,7 @@ const maxLife = Math.max(...heroes.map((hero) => hero.life));
                 ) : (
                   <HeroEmblem heroId={hero.id} glyph={heroPresentation[hero.id]!.glyph} size={40} />
                 )}
-                <span>{shortName(hero.name[lang])}</span>
+                <span>{heroShortName(hero.name[lang])}</span>
               </a>
             </li>
           );
@@ -52,7 +51,7 @@ const maxLife = Math.max(...heroes.map((hero) => hero.life));
           <li>
             <a href={`#${hero.id}`} class="upcoming-link" style={heroColorStyle(hero.id)}>
               <span class="seal" aria-hidden="true">?</span>
-              <span>{shortName(hero.name[lang])}</span>
+              <span>{heroShortName(hero.name[lang])}</span>
               <span class="soon">{t('hero.comingSoon')}</span>
             </a>
           </li>

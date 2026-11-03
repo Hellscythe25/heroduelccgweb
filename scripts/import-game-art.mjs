@@ -40,12 +40,14 @@ const PIECES = [
   { from: 'Sprites/Yrenna.png', to: 'heroes/yrenna.jpg', width: 1024 },
   { from: 'Art/Identity/shouny.jpg', to: 'heroes/shouny.jpg', width: 1024 },
   { from: 'Art/Identity/krunk.jpg', to: 'heroes/krunk.jpg', width: 1024 },
+  { from: 'Art/Identity/vhassa.jpg', to: 'heroes/vhassa.jpg', width: 1024 },
   // Arenas de cada héroe.
   { from: 'Art/Screens/arena_brakka.jpg', to: 'arenas/brakka.jpg', width: 1536 },
   { from: 'Art/Screens/arena_sable.jpg', to: 'arenas/sable.jpg', width: 1536 },
   { from: 'Art/Screens/arena_yrenna.jpg', to: 'arenas/yrenna.jpg', width: 1536 },
   { from: 'Art/Screens/arena_shouny.jpg', to: 'arenas/shouny.jpg', width: 1536 },
   { from: 'Art/Screens/arena_krunk.jpg', to: 'arenas/krunk.jpg', width: 1536 },
+  { from: 'Art/Screens/arena_vhassa.jpg', to: 'arenas/vhassa.jpg', width: 1536 },
   // Escenas para cabeceras de página.
   { from: 'Sprites/PVPBanner.png', to: 'scenes/duel.jpg', width: 1344 },
   { from: 'Art/Screens/combat_board.jpg', to: 'scenes/board.jpg', width: 1536 },

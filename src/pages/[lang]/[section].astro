@@ -21,7 +21,7 @@ import LegalPage from '~/components/LegalPage.astro';
 import { locales, routes, useTranslations, type Lang } from '~/i18n/ui';
 import { gameCopy } from '~/i18n/pages/game';
 import { howToPlayCopy } from '~/i18n/pages/howToPlay';
-import { heroesPageCopy } from '~/i18n/pages/heroes';
+import { heroShortName, heroesPageCopy } from '~/i18n/pages/heroes';
 import { heroes } from '~/data';
 import { isPressKitPublishable, pressKit } from '~/press';
 import { isLegalPublished } from '~/legal';
@@ -63,7 +63,7 @@ switch (section) {
     // Los nombres salen de los datos: un héroe nuevo entra en la descripción sin tocar el texto.
     description = heroesPageCopy[lang].meta.description.replace(
       '{names}',
-      new Intl.ListFormat(lang, { type: 'conjunction' }).format(heroes.map((hero) => hero.name[lang].split(' ')[0]!)),
+      new Intl.ListFormat(lang, { type: 'conjunction' }).format(heroes.map((hero) => heroShortName(hero.name[lang]))),
     );
     break;
   case 'blog':

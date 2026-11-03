@@ -22,7 +22,7 @@ import HeroEmblem from '~/components/HeroEmblem.astro';
 import { brandEmblem, heroPortrait, scenes } from '~/art';
 import { heroes } from '~/data';
 import { heroColorStyle } from '~/heroColors';
-import { heroPresentation, upcomingHeroes } from '~/i18n/pages/heroes';
+import { heroPresentation, heroShortName, upcomingHeroes } from '~/i18n/pages/heroes';
 import { homeCopy } from '~/i18n/pages/home';
 import { localizedPath, locales, useTranslations, type Lang, type UiKey } from '~/i18n/ui';
 import { activeLinks } from '~/site';
@@ -42,7 +42,6 @@ const ctaLabels: Record<string, UiKey> = {
   itch: 'home.cta.itch',
 };
 
-const shortName = (name: string) => name.split(/[\s,]/)[0];
 const heroesPath = localizedPath(lang, 'heroes');
 ---
 
@@ -74,7 +73,7 @@ const heroesPath = localizedPath(lang, 'heroes');
                 ) : (
                   <HeroEmblem heroId={hero.id} glyph={heroPresentation[hero.id]!.glyph} size={96} />
                 )}
-                <span class="slice-name">{shortName(hero.name[lang])}</span>
+                <span class="slice-name">{heroShortName(hero.name[lang])}</span>
               </a>
             </li>
           );
@@ -156,7 +155,7 @@ const heroesPath = localizedPath(lang, 'heroes');
                   )}
                 </span>
                 <span class="card-body">
-                  <span class="card-name">{shortName(hero.name[lang])}</span>
+                  <span class="card-name">{heroShortName(hero.name[lang])}</span>
                   <span class="card-role">{heroPresentation[hero.id]!.role[lang]}</span>
                   <span class="card-life">
                     {t('hero.life')} {hero.life}
@@ -183,7 +182,7 @@ const heroesPath = localizedPath(lang, 'heroes');
                 />
               </span>
               <span class="card-body">
-                <span class="card-name">{shortName(hero.name[lang])}</span>
+                <span class="card-name">{heroShortName(hero.name[lang])}</span>
                 <span class="card-role">{t('hero.comingSoon')}</span>
               </span>
             </a>
