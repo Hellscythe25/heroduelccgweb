@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { heroes } from '~/data';
 import { heroColorStyle } from '~/heroColors';
-import { heroesPageCopy, upcomingHeroes } from '~/i18n/pages/heroes';
+import { heroEpithet, heroShortName, heroesPageCopy, upcomingHeroes } from '~/i18n/pages/heroes';
 import { homeCopy } from '~/i18n/pages/home';
 
 // El juego seguirá sumando héroes: la web no puede depender de cuántos hay hoy.
@@ -19,6 +19,22 @@ describe('número de héroes abierto', () => {
   it('la descripción de la página de héroes lleva los nombres desde los datos', () => {
     for (const copy of Object.values(heroesPageCopy)) {
       expect(copy.meta.description).toContain('{names}');
+    }
+  });
+});
+
+describe('nombres de héroe', () => {
+  it('separa nombre y epíteto con o sin coma', () => {
+    expect([heroShortName('Sable la Guardiana'), heroEpithet('Sable la Guardiana')]).toEqual(['Sable', 'la Guardiana']);
+    expect([heroShortName('Vhassa, la Pactada'), heroEpithet('Vhassa, la Pactada')]).toEqual(['Vhassa', 'la Pactada']);
+    expect([heroShortName('Vhassa'), heroEpithet('Vhassa')]).toEqual(['Vhassa', '']);
+  });
+
+  it('ningún nombre corto de los datos arrastra puntuación', () => {
+    for (const hero of heroes) {
+      for (const name of Object.values(hero.name)) {
+        expect(heroShortName(name)).toMatch(/^\p{L}+$/u);
+      }
     }
   });
 });

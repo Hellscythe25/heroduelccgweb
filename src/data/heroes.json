@@ -1,5 +1,5 @@
 {
-  "dataVersion": "0.6.0",
+  "dataVersion": "0.8.0",
   "deckRules": null,
   "heroes": [
     {
@@ -249,6 +249,56 @@
         "name": {
           "es": "El Desprecio del Forjado",
           "en": "Contempt for the Forged"
+        }
+      }
+    },
+    {
+      "id": "vhassa",
+      "name": {
+        "es": "Vhassa, la Pactada",
+        "en": "Vhassa, the Pactbound"
+      },
+      "life": 30,
+      "passive": {
+        "name": {
+          "es": "Fervor de Sangre",
+          "en": "Blood Fervor"
+        },
+        "text": {
+          "es": "cuando Vhassa pierde vida por un coste propio durante su turno, su próximo ataque este turno gana +1 (acumulable; una vez por coste, no por punto de vida).",
+          "en": "whenever Vhassa loses health to her own cost during her turn, her next attack this turn gains +1 (stacks; once per cost, not per health point)."
+        }
+      },
+      "actives": [
+        {
+          "id": "h6_tribute",
+          "name": {
+            "es": "Tributo de Sangre",
+            "en": "Blood Tribute"
+          },
+          "text": {
+            "es": "Pierdes 2 de vida. Acumulable: puedes usarla varias veces en el mismo turno. No consume tu acción del turno. Puede matarte.",
+            "en": "You lose 2 health. Stacks: you can use it several times in the same turn. Does not consume your turn action. Can kill you."
+          },
+          "cost": 1
+        },
+        {
+          "id": "h6_rite",
+          "name": {
+            "es": "Rito Carmesí",
+            "en": "Crimson Rite"
+          },
+          "text": {
+            "es": "Atacas ya mismo con +2 de daño adicional, más +1 por cada 4 de vida que te falte (máximo +7 en total). Cuenta como tu ataque del turno.",
+            "en": "Attack immediately with +2 bonus damage, plus +1 for every 4 health you are missing (up to +7 total). Counts as your attack for the turn."
+          },
+          "cost": 6
+        }
+      ],
+      "campaign": {
+        "name": {
+          "es": "El Precio del Pacto",
+          "en": "The Price of the Pact"
         }
       }
     }

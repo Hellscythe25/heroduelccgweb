@@ -43,6 +43,7 @@ const HERO_COLORS = {
   yrenna: '#b45fd0',
   shouny: '#4a7edb',
   krunk: '#c97a3f',
+  vhassa: '#8e3a4f',
 };
 
 // El título usa Cinzel si está instalada en la máquina que genera la imagen
