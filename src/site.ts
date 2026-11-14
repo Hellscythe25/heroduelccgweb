@@ -38,6 +38,14 @@ export const developer = {
 /** Correo de contacto para prensa. Vacío hasta que exista uno del dominio. */
 export const pressContact = '';
 
+/**
+ * Correo para consultas y pedidos sobre datos personales. Lo dio el dueño el
+ * 2026-11-14 para la beta cerrada y es TEMPORAL: este es el único lugar donde
+ * vive. Los textos legales lo citan con la marca `{{privacyContact}}`, que
+ * src/lib/siteTokens.ts convierte en enlace al construir el sitio.
+ */
+export const privacyContact = 'wildcatgamesperu@gmail.com';
+
 /** `true` si el enlace está definido y es utilizable. */
 export function hasLink(url: string): boolean {
   return url.trim().length > 0;

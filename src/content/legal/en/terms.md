@@ -3,14 +3,14 @@ title: Terms of Service
 description: The conditions for playing Hero Duel CCG during the beta, virtual currencies and fair play rules.
 lang: en
 doc: terms
-updatedAt: 2026-10-31
+updatedAt: 2026-11-14
 ---
 
 These terms govern the use of **Hero Duel CCG** (the PC game and its online services). By playing you accept them. If you do not agree, do not use the game.
 
 ## 1. Who provides the game
 
-Hero Duel CCG is provided by **Inca Games** [PENDING: exact legal name and address], New Jersey, United States. Contact: [PENDING: contact email].
+Hero Duel CCG is developed and run by **Wildcat Games**, and published by Inca Games. [PENDING: which entity is the party to these terms, with its legal name and address; to be confirmed by the legal review.] Contact: [PENDING: contact email].
 
 ## 2. The game is in beta
 
@@ -23,7 +23,7 @@ Hero Duel CCG is in development. During the beta:
 
 ## 3. Your account
 
-- The game creates an anonymous account on your device. If you lose that session (for example, by reinstalling your system), you may lose the account. When available, you will be able to link it to a Unity account so you do not lose it.
+- You can play as a guest, with a key the game generates to recognize your device, or create an account with a username and password on a server page that opens in your browser. [PENDING: what happens to a guest's progress if that key is lost, for example when reinstalling the system.]
 - You are responsible for what happens with your account. Do not sell, lend or share it.
 - You must be at least [PENDING: minimum age] years old to play, or the age required by the law of your country if higher.
 
@@ -33,7 +33,7 @@ Other players see your display name. It cannot be offensive, discriminatory or s
 
 ## 5. License
 
-We grant you a personal, limited, non-exclusive, non-transferable and revocable license to use the game for leisure and non-commercial purposes. The game and its cards, heroes, text, art, music and code belong to Inca Games or its licensors. These terms do not transfer any ownership to you.
+We grant you a personal, limited, non-exclusive, non-transferable and revocable license to use the game for leisure and non-commercial purposes. The game and its cards, heroes, text, art, music and code belong to [PENDING: owner of the game's rights; to be confirmed by the legal review] or its licensors. These terms do not transfer any ownership to you.
 
 ## 6. Cards and virtual currencies
 
@@ -85,4 +85,4 @@ How we handle your data is explained in the Privacy Policy.
 
 ## 13. Contact
 
-[PENDING: contact email] · Inca Games [PENDING: legal name and address].
+[PENDING: contact email] · Wildcat Games [PENDING: legal name and address].

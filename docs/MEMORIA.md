@@ -135,6 +135,25 @@ Estado medido en la última verificación: build en verde, 4 páginas,
   - El arte PVP del lobby (`Sprites/PVPBanner.png`, fuente de
     `scenes/duel.jpg`) cambió en la 0.8.0. La web sigue con el anterior: el
     cambio no se pidió y queda para cuando el dueño lo decida.
+- **Aviso de privacidad para la beta cerrada 0.8.0** (dueño, 2026-11-14, vía
+  Agent TCG). Se publicará en `/es/privacidad/` y `/en/privacy/` antes de
+  mandar las invitaciones. Cómo quedó:
+  - El texto parte del aviso que el dueño aprobó para `/account/privacy` del
+    servidor propio (11/11, actualizado el 13/11). El borrador de Agent TCG
+    trae la fuente de cada afirmación.
+  - Ya no menciona Unity: la beta corre solo en el servidor propio (ASP.NET +
+    PostgreSQL, detrás de Cloudflare).
+  - El contacto, `privacyContact` en `src/site.ts`, es temporal y vive solo
+    ahí. Los textos lo citan con `{{privacyContact}}` y `LegalPage.astro` lo
+    resuelve con `src/lib/siteTokens.ts`.
+  - `legalStatus.privacy` sigue en `draft`: publicar lo decide el dueño tras
+    la revisión legal.
+  - **Responsable del tratamiento: Wildcat Games** (dueño, 2026-11-14), que
+    opera el servidor y atiende los pedidos. Inca Games figura solo como
+    editora. Esto sustituye la decisión del 2026-10-31, que nombraba a Inca
+    Games. Los Términos ya no dicen que Inca Games ofrece el juego ni que es
+    titular de los derechos: esos dos puntos quedan `[PENDIENTE]` para la
+    revisión legal.
 - **Los datos del juego no publicables todavía** (decisión del juego, no de la
   web): fechas internas de la beta y del lanzamiento, nombres de rango (copian
   a World of Warcraft y se van a sustituir), precios y número de cartas.
@@ -201,6 +220,16 @@ Ordenados por lo que bloquean.
    `src/content/legal/`, con cada hueco marcado `[PENDIENTE]`. Además, el
    juego debe resolver antes de publicarlos el consentimiento real de
    Analytics y una vía de borrado de cuenta; ver la bitácora de la sesión 4.)*
+   *(2026-11-14: la política de privacidad se rehízo para el servidor propio
+   del juego, sin Unity Analytics; ver DECIDIDO. Siguen abiertos estos puntos:*
+   - *Resuelto el mismo día: el responsable del tratamiento es Wildcat Games
+     (ver DECIDIDO). Faltan su razón social y su dirección, si la revisión
+     legal las pide, y saber qué entidad es la parte de los Términos y quién es
+     titular de los derechos del juego.*
+   - *¿el aviso cubre también la build anterior publicada en UGS?*
+   - *¿qué aviso manda: el de la web o el de `/account/privacy` del servidor?*
+   - *días de copias de seguridad, plazo de respuesta, edad mínima, ubicación
+     del servidor y leyes aplicables.)*
    **¿Qué entidad legal figura como responsable del tratamiento de datos?**
    *Bloquea las páginas legales de la fase 1.* No se publica una política de
    privacidad con un responsable inventado: un documento legal falso es peor que

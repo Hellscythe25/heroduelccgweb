@@ -14,6 +14,20 @@ convencionales. Las entradas no se escriben a mano.
 
 ## [No publicado]
 
+### Cambiado — legales para el servidor propio (2026-11-14, rama `feat/landing-privacy-own-server`)
+
+- Borrador nuevo de la Política de privacidad (es/en) para la beta cerrada
+  0.8.0, que corre en el servidor propio del juego y no en Unity Gaming
+  Services. Sigue en borrador, con los datos que faltan marcados.
+- Responsable del tratamiento: Wildcat Games, la desarrolladora; Inca Games
+  figura como editora.
+- Términos: la cuenta se describe como invitado con clave del equipo o cuenta
+  con usuario y contraseña, sin cuenta de Unity. Wildcat Games desarrolla y
+  opera el juego; la parte contratante y el titular de los derechos quedan
+  para la revisión legal.
+- El correo de privacidad vive solo en `src/site.ts` (`privacyContact`); los
+  textos lo citan con la marca `{{privacyContact}}`.
+
 ### Añadido — Vhassa, sexto héroe (2026-11-03, rama `feat/heroes-vhassa`)
 
 - Vhassa, la Pactada, deja de ser "Próximamente". Tiene ficha completa en

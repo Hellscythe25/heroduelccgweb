@@ -1,139 +1,88 @@
 ---
 title: Política de privacidad
-description: Qué datos trata Hero Duel CCG, para qué, con quién se comparten y cómo ejercer tus derechos.
+description: Qué datos guarda Hero Duel CCG durante la beta cerrada, para qué los usa, quién más interviene y cómo pedir que se borren.
 lang: es
 doc: privacy
-updatedAt: 2026-10-31
+updatedAt: 2026-11-14
 ---
 
-Esta política explica qué datos personales se tratan cuando juegas a **Hero Duel CCG** (el juego para PC y sus servicios en línea) y cuando visitas este sitio web, para qué se usan y qué derechos tienes.
+Hero Duel CCG está en **beta cerrada**. Este aviso explica qué datos guarda el servidor del juego, para qué los usa y cómo pedir que se borren. Al final explica también qué datos trata este sitio web.
 
-## 1. Quién es el responsable
+[PENDIENTE: confirmar si este aviso cubre también la versión anterior del juego, publicada sobre los servicios de Unity, o solo la beta cerrada en el servidor propio.]
 
-El responsable del tratamiento es **Inca Games** [PENDIENTE: razón social exacta], con domicilio en [PENDIENTE: dirección], Nueva Jersey, Estados Unidos.
+## 1. Quién responde por tus datos
 
-Para cualquier consulta sobre privacidad escribe a [PENDIENTE: correo de privacidad].
+El responsable del tratamiento de tus datos es **Wildcat Games**, la desarrolladora del juego: opera el servidor y atiende los pedidos sobre tus datos. Inca Games es la editora del juego. [PENDIENTE: razón social y dirección de Wildcat Games, si la revisión legal las pide.]
 
-[PENDIENTE: representante en la Unión Europea y en el Reino Unido, si la revisión legal concluye que hace falta.]
+Para cualquier consulta o pedido sobre tus datos, escribe a **{{privacyContact}}**.
 
-## 2. Qué datos tratamos
+## 2. Qué guardamos
 
-### 2.1 Tu cuenta de juego
+- **Tu cuenta, si creas una:** tu nombre de usuario y tu contraseña. La contraseña se guarda transformada de forma que nadie puede leerla, tampoco nosotros. La cuenta se crea en una página del servidor que se abre en tu navegador; nunca escribes la contraseña dentro del juego.
+- **Tu instalación del juego:** un identificador y una clave que el propio juego genera para reconocer tu equipo. En tu equipo, el juego guarda esa clave protegida y tu identificador de jugador, que sirve como ID de soporte.
+- **La versión del juego:** en cada conexión, el juego envía su número de versión y de protocolo, para avisarte si tienes que actualizar.
+- **Tu código de invitación:** se usa una sola vez para entrar a la beta; el juego no lo guarda en tu equipo.
+- **Tu perfil:** tu nombre público (con su número), tus amigos, tus solicitudes de amistad y tus bloqueos.
+- **Tu progreso:** tus cartas, tus mazos, tus monedas del juego, tus puntuaciones, tu nivel y las partidas que juegas.
+- **Los días en que abres el juego:** solo la fecha, sin la hora, para poder enviar regalos a quienes jugaron en ciertos días (por ejemplo, una compensación si el servidor falla). Se guardan 90 días y después se borran solos.
+- **Tus regalos:** los regalos del buzón que tienes por reclamar y los que ya reclamaste, con su fecha, para que nadie reciba dos veces el mismo.
+- **Eventos de uso:** anotaciones de lo que ocurre en el juego, como las partidas que empiezas y terminas, para saber cómo funciona la beta. Solo llevan identificadores y contadores de una lista cerrada; no llevan datos de tu equipo.
+- **Registros técnicos:** si desde una conexión se hacen demasiados intentos seguidos, el servidor anota la dirección de internet de esa conexión para protegerse de abusos.
 
-- **Identificador de jugador.** Al abrir el juego por primera vez, el servicio de autenticación de Unity crea una cuenta anónima con un identificador aleatorio. No te pedimos nombre real, correo, teléfono, dirección ni fecha de nacimiento.
-- **Nombre visible.** El nombre que eliges en el juego (de 3 a 16 caracteres). Lo verán otros jugadores (ver la sección 3).
-- **Cuenta de Unity (cuando esté disponible).** Si en el futuro vinculas tu progreso a una cuenta de Unity, Unity gestiona tus credenciales; el juego no recibe tu contraseña. [PENDIENTE: confirmar qué datos de la cuenta de Unity llegan al juego antes de activar esta función.]
-
-### 2.2 Tu progreso y tu actividad en el juego
-
-Se guardan en los servidores del juego:
-
-- Perfil: nombre visible, fecha de creación, puntuación de la clasificatoria, racha de victorias, héroe inicial y héroes desbloqueados, y el contador diario de monedas.
-- Colección de cartas, mazos (incluido el nombre que les pongas) y sobres sin abrir.
-- Saldos de las monedas virtuales del juego (monedas, esencia y gemas) y los contadores de garantía de los sobres.
-- Historial de tus últimas 20 partidas: héroes, resultado, turnos, motivo del final, cambio de puntuación y nombre visible del rival.
-- Progreso de las campañas.
-- Registro de compras: identificadores de transacción y productos de compra única.
-- Datos de cada partida en línea: el estado de la partida (mano, mazo, equipo y semilla aleatoria de ambos jugadores), el resultado y la liquidación de recompensas, y tu entrada en la cola de emparejamiento.
-
-### 2.3 Datos técnicos y de uso (analítica)
-
-Solo con tu consentimiento, el juego envía a Unity Analytics eventos de uso, como el inicio y el final de una partida, el uso de habilidades, el progreso en campañas, la apertura de sobres, la creación de cartas, las compras y los mazos guardados. El servicio de analítica de Unity añade datos del equipo: modelo, sistema operativo, procesador y tarjeta gráfica, memoria, pantalla, idioma, versión del juego, plataforma y sus propios identificadores de instalación.
-
-[PENDIENTE: hoy el juego no pide este consentimiento y la analítica está apagada en el panel de Unity. Antes de publicar esta política, el juego debe pedir el consentimiento al empezar y permitir retirarlo en Opciones.]
-
-[PENDIENTE: confirmar con la documentación de Unity si su servicio de analítica trata la dirección IP o una ubicación aproximada.]
-
-### 2.4 Registros de los servidores
-
-Los servidores del juego guardan registros técnicos para operar el servicio, detectar errores y prevenir trampas. Pueden incluir tu identificador de jugador, identificadores de partida y de transacción, y tu puntuación.
-
-### 2.5 Datos guardados en tu equipo
-
-El juego guarda en tu PC tus preferencias (idioma, audio, vídeo, efectos y vibración del mando), la sesión de inicio de Unity, una copia del catálogo de cartas y un archivo de registro técnico (`Player.log`) que incluye tu identificador de jugador. Estos datos no salen de tu equipo salvo la sesión, que se usa para iniciar sesión.
-
-### 2.6 Lo que no tratamos
-
-- No hay publicidad ni seguimiento publicitario.
-- No hay chat: la única comunicación con otros jugadores es la propia partida.
-- Durante la beta no hay pagos con dinero real, así que no tratamos datos de pago (ver la sección 9).
-
-### 2.7 Este sitio web
-
-Este sitio no usa cookies, no tiene analítica y no tiene formularios. Como cualquier servidor web, el de nuestro proveedor de alojamiento registra datos técnicos de cada visita (dirección IP, navegador, página solicitada y hora) por seguridad y funcionamiento. [PENDIENTE: plazo de conservación de esos registros según el proveedor.]
+No pedimos tu nombre real, tu correo, tu teléfono ni datos de pago. **En esta beta no hay compras con dinero real.**
 
 ## 3. Qué ven otros jugadores
 
-- Tu rival en una partida ve tu nombre visible y tu héroe, y tu nombre queda en su historial de partidas.
-- Si juegas partidas clasificatorias, la tabla de clasificación muestra a cualquier jugador las 20 primeras posiciones con su nombre visible y su puntuación.
+Tu rival ve tu nombre público, tu héroe, tu avatar y tu marco, y tu nombre queda en su historial de partidas. Tus amigos ven tu nombre y si estás conectado. La clasificación muestra nombres públicos y puntuaciones.
 
-Por eso te pedimos que tu nombre visible no incluya tu nombre real ni otros datos personales.
+Por eso te pedimos que tu nombre público no incluya tu nombre real ni otros datos personales.
 
-## 4. Para qué usamos los datos y con qué base
+## 4. Para qué los usamos
 
-| Finalidad | Base legal (si te aplica el RGPD o el RGPD del Reino Unido) |
-|---|---|
-| Crear tu cuenta, guardar tu progreso y prestarte el juego | Ejecución del contrato (los Términos de uso) |
-| Emparejarte, resolver partidas y mostrar la clasificación | Ejecución del contrato |
-| Seguridad, prevención de trampas y abusos, y corrección de errores | Interés legítimo en mantener un juego justo y seguro |
-| Analítica para mejorar el juego y su balance | Consentimiento, que puedes retirar en cualquier momento |
-| Cumplir obligaciones legales | Obligación legal |
+Solo para que puedas jugar: entrar con tu cuenta, conservar tu progreso, jugar con tus amigos y mantener el servicio funcionando y protegido. No los vendemos ni los usamos para publicidad.
 
-No vendemos tus datos personales ni los usamos para publicidad.
+## 5. Quién más interviene
 
-## 5. Con quién compartimos los datos
+Cuando te conectas por internet, la conexión pasa por la red de **Cloudflare**, que la protege. Cloudflare ve tu dirección de internet y puede ver lo que viaja entre tu equipo y el servidor, incluido lo que escribes en las páginas de cuenta. Las páginas de cuenta cargan además su comprobación «Turnstile», que verifica que quien escribe es una persona. Cloudflare trata esos datos según su propia [política de privacidad](https://www.cloudflare.com/privacypolicy/). Nadie más recibe tus datos.
 
-- **Unity Technologies**, que presta los servicios en línea del juego (autenticación, guardado en la nube, lógica del servidor, economía, clasificación, configuración remota y analítica) como encargado del tratamiento.
-- **Nuestro proveedor de alojamiento web**, para servir este sitio.
-- **Autoridades**, solo cuando la ley nos obligue.
+[PENDIENTE: dónde está físicamente el servidor y si eso implica una transferencia internacional de datos; lo confirma la revisión legal.]
 
-[PENDIENTE: confirmar con la revisión legal el acuerdo de tratamiento de datos con Unity y con el proveedor de alojamiento.]
+## 6. Cuánto tiempo se conservan
 
-## 6. Transferencias internacionales
+Mientras uses el juego, o hasta que pidas que se borren. Las copias de seguridad del servidor se conservan hasta [PENDIENTE: número de días que declara el dueño]. Los registros técnicos ocupan un espacio fijo: los más antiguos se van sobrescribiendo.
 
-Inca Games está en Estados Unidos y los servicios de Unity pueden tratar datos en Estados Unidos y en otros países. [PENDIENTE: garantías aplicables a las transferencias desde el Espacio Económico Europeo y el Reino Unido, por ejemplo cláusulas contractuales tipo o el Marco de Privacidad de Datos.]
+## 7. Cómo borrar tu cuenta y tus datos
 
-## 7. Cuánto tiempo los conservamos
+Escribe a **{{privacyContact}}** e indica tu nombre de usuario. Si juegas sin cuenta, indica tu nombre público completo, con su número (o tu ID de soporte, que está en Opciones). Podemos pedirte una comprobación de que la cuenta es tuya.
 
-- Los datos de tu cuenta y de tu progreso, mientras tengas la cuenta.
-- El historial visible en el juego guarda tus últimas 20 partidas.
-- Las entradas de la cola de emparejamiento caducan a los 2 minutos.
-- [PENDIENTE: plazo de conservación de los datos de partidas, de las liquidaciones y de los registros de los servidores. Hoy no se borran automáticamente.]
-- [PENDIENTE: plazo de conservación de los datos de analítica.]
+Se borran tu cuenta, el registro de tus equipos, tu nombre público, tus amigos, tu progreso, tus monedas, tus puntuaciones, tus eventos de uso, los días en que abriste el juego, los regalos que recibiste y los que tenías por reclamar. El borrado no se puede deshacer.
 
-## 8. Reinicios de progreso durante la beta
+Después del borrado queda esto:
 
-Mientras el juego esté en beta, el progreso puede reiniciarse. En el último reinicio se borraron la colección, los mazos, las monedas y la esencia, los sobres sin abrir, el progreso de campaña, los contadores de los sobres, el historial, la puntuación y la racha, los héroes desbloqueados y el registro de compras de prueba. Se conservaron el nombre visible y las gemas. Avisaremos en el juego antes de cada reinicio.
+- el registro interno de acciones de administración (por ejemplo, un regalo de monedas, un bloqueo o el propio borrado), que usa un identificador interno y no tu nombre;
+- las partidas que jugaste con otras personas, donde sigue figurando ese identificador, pero ya no el nombre con el que jugaste;
+- las copias de seguridad anteriores, hasta que caducan.
 
-## 9. Compras
+## 8. Otros pedidos
 
-Durante la beta todas las compras son **de prueba**: no se cobra dinero real ni se pide ningún dato de pago. Cuando haya compras reales, el pago lo gestionará la tienda de la plataforma (por ejemplo, Steam) con su propia política de privacidad, y actualizaremos esta política antes. [PENDIENTE: datos de compra que se recibirán de cada tienda.]
+Por el mismo correo puedes preguntar qué datos tuyos guardamos o pedir que se corrija alguno. Tu nombre público lo puedes cambiar en el juego. Responderemos en un plazo de [PENDIENTE: plazo de respuesta].
 
-## 10. Tus derechos
+## 9. Reinicios durante la beta
 
-Según la ley que te aplique, puedes pedir acceso a tus datos, rectificarlos, borrarlos, recibirlos en un formato portable, oponerte a un tratamiento o limitarlo, y retirar tu consentimiento a la analítica cuando quieras.
+Mientras el juego esté en beta, el progreso puede reiniciarse; avisaremos antes en el juego. La beta cerrada 0.8.0 empieza con una base de datos nueva.
 
-- Tu nombre visible lo puedes cambiar en el juego.
-- El juego todavía no tiene un botón para borrar la cuenta. Puedes pedir el borrado o una copia de tus datos escribiendo a [PENDIENTE: correo de privacidad], indicando tu identificador de jugador. Responderemos en un plazo de [PENDIENTE: plazo].
-- Si vives en el Espacio Económico Europeo o en el Reino Unido, también puedes reclamar ante tu autoridad de protección de datos.
-- Si vives en California u otro estado de EE. UU. con ley de privacidad propia, tienes además los derechos que esa ley reconoce. No vendemos ni compartimos datos personales para publicidad.
+## 10. Menores
 
-[PENDIENTE: la revisión legal debe confirmar qué leyes aplican (por ejemplo, RGPD, ley de California y ley peruana de protección de datos) y ajustar esta sección.]
+[PENDIENTE: edad mínima para jugar y tratamiento de los datos de menores; lo decide el dueño con la revisión legal.]
 
-## 11. Menores
+## 11. Este sitio web
 
-Hero Duel CCG no está dirigido a menores de [PENDIENTE: edad mínima] años y no recopilamos a sabiendas datos de menores de esa edad. Si crees que un menor nos ha dado datos, escríbenos y los borraremos.
+Este sitio no usa cookies, no tiene analítica y no tiene formularios. Como cualquier servidor web, el de nuestro proveedor de alojamiento registra datos técnicos de cada visita (dirección de internet, navegador, página solicitada y hora) por seguridad y funcionamiento. [PENDIENTE: plazo de conservación de esos registros según el proveedor.]
 
-[PENDIENTE: edad mínima, tratamiento de menores de 13 años (ley COPPA de EE. UU.) y de 16 años (RGPD), y clasificación por edades del juego, que todavía no se ha obtenido.]
+## 12. Leyes aplicables y tus derechos
 
-## 12. Seguridad
+[PENDIENTE: la revisión legal confirma qué leyes aplican (por ejemplo, la ley peruana de protección de datos personales, el RGPD o la ley de California) y ajusta esta sección.]
 
-El servidor decide todas las reglas y recompensas, y los jugadores no pueden escribir directamente en sus datos guardados. Las comunicaciones con los servicios del juego y con este sitio van cifradas. Ningún sistema es infalible: si detectamos una brecha que afecte a tus datos, te avisaremos como exija la ley.
+## 13. Cambios en este aviso
 
-## 13. Cambios en esta política
-
-Si cambiamos esta política, actualizaremos la fecha de arriba y, si el cambio es importante, te avisaremos en el juego o en este sitio.
-
-## 14. Contacto
-
-[PENDIENTE: correo de privacidad] · Inca Games [PENDIENTE: razón social y dirección].
+Si este aviso cambia, la versión vigente será siempre la de esta página, con su fecha de actualización arriba.
