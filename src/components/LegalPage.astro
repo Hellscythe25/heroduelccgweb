@@ -3,9 +3,10 @@
  * Página de un documento legal. El texto vive en src/content/legal/{lang}/;
  * el estado (borrador o publicado) en src/legal.ts.
  */
-import { getCollection, render } from 'astro:content';
+import { getCollection } from 'astro:content';
 import PageHead from '~/components/PageHead.astro';
 import { isLegalPublished, type LegalDoc } from '~/legal';
+import { resolveSiteTokens } from '~/lib/siteTokens';
 import { localeTags, useTranslations, type Lang } from '~/i18n/ui';
 
 interface Props {
@@ -22,7 +23,8 @@ if (!entry) {
   throw new Error(`Falta src/content/legal/${lang}/ para "${doc}".`);
 }
 
-const { Content } = await render(entry);
+// El HTML ya renderizado, con {{privacyContact}} y demás marcas de src/site.ts resueltas.
+const html = resolveSiteTokens(entry.rendered?.html ?? '');
 const isDraft = !isLegalPublished(doc);
 const dateFormat = new Intl.DateTimeFormat(localeTags[lang], { dateStyle: 'long', timeZone: 'UTC' });
 ---
@@ -43,9 +45,7 @@ const dateFormat = new Intl.DateTimeFormat(localeTags[lang], { dateStyle: 'long'
       </aside>
     )
   }
-  <article class="legal">
-    <Content />
-  </article>
+  <article class="legal" set:html={html} />
 </div>
 
 <style>

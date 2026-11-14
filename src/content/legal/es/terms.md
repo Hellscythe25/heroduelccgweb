@@ -3,14 +3,14 @@ title: Términos de uso
 description: Las condiciones para jugar a Hero Duel CCG durante la beta, las monedas virtuales y las normas de juego limpio.
 lang: es
 doc: terms
-updatedAt: 2026-10-31
+updatedAt: 2026-11-14
 ---
 
 Estos términos regulan el uso de **Hero Duel CCG** (el juego para PC y sus servicios en línea). Al jugar los aceptas. Si no estás de acuerdo, no uses el juego.
 
 ## 1. Quién ofrece el juego
 
-Hero Duel CCG lo ofrece **Inca Games** [PENDIENTE: razón social exacta y dirección], Nueva Jersey, Estados Unidos. Contacto: [PENDIENTE: correo de contacto].
+Hero Duel CCG lo desarrolla y opera **Wildcat Games**, y lo edita Inca Games. [PENDIENTE: qué entidad es la parte de estos términos, con su razón social y dirección; lo confirma la revisión legal.] Contacto: [PENDIENTE: correo de contacto].
 
 ## 2. El juego está en beta
 
@@ -23,7 +23,7 @@ Hero Duel CCG está en desarrollo. Durante la beta:
 
 ## 3. Tu cuenta
 
-- El juego crea una cuenta anónima en tu equipo. Si pierdes esa sesión (por ejemplo, al reinstalar el sistema), puedes perder la cuenta. Cuando esté disponible, podrás vincularla a una cuenta de Unity para no perderla.
+- Puedes jugar como invitado, con una clave que el juego genera para reconocer tu equipo, o crear una cuenta con nombre de usuario y contraseña en una página del servidor que se abre en tu navegador. [PENDIENTE: qué pasa con el progreso de un invitado si se pierde esa clave, por ejemplo al reinstalar el sistema.]
 - Eres responsable de lo que ocurra con tu cuenta. No la vendas, la prestes ni la compartas.
 - Debes tener al menos [PENDIENTE: edad mínima] años para jugar, o la edad que exija la ley de tu país si es mayor.
 
@@ -33,7 +33,7 @@ Tu nombre lo ven otros jugadores. No puede ser ofensivo, discriminatorio ni sexu
 
 ## 5. Licencia de uso
 
-Te damos una licencia personal, limitada, no exclusiva, intransferible y revocable para usar el juego con fines de ocio y no comerciales. El juego, sus cartas, héroes, textos, arte, música y código pertenecen a Inca Games o a sus licenciantes. Estos términos no te transmiten ninguna propiedad.
+Te damos una licencia personal, limitada, no exclusiva, intransferible y revocable para usar el juego con fines de ocio y no comerciales. El juego, sus cartas, héroes, textos, arte, música y código pertenecen a [PENDIENTE: titular de los derechos del juego; lo confirma la revisión legal] o a sus licenciantes. Estos términos no te transmiten ninguna propiedad.
 
 ## 6. Cartas y monedas virtuales
 
@@ -85,4 +85,4 @@ Cómo tratamos tus datos se explica en la Política de privacidad.
 
 ## 13. Contacto
 
-[PENDIENTE: correo de contacto] · Inca Games [PENDIENTE: razón social y dirección].
+[PENDIENTE: correo de contacto] · Wildcat Games [PENDIENTE: razón social y dirección].
