@@ -14,6 +14,18 @@ convencionales. Las entradas no se escriben a mano.
 
 ## [No publicado]
 
+### Añadido — Novedades por versión (2026-11-15, rama `feat/landing-changelog`)
+
+- Página nueva **Novedades** (`/es/novedades/`, `/en/changelog/`), en el
+  menú principal: qué cambió en cada versión del juego, de la 0.2.0 a la
+  0.8.0. Cada versión muestra su aviso y sus destacados, con el detalle
+  completo en un bloque desplegable y un índice de versiones arriba.
+- El texto sale del registro de jugadores del juego, sin nombres de rango ni
+  gemas; el inglés usa los términos del juego. Colección nueva
+  `src/content/changelog/` con sus reglas en `_README.md`.
+- `tests/changelog.test.ts` comprueba el orden de versiones, la paridad entre
+  idiomas y que no se cuelen gemas, fechas ni el nombre interno.
+
 ### Añadido — Vhassa, sexto héroe (2026-11-03, rama `feat/heroes-vhassa`)
 
 - Vhassa, la Pactada, deja de ser "Próximamente". Tiene ficha completa en

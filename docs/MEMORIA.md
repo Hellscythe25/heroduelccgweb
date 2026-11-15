@@ -138,6 +138,25 @@ Estado medido en la última verificación: build en verde, 4 páginas,
 - **Los datos del juego no publicables todavía** (decisión del juego, no de la
   web): fechas internas de la beta y del lanzamiento, nombres de rango (copian
   a World of Warcraft y se van a sustituir), precios y número de cartas.
+- **Página pública de novedades por versión** (dueño, 2026-11-15):
+  `/es/novedades/` y `/en/changelog/`, en el menú principal. Adelanta a la
+  fase 1 una parte de lo que `DEPLOY.md` §15 reservaba a Noticias (fase 2),
+  pero no usa esa colección: las notas no llevan fecha ni autor, porque las
+  fechas de la beta son internas. Detalles:
+  - El texto se adapta del registro de jugadores del juego
+    (`Docs/CHANGELOG_Jugadores.md`, espejo estable, commit `fae841f`).
+    Entran todas las versiones, de la 0.2.0 a la 0.8.0.
+  - Cada versión enseña su aviso y hasta seis destacados; el detalle
+    completo va plegado en un `<details>`, sin JavaScript.
+  - Se quitan los avisos de "versión en preparación" (ya salieron), los
+    nombres de rango, todo lo de gemas y moneda premium, las fechas y los
+    nombres internos. Reglas completas en
+    `src/content/changelog/_README.md`.
+  - El inglés lo traduce la web con los términos del propio juego
+    (`ContentDatabase.json`) y lo aprueba el dueño.
+  - La regla de `src/content/news/_README.md` (tablas de cambios de cartas
+    generadas desde `cards.json`) sigue valiendo para Noticias. Aquí los
+    cambios de balance se citan tal como los publica el juego.
 
 ---
 
