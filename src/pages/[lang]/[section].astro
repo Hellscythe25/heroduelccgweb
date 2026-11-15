@@ -28,7 +28,7 @@ import { screenshotsCopy } from '~/i18n/pages/screenshots';
 import { heroes } from '~/data';
 import { isPressKitPublishable, pressKit } from '~/press';
 import { isLegalPublished } from '~/legal';
-import { hasDevlogPosts } from '~/devlog';
+import { feedPath, hasDevlogPosts } from '~/devlog';
 
 type Section = 'game' | 'howToPlay' | 'heroes' | 'screenshots' | 'changelog' | 'blog' | 'presskit' | 'privacy' | 'terms';
 
@@ -51,6 +51,7 @@ const siteName = t('site.name');
 let title: string;
 let description: string;
 let noindex = false;
+let feed: { href: string; title: string } | undefined;
 
 switch (section) {
   case 'game':
@@ -81,6 +82,7 @@ switch (section) {
     title = `${t('devlog.title')} — ${siteName}`;
     description = t('devlog.intro');
     noindex = !hasDevlogPosts(lang);
+    if (!noindex) feed = { href: feedPath(lang), title };
     break;
   case 'presskit':
     title = `${t('press.title')} — ${pressKit.game.title}`;
@@ -98,7 +100,7 @@ switch (section) {
 }
 ---
 
-<BaseLayout title={title} description={description} lang={lang} routeKey={section} noindex={noindex}>
+<BaseLayout title={title} description={description} lang={lang} routeKey={section} noindex={noindex} feed={feed}>
   {section === 'game' && <GamePage lang={lang} />}
   {section === 'howToPlay' && <HowToPlayPage lang={lang} />}
   {section === 'heroes' && <HeroesPage lang={lang} />}

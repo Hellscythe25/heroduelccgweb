@@ -177,6 +177,16 @@ Estado medido en la última verificación: build en verde, 4 páginas,
 - **La escena del duelo usa el arte PVP de la 0.8.0** (dueño, 2026-11-15):
   `scenes/duel.jpg` se reimportó del espejo estable (`fae841f`). El resto
   del arte del sitio no cambió en el juego.
+- **El devlog abre con la beta cerrada** (dueño, 2026-11-15): entra en la
+  fase 1 la página de cada entrada (`/es/devlog/<slug>/`,
+  `/en/devlog/<slug>/`) y un feed RSS por idioma (`/es/devlog/rss.xml`),
+  escrito a mano, sin `@astrojs/rss`. Detalles:
+  - Las entradas viven en `src/content/blog/{es,en}/`; la traducción se une
+    con `translationOf`, y el selector de idioma y los hreflang la siguen.
+  - La primera entrada cuenta la primera prueba en el servidor propio, con
+    22 testers por invitación (dato del dueño). Lo demás sale del registro de
+    jugadores de la 0.8.0. Sin gemas, rangos ni fechas de la beta.
+  - Va como `draft: true` hasta que el dueño apruebe el texto y la firma.
 
 ---
 

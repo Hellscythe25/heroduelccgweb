@@ -1,0 +1,115 @@
+---
+/**
+ * Una entrada del devlog: cabecera con firma y fecha, la portada, el texto y
+ * la vuelta a la lista. El Markdown llega por el slot.
+ *
+ * La portada va entera bajo la cabecera y no de fondo: suele ser una captura
+ * del juego, y detrás del velo de PageHead no se distingue nada.
+ */
+import { Picture } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import PageHead from '~/components/PageHead.astro';
+import { localeTags, localizedPath, useTranslations, type Lang } from '~/i18n/ui';
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+  lang: Lang;
+}
+
+const { post, lang } = Astro.props;
+const t = useTranslations(lang);
+const dateFormat = new Intl.DateTimeFormat(localeTags[lang], { dateStyle: 'long', timeZone: 'UTC' });
+---
+
+<PageHead title={post.data.title} lead={post.data.description}>
+  <p class="meta">
+    {t('devlog.published')}{' '}
+    <time datetime={post.data.publishedAt.toISOString().slice(0, 10)}>{dateFormat.format(post.data.publishedAt)}</time>
+    {' · '}
+    {post.data.author}
+  </p>
+</PageHead>
+
+<div class="section container">
+  <article class="post">
+    {
+      post.data.cover && (
+        <Picture
+          src={post.data.cover.src}
+          alt={post.data.cover.alt}
+          formats={['avif', 'webp']}
+          widths={[480, 800, 1280]}
+          sizes="(min-width: 48rem) 42rem, 100vw"
+          loading="eager"
+          fetchpriority="high"
+          class="cover"
+        />
+      )
+    }
+    <slot />
+  </article>
+  <p class="back">
+    <a href={localizedPath(lang, 'blog')}>{t('devlog.back')}</a>
+  </p>
+</div>
+
+<style>
+  .meta {
+    margin-block-start: var(--hd-space-4);
+    color: var(--hd-text-muted);
+    font-size: var(--hd-text-sm);
+  }
+
+  /* El Markdown no lleva clases: se estiliza por elemento dentro del artículo. */
+  .post {
+    max-width: var(--hd-measure);
+  }
+
+  .post :global(h2) {
+    margin-block: var(--hd-space-12) var(--hd-space-4);
+    font-size: var(--hd-text-xl);
+    color: var(--hd-accent);
+  }
+
+  .post :global(h2:first-child) {
+    margin-block-start: 0;
+  }
+
+  .post :global(h3) {
+    margin-block: var(--hd-space-6) var(--hd-space-2);
+    font-size: var(--hd-text-lg);
+  }
+
+  .post :global(p),
+  .post :global(ul),
+  .post :global(ol) {
+    margin-block-end: var(--hd-space-4);
+  }
+
+  .post :global(li) {
+    margin-block-end: var(--hd-space-2);
+  }
+
+  .post :global(strong) {
+    color: var(--hd-text);
+  }
+
+  .post :global(.cover) {
+    margin-block-end: var(--hd-space-8);
+  }
+
+  .post :global(img) {
+    display: block;
+    inline-size: 100%;
+    block-size: auto;
+    border: 1px solid var(--hd-border);
+    border-radius: var(--hd-radius-md);
+  }
+
+  .back {
+    max-width: var(--hd-measure);
+    margin-block-start: var(--hd-space-12);
+    padding-block-start: var(--hd-space-6);
+    border-block-start: 1px solid var(--hd-border);
+  }
+</style>

@@ -11,10 +11,16 @@ interface Props {
   lang: Lang;
   routeKey: RouteKey;
   image?: string | undefined;
+  imageAlt?: string | undefined;
+  /** Rutas de esta página por idioma cuando no salen de `routes` (ver Seo.astro). */
+  langPaths?: Partial<Record<Lang, string>> | undefined;
+  publishedAt?: Date | undefined;
+  feed?: { href: string; title: string } | undefined;
   noindex?: boolean;
 }
 
-const { title, description, lang, routeKey, image, noindex = false } = Astro.props;
+const { title, description, lang, routeKey, image, imageAlt, langPaths, publishedAt, feed, noindex = false } =
+  Astro.props;
 const t = useTranslations(lang);
 ---
 
@@ -27,12 +33,16 @@ const t = useTranslations(lang);
       lang={lang}
       routeKey={routeKey}
       image={image}
+      imageAlt={imageAlt}
+      langPaths={langPaths}
+      publishedAt={publishedAt}
+      feed={feed}
       noindex={noindex}
     />
   </head>
   <body>
     <a class="skip-link" href="#main">{t('nav.skipToContent')}</a>
-    <SiteHeader lang={lang} routeKey={routeKey} />
+    <SiteHeader lang={lang} routeKey={routeKey} langPaths={langPaths} />
     <main id="main" tabindex="-1">
       <slot />
     </main>

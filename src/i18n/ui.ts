@@ -106,6 +106,8 @@ export const ui = {
       'Notas del equipo sobre cómo se hace Hero Duel CCG: diseño, decisiones y avances.',
     'devlog.empty': 'Todavía no hay entradas. La primera llegará pronto.',
     'devlog.published': 'Publicado el',
+    'devlog.back': 'Todas las entradas del devlog',
+    'devlog.feed': 'Sigue el devlog por RSS',
     'legal.updated': 'Última actualización',
     'legal.draft.title': 'Borrador pendiente de revisión legal',
     'legal.draft.body':
@@ -195,6 +197,8 @@ export const ui = {
     'devlog.intro': 'Notes from the team on how Hero Duel CCG is made: design, decisions and progress.',
     'devlog.empty': 'No posts yet. The first one is coming soon.',
     'devlog.published': 'Published on',
+    'devlog.back': 'All devlog posts',
+    'devlog.feed': 'Follow the devlog via RSS',
     'legal.updated': 'Last updated',
     'legal.draft.title': 'Draft pending legal review',
     'legal.draft.body':

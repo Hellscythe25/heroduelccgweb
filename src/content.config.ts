@@ -40,9 +40,18 @@ const editorial = z.object({
 
 const blog = defineCollection({
   loader: glob({ pattern: '**/[^_]*.{md,mdx}', base: './src/content/blog' }),
-  schema: editorial.extend({
-    tags: z.array(z.string()).default([]),
-  }),
+  // La portada pasa por `image()`: Astro la optimiza y el build se rompe si la
+  // ruta no existe, en vez de publicar una imagen rota.
+  schema: ({ image }) =>
+    editorial.extend({
+      tags: z.array(z.string()).default([]),
+      cover: z
+        .object({
+          src: image(),
+          alt: z.string().min(1, 'El texto alternativo es obligatorio.'),
+        })
+        .optional(),
+    }),
 });
 
 const news = defineCollection({

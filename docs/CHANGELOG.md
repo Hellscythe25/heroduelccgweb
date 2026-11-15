@@ -14,6 +14,18 @@ convencionales. Las entradas no se escriben a mano.
 
 ## [No publicado]
 
+### Añadido — Devlog con entradas (2026-11-15, rama `feat/blog-closed-beta`)
+
+- Cada entrada del devlog tiene su página (`/es/devlog/<slug>/`,
+  `/en/devlog/<slug>/`) con portada, firma y fecha, enlace a su traducción en
+  el selector de idioma y en los hreflang, e imagen propia para redes.
+- La lista del devlog enlaza cada entrada con su portada, y cada idioma tiene
+  su feed RSS (`/es/devlog/rss.xml`), sin dependencias nuevas.
+- Primera entrada, en borrador: «Empieza la beta cerrada» / «The closed beta
+  begins».
+- `tests/devlog.test.ts` comprueba carpetas por idioma, slugs, traducciones y
+  enlaces internos.
+
 ### Añadido — Galería de capturas (2026-11-15, rama `feat/landing-screenshots`)
 
 - Página nueva **Capturas** (`/es/capturas/`, `/en/screenshots/`), en el menú
