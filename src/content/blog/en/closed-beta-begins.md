@@ -5,7 +5,7 @@ lang: en
 publishedAt: 2026-11-15
 author: Code Warlock
 tags: [beta]
-draft: true
+draft: false
 translationOf: empieza-la-beta-cerrada
 cover:
   src: ../../../assets/screens/en/04i-spell-hit.jpg

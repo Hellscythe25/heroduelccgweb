@@ -5,7 +5,7 @@ lang: es
 publishedAt: 2026-11-15
 author: Code Warlock
 tags: [beta]
-draft: true
+draft: false
 cover:
   src: ../../../assets/screens/es/04i-spell-hit.jpg
   alt: Un duelo en Hero Duel CCG, Brakka contra Brakka, con una carta de golpe en el centro de la mesa.
