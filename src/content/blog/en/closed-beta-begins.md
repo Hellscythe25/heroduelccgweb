@@ -3,7 +3,7 @@ title: The closed beta begins
 description: Hero Duel CCG's first test on our own server is underway, with 22 invited testers.
 lang: en
 publishedAt: 2026-11-15
-author: Wildcat Games
+author: Code Warlock
 tags: [beta]
 draft: true
 translationOf: empieza-la-beta-cerrada
@@ -14,6 +14,11 @@ cover:
 
 Hero Duel CCG's first closed beta has begun. It's the first time the game runs
 on our own server, and 22 testers are already playing by invitation.
+
+## Why our own server
+
+For digital sovereignty and autonomy: we want to decide for ourselves where
+the game lives and how it works.
 
 ## How to get in
 

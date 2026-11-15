@@ -3,7 +3,7 @@ title: Empieza la beta cerrada
 description: La primera prueba de Hero Duel CCG en nuestro propio servidor ya está en marcha, con 22 testers por invitación.
 lang: es
 publishedAt: 2026-11-15
-author: Wildcat Games
+author: Code Warlock
 tags: [beta]
 draft: true
 cover:
@@ -13,6 +13,11 @@ cover:
 
 Hero Duel CCG ya tiene su primera beta cerrada. Es la primera vez que el juego
 corre en nuestro propio servidor, y ya hay 22 testers jugando por invitación.
+
+## Por qué un servidor propio
+
+Por soberanía y autonomía digital: queremos decidir nosotros dónde vive el
+juego y cómo funciona.
 
 ## Cómo se entra
 
