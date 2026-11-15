@@ -157,6 +157,26 @@ Estado medido en la última verificación: build en verde, 4 páginas,
   - La regla de `src/content/news/_README.md` (tablas de cambios de cartas
     generadas desde `cards.json`) sigue valiendo para Noticias. Aquí los
     cambios de balance se citan tal como los publica el juego.
+- **Galería de capturas del juego** (dueño, 2026-11-15, pedido que trajo
+  Agent TCG): `/es/capturas/` y `/en/screenshots/`, en el menú principal.
+  Cada idioma enseña el juego en su idioma. Detalles:
+  - Son 15 de las 17 capturas de la 0.8.1 candidata que dejó el equipo del
+    juego en `inbox/screens-0.8.1/` (fuera del repositorio). Fuera quedan el
+    centro PVP, que gira entero alrededor del rango, y la carta jugada
+    (`04a`), casi igual que el golpe de hechizo (`04i`).
+  - `scripts/import-screenshots.mjs` las tapa y las guarda en
+    `src/assets/screens/{es,en}/` como JPG de 1600 px (unos 5 MB en total).
+    Tapa la marca «Development Build» (y la versión de la build en el
+    lobby), la línea de depuración «Sala: pve_s01» en combate, los nombres de
+    rango (lobby y perfil) y las fechas de desbloqueo de los logros. El dueño
+    eligió tapar en vez de esperar capturas de una build de release.
+  - Los logros salen en la 0.8.1: su captura va en el grupo «Próximamente».
+  - Los contadores de gemas se ven en algunas capturas. No se taparon: la
+    página El juego ya presenta las gemas como una de las tres monedas.
+  - Solo se publican en heroduelccg.com; no se suben a otros servicios.
+- **La escena del duelo usa el arte PVP de la 0.8.0** (dueño, 2026-11-15):
+  `scenes/duel.jpg` se reimportó del espejo estable (`fae841f`). El resto
+  del arte del sitio no cambió en el juego.
 
 ---
 

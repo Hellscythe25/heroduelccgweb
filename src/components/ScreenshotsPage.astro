@@ -1,0 +1,108 @@
+---
+/**
+ * Galería de capturas del juego, agrupada por lo que enseña.
+ *
+ * Sin JavaScript: cada miniatura enlaza a la captura grande (WebP a 1600 px),
+ * que el navegador abre por sí mismo. Una captura que falte en un idioma rompe
+ * el build en vez de dejar un hueco en la rejilla.
+ */
+import { Picture, getImage } from 'astro:assets';
+import PageHead from '~/components/PageHead.astro';
+import { screenshot } from '~/art';
+import { screenshotsCopy } from '~/i18n/pages/screenshots';
+import type { Lang } from '~/i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const copy = screenshotsCopy[lang];
+
+const groups = await Promise.all(
+  copy.groups.map(async (group) => ({
+    ...group,
+    shots: await Promise.all(
+      group.shots.map(async (shot) => {
+        const image = screenshot(lang, shot.id);
+        if (!image) throw new Error(`Falta src/assets/screens/${lang}/${shot.id}.jpg.`);
+        const full = await getImage({ src: image, width: 1600, format: 'webp' });
+        return { ...shot, image, fullSrc: full.src };
+      }),
+    ),
+  })),
+);
+---
+
+<PageHead title={copy.title} lead={copy.lead} />
+
+{
+  groups.map((group, groupIndex) => (
+    <section class="section container" aria-labelledby={`shots-${groupIndex}`}>
+      <h2 id={`shots-${groupIndex}`}>{group.title}</h2>
+      {group.note && <p class="note">{group.note}</p>}
+      <ul class="shots">
+        {group.shots.map((shot, shotIndex) => (
+          <li>
+            <figure>
+              <a href={shot.fullSrc} class="frame">
+                <Picture
+                  src={shot.image}
+                  alt={shot.caption}
+                  formats={['avif', 'webp']}
+                  widths={[480, 800]}
+                  sizes="(min-width: 64rem) 22rem, (min-width: 40rem) 45vw, 100vw"
+                  loading={groupIndex === 0 && shotIndex < 3 ? 'eager' : 'lazy'}
+                />
+                <span class="visually-hidden">{copy.fullSize}</span>
+              </a>
+              {/* El pie repite el texto alternativo de la imagen: se oculta al lector de pantalla para no leerlo dos veces. */}
+              <figcaption aria-hidden="true">{shot.caption}</figcaption>
+            </figure>
+          </li>
+        ))}
+      </ul>
+    </section>
+  ))
+}
+
+<style>
+  .note {
+    margin-block: calc(-1 * var(--hd-space-4)) var(--hd-space-6);
+    color: var(--hd-text-muted);
+  }
+
+  .shots {
+    display: grid;
+    gap: var(--hd-space-8) var(--hd-space-6);
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr));
+    padding: 0;
+    list-style: none;
+  }
+
+  .frame {
+    display: block;
+    overflow: hidden;
+    border: 1px solid var(--hd-border);
+    border-radius: var(--hd-radius-md);
+    background: var(--hd-surface-sunken);
+  }
+
+  .frame :global(img) {
+    display: block;
+    inline-size: 100%;
+    block-size: auto;
+    aspect-ratio: 16 / 9;
+  }
+
+  .frame:hover,
+  .frame:focus-visible {
+    border-color: var(--hd-border-gold);
+  }
+
+  figcaption {
+    margin-block-start: var(--hd-space-3);
+    color: var(--hd-text-muted);
+    font-size: var(--hd-text-sm);
+  }
+</style>

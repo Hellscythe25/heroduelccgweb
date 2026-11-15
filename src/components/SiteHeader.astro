@@ -23,6 +23,7 @@ const nav: { key: RouteKey; label: string }[] = [
   { key: 'game', label: t('nav.game') },
   { key: 'howToPlay', label: t('nav.howToPlay') },
   { key: 'heroes', label: t('nav.heroes') },
+  { key: 'screenshots', label: t('nav.screenshots') },
   { key: 'changelog', label: t('nav.changelog') },
   ...(hasDevlogPosts(lang) ? [{ key: 'blog' as const, label: t('nav.blog') }] : []),
   ...(isPressKitPublishable ? [{ key: 'presskit' as const, label: t('nav.presskit') }] : []),

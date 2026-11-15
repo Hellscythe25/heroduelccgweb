@@ -39,6 +39,7 @@ export const routes = {
   game: { es: 'juego', en: 'game' },
   howToPlay: { es: 'como-se-juega', en: 'how-to-play' },
   heroes: { es: 'heroes', en: 'heroes' },
+  screenshots: { es: 'capturas', en: 'screenshots' },
   changelog: { es: 'novedades', en: 'changelog' },
   news: { es: 'noticias', en: 'news' },
   // La colección se llama `blog`; de cara al público es el devlog.
@@ -66,6 +67,7 @@ export const ui = {
     'nav.news': 'Noticias',
     'nav.blog': 'Devlog',
     'nav.heroes': 'Héroes',
+    'nav.screenshots': 'Capturas',
     'nav.changelog': 'Novedades',
     'nav.cards': 'Cartas',
     'nav.deckbuilder': 'Deckbuilder',
@@ -156,6 +158,7 @@ export const ui = {
     'nav.news': 'News',
     'nav.blog': 'Devlog',
     'nav.heroes': 'Heroes',
+    'nav.screenshots': 'Screenshots',
     'nav.changelog': 'Changelog',
     'nav.cards': 'Cards',
     'nav.deckbuilder': 'Deckbuilder',
