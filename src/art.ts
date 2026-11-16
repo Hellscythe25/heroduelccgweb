@@ -41,6 +41,17 @@ export function heroArena(heroId: string): ImageMetadata | undefined {
 
 export const scenes = { duel, board, campaign };
 
+/**
+ * Capturas del juego (scripts/import-screenshots.mjs), una por idioma: la
+ * página en español enseña el juego en español. `undefined` si no existe, y
+ * quien la pida decide si eso rompe el build.
+ */
+const screens = import.meta.glob<ImageModule>('./assets/screens/*/*.jpg', { eager: true });
+
+export function screenshot(lang: string, id: string): ImageMetadata | undefined {
+  return screens[`./assets/screens/${lang}/${id}.jpg`]?.default;
+}
+
 export const brandEmblem = emblem;
 
 /** Una ilustración por tipo de carta, en el orden de gameCopy.collection.types. */

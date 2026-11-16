@@ -9,9 +9,15 @@ interface Props {
   lang: Lang;
   /** Ruta actual, para marcar el enlace activo y cambiar de idioma sin perder la página. */
   routeKey: RouteKey;
+  /**
+   * Rutas de esta página por idioma cuando no salen de `routes`. Si un idioma
+   * no tiene la página (una entrada sin traducir), el selector lleva a la
+   * sección de ese idioma.
+   */
+  langPaths?: Partial<Record<Lang, string>> | undefined;
 }
 
-const { lang, routeKey } = Astro.props;
+const { lang, routeKey, langPaths } = Astro.props;
 const t = useTranslations(lang);
 
 /* La navegación crece solo cuando la sección existe de verdad: un menú con
@@ -23,6 +29,8 @@ const nav: { key: RouteKey; label: string }[] = [
   { key: 'game', label: t('nav.game') },
   { key: 'howToPlay', label: t('nav.howToPlay') },
   { key: 'heroes', label: t('nav.heroes') },
+  { key: 'screenshots', label: t('nav.screenshots') },
+  { key: 'changelog', label: t('nav.changelog') },
   ...(hasDevlogPosts(lang) ? [{ key: 'blog' as const, label: t('nav.blog') }] : []),
   ...(isPressKitPublishable ? [{ key: 'presskit' as const, label: t('nav.presskit') }] : []),
 ];
@@ -49,7 +57,7 @@ const nav: { key: RouteKey; label: string }[] = [
           locales.map((code) => (
             <li>
               <a
-                href={localizedPath(code, routeKey)}
+                href={langPaths?.[code] ?? localizedPath(code, routeKey)}
                 hreflang={code}
                 lang={code}
                 aria-current={code === lang ? 'true' : undefined}

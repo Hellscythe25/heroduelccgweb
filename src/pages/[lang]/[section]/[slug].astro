@@ -1,0 +1,59 @@
+---
+/**
+ * Página de cada entrada del devlog: /es/devlog/<slug>/ y /en/devlog/<slug>/.
+ *
+ * La sección sale de la tabla `routes`, como en [section].astro: si el devlog
+ * cambiara de URL, las entradas la seguirían. Solo se generan entradas
+ * publicadas; un borrador no tiene página.
+ */
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import { getImage } from 'astro:assets';
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import DevlogPost from '~/components/DevlogPost.astro';
+import { feedPath, postPath, postSlug } from '~/devlog';
+import { routes, useTranslations, type Lang } from '~/i18n/ui';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', (entry) => !entry.data.draft);
+  return posts.map((post) => ({
+    params: { lang: post.data.lang, section: routes.blog[post.data.lang], slug: postSlug(post.id) },
+    props: { post, posts },
+  }));
+}
+
+const { post, posts } = Astro.props as { post: CollectionEntry<'blog'>; posts: CollectionEntry<'blog'>[] };
+const lang = post.data.lang as Lang;
+const t = useTranslations(lang);
+const { Content } = await render(post);
+
+// La traducción se enlaza por `translationOf` en cualquiera de los dos sentidos.
+const slug = postSlug(post.id);
+const translation = posts.find(
+  (other) =>
+    other.data.lang !== lang &&
+    (postSlug(other.id) === post.data.translationOf || other.data.translationOf === slug),
+);
+const langPaths: Partial<Record<Lang, string>> = { [lang]: postPath(lang, slug) };
+if (translation) langPaths[translation.data.lang] = postPath(translation.data.lang, postSlug(translation.id));
+
+// Imagen para redes: la portada en JPEG a 1200 px, el ancho que piden X y Facebook.
+const ogImage = post.data.cover
+  ? (await getImage({ src: post.data.cover.src, width: 1200, format: 'jpg' })).src
+  : undefined;
+---
+
+<BaseLayout
+  title={`${post.data.title} — ${t('devlog.title')}`}
+  description={post.data.description}
+  lang={lang}
+  routeKey="blog"
+  image={ogImage}
+  imageAlt={post.data.cover?.alt}
+  langPaths={langPaths}
+  publishedAt={post.data.publishedAt}
+  feed={{ href: feedPath(lang), title: `${t('devlog.title')} — ${t('site.name')}` }}
+>
+  <DevlogPost post={post} lang={lang}>
+    <Content />
+  </DevlogPost>
+</BaseLayout>

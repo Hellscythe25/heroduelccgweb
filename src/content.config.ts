@@ -40,9 +40,18 @@ const editorial = z.object({
 
 const blog = defineCollection({
   loader: glob({ pattern: '**/[^_]*.{md,mdx}', base: './src/content/blog' }),
-  schema: editorial.extend({
-    tags: z.array(z.string()).default([]),
-  }),
+  // La portada pasa por `image()`: Astro la optimiza y el build se rompe si la
+  // ruta no existe, en vez de publicar una imagen rota.
+  schema: ({ image }) =>
+    editorial.extend({
+      tags: z.array(z.string()).default([]),
+      cover: z
+        .object({
+          src: image(),
+          alt: z.string().min(1, 'El texto alternativo es obligatorio.'),
+        })
+        .optional(),
+    }),
 });
 
 const news = defineCollection({
@@ -72,4 +81,27 @@ const legal = defineCollection({
   }),
 });
 
-export const collections = { blog, news, legal };
+/**
+ * Novedades por versión del juego (la página pública de changelog). Un archivo
+ * por versión e idioma: src/content/changelog/{lang}/{version}.md.
+ *
+ * No son noticias: no llevan fecha ni autor (las fechas de la beta son
+ * internas) y su texto se adapta del registro de jugadores del propio juego.
+ * Las reglas de adaptación están en src/content/changelog/_README.md.
+ */
+const changelog = defineCollection({
+  loader: glob({ pattern: '**/[^_]*.md', base: './src/content/changelog' }),
+  schema: z.object({
+    version: z.string().regex(/^\d+\.\d+\.\d+$/, 'Usa la versión del juego, ej. 0.8.0.'),
+    lang: locale,
+    /** Aviso de la versión (actualización obligatoria, reinicio de progreso…). */
+    notice: z.string().min(1).max(400).optional(),
+    /**
+     * Lo más importante de la versión, en pocas líneas. Si la versión es corta
+     * se deja vacío y la página muestra el detalle completo sin plegar.
+     */
+    highlights: z.array(z.string().min(1).max(220)).max(6).default([]),
+  }),
+});
+
+export const collections = { blog, news, legal, changelog };

@@ -12,7 +12,7 @@
  */
 import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import type { Lang } from './i18n/ui';
+import { routes, type Lang } from './i18n/ui';
 
 const BLOG_DIR = join(process.cwd(), 'src', 'content', 'blog');
 
@@ -37,4 +37,23 @@ export function hasDevlogPosts(lang: Lang): boolean {
       const isDraft = /^draft:\s*true\s*$/m.test(data);
       return isLang && !isDraft;
     });
+}
+
+/**
+ * Slug público de una entrada. Las entradas viven en `src/content/blog/{lang}/`,
+ * así que el id que da el loader es `es/mi-entrada`: el idioma ya va en la URL
+ * y no se repite.
+ */
+export function postSlug(id: string): string {
+  return id.split('/').pop()!;
+}
+
+/** Ruta absoluta de una entrada, con barra final (trailingSlash: 'always'). */
+export function postPath(lang: Lang, slug: string): string {
+  return `/${lang}/${routes.blog[lang]}/${slug}/`;
+}
+
+/** Ruta del feed RSS del devlog de un idioma. */
+export function feedPath(lang: Lang): string {
+  return `/${lang}/${routes.blog[lang]}/rss.xml`;
 }

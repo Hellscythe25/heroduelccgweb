@@ -1,7 +1,8 @@
 ---
 import { getCollection } from 'astro:content';
+import { Picture } from 'astro:assets';
 import PageHead from '~/components/PageHead.astro';
-import { hasDevlogPosts } from '~/devlog';
+import { feedPath, hasDevlogPosts, postPath, postSlug } from '~/devlog';
 import { localeTags, useTranslations, type Lang } from '~/i18n/ui';
 
 interface Props {
@@ -29,20 +30,43 @@ const dateFormat = new Intl.DateTimeFormat(localeTags[lang], { dateStyle: 'long'
     posts.length === 0 ? (
       <p class="empty">{t('devlog.empty')}</p>
     ) : (
-      <ul class="posts">
-        {posts.map((post) => (
-          <li class="panel">
-            <h2>{post.data.title}</h2>
-            <p class="meta">
-              {t('devlog.published')}{' '}
-              <time datetime={post.data.publishedAt.toISOString()}>{dateFormat.format(post.data.publishedAt)}</time>
-              {' · '}
-              {post.data.author}
-            </p>
-            <p>{post.data.description}</p>
-          </li>
-        ))}
-      </ul>
+      <>
+        <ul class="posts">
+          {posts.map((post, index) => (
+            <li class:list={['post', { 'has-cover': post.data.cover }]}>
+              {post.data.cover && (
+                <Picture
+                  src={post.data.cover.src}
+                  alt=""
+                  formats={['avif', 'webp']}
+                  widths={[480, 800]}
+                  sizes="(min-width: 48rem) 20rem, 100vw"
+                  loading={index === 0 ? 'eager' : 'lazy'}
+                  class="cover"
+                />
+              )}
+              <div class="body">
+                {/* El enlace cubre la tarjeta entera con un pseudoelemento: un solo destino por entrada. */}
+                <h2>
+                  <a href={postPath(lang, postSlug(post.id))}>{post.data.title}</a>
+                </h2>
+                <p class="meta">
+                  {t('devlog.published')}{' '}
+                  <time datetime={post.data.publishedAt.toISOString().slice(0, 10)}>
+                    {dateFormat.format(post.data.publishedAt)}
+                  </time>
+                  {' · '}
+                  {post.data.author}
+                </p>
+                <p>{post.data.description}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
+        <p class="feed">
+          <a href={feedPath(lang)} type="application/rss+xml">{t('devlog.feed')}</a>
+        </p>
+      </>
     )
   }
 </section>
@@ -54,17 +78,75 @@ const dateFormat = new Intl.DateTimeFormat(localeTags[lang], { dateStyle: 'long'
 
   .posts {
     display: grid;
-    gap: var(--hd-space-4);
+    gap: var(--hd-space-6);
     padding: 0;
     list-style: none;
   }
 
-  .posts h2 {
+  .post {
+    position: relative;
+    display: grid;
+    overflow: hidden;
+    border: 1px solid var(--hd-border);
+    border-radius: var(--hd-radius-md);
+    background: var(--hd-surface-raised);
+  }
+
+  .post:hover,
+  .post:focus-within {
+    border-color: var(--hd-border-gold);
+  }
+
+  @media (min-width: 48rem) {
+    .has-cover {
+      grid-template-columns: 20rem 1fr;
+    }
+  }
+
+  .post :global(.cover) {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+  }
+
+  .body {
+    padding: var(--hd-space-6);
+  }
+
+  .post h2 {
     font-size: var(--hd-text-xl);
+  }
+
+  .post h2 a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .post h2 a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+
+  .post h2 a:focus-visible {
+    outline: none;
+  }
+
+  .post:has(a:focus-visible) {
+    outline: 2px solid var(--hd-focus);
+    outline-offset: 2px;
   }
 
   .meta {
     margin-block: var(--hd-space-2);
+    color: var(--hd-text-muted);
+    font-size: var(--hd-text-sm);
+  }
+
+  .feed {
+    margin-block-start: var(--hd-space-8);
     font-size: var(--hd-text-sm);
   }
 </style>
