@@ -17,21 +17,24 @@ import GamePage from '~/components/GamePage.astro';
 import HowToPlayPage from '~/components/HowToPlayPage.astro';
 import HeroesPage from '~/components/HeroesPage.astro';
 import DevlogPage from '~/components/DevlogPage.astro';
+import ChangelogPage from '~/components/ChangelogPage.astro';
+import ScreenshotsPage from '~/components/ScreenshotsPage.astro';
 import LegalPage from '~/components/LegalPage.astro';
 import { locales, routes, useTranslations, type Lang } from '~/i18n/ui';
 import { gameCopy } from '~/i18n/pages/game';
 import { howToPlayCopy } from '~/i18n/pages/howToPlay';
 import { heroShortName, heroesPageCopy } from '~/i18n/pages/heroes';
+import { screenshotsCopy } from '~/i18n/pages/screenshots';
 import { heroes } from '~/data';
 import { isPressKitPublishable, pressKit } from '~/press';
 import { isLegalPublished } from '~/legal';
 import { hasDevlogPosts } from '~/devlog';
 
-type Section = 'game' | 'howToPlay' | 'heroes' | 'blog' | 'presskit' | 'privacy' | 'terms';
+type Section = 'game' | 'howToPlay' | 'heroes' | 'screenshots' | 'changelog' | 'blog' | 'presskit' | 'privacy' | 'terms';
 
 export function getStaticPaths() {
   // Astro aísla getStaticPaths del resto del frontmatter: la lista vive aquí dentro.
-  const sections: Section[] = ['game', 'howToPlay', 'heroes', 'blog', 'presskit', 'privacy', 'terms'];
+  const sections: Section[] = ['game', 'howToPlay', 'heroes', 'screenshots', 'changelog', 'blog', 'presskit', 'privacy', 'terms'];
   return sections.flatMap((section) =>
     locales.map((lang) => ({
       params: { lang, section: routes[section][lang] },
@@ -66,6 +69,14 @@ switch (section) {
       new Intl.ListFormat(lang, { type: 'conjunction' }).format(heroes.map((hero) => heroShortName(hero.name[lang]))),
     );
     break;
+  case 'screenshots':
+    title = `${screenshotsCopy[lang].meta.title} — ${siteName}`;
+    description = screenshotsCopy[lang].meta.description;
+    break;
+  case 'changelog':
+    title = `${t('changelog.title')} — ${siteName}`;
+    description = t('changelog.intro');
+    break;
   case 'blog':
     title = `${t('devlog.title')} — ${siteName}`;
     description = t('devlog.intro');
@@ -91,6 +102,8 @@ switch (section) {
   {section === 'game' && <GamePage lang={lang} />}
   {section === 'howToPlay' && <HowToPlayPage lang={lang} />}
   {section === 'heroes' && <HeroesPage lang={lang} />}
+  {section === 'screenshots' && <ScreenshotsPage lang={lang} />}
+  {section === 'changelog' && <ChangelogPage lang={lang} />}
   {section === 'blog' && <DevlogPage lang={lang} />}
   {section === 'presskit' && <PressKitPage lang={lang} />}
   {(section === 'privacy' || section === 'terms') && <LegalPage lang={lang} doc={section} />}

@@ -13,6 +13,7 @@ import { gameCopy } from '~/i18n/pages/game';
 import { heroPresentation, heroesPageCopy } from '~/i18n/pages/heroes';
 import { homeCopy } from '~/i18n/pages/home';
 import { howToPlayCopy } from '~/i18n/pages/howToPlay';
+import { screenshotsCopy } from '~/i18n/pages/screenshots';
 import { locales } from '~/i18n/ui';
 import { legalDocs } from '~/legal';
 import { heroesFromContentDatabase, splitPassive } from '../scripts/lib/game-data.mjs';
@@ -31,7 +32,7 @@ function shape(value: unknown): unknown {
 }
 
 describe('textos largos', () => {
-  const pages = { gameCopy, howToPlayCopy, heroesPageCopy, homeCopy };
+  const pages = { gameCopy, howToPlayCopy, heroesPageCopy, homeCopy, screenshotsCopy };
 
   for (const [name, copy] of Object.entries(pages)) {
     it(`${name} tiene la misma forma en todos los idiomas`, () => {

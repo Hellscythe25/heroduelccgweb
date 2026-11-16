@@ -1,0 +1,274 @@
+---
+/**
+ * Novedades por versión del juego. El texto vive en
+ * src/content/changelog/{lang}/{version}.md, adaptado del registro de
+ * jugadores del juego (reglas en el _README.md de esa carpeta).
+ *
+ * Cada versión enseña su aviso y sus destacados; el detalle completo va en un
+ * <details> nativo, plegado, para que la página se recorra sin JavaScript.
+ * Las versiones cortas no tienen destacados y muestran el detalle directamente.
+ */
+import { getCollection, render } from 'astro:content';
+import PageHead from '~/components/PageHead.astro';
+import { compareVersions, versionAnchor } from '~/changelog';
+import { defaultLang, useTranslations, type Lang } from '~/i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const all = await getCollection('changelog');
+const entries = all
+  .filter((entry) => entry.data.lang === lang)
+  .sort((a, b) => compareVersions(b.data.version, a.data.version));
+
+// Una versión sin su par en el otro idioma rompe el build: no se publica a medias.
+const expected = all.filter((entry) => entry.data.lang === defaultLang).map((entry) => entry.data.version);
+const missing = expected.filter((version) => !entries.some((entry) => entry.data.version === version));
+if (missing.length > 0) {
+  throw new Error(`Faltan en src/content/changelog/${lang}/ las versiones: ${missing.join(', ')}.`);
+}
+
+const releases = await Promise.all(
+  entries.map(async (entry) => ({
+    ...entry.data,
+    anchor: versionAnchor(entry.data.version),
+    Content: (await render(entry)).Content,
+  })),
+);
+---
+
+<PageHead title={t('changelog.title')} lead={t('changelog.intro')} />
+
+<div class="section container">
+  <nav class="versions" aria-label={t('changelog.versions')}>
+    <ul>
+      {
+        releases.map((release) => (
+          <li>
+            <a href={`#${release.anchor}`}>{release.version}</a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+
+  <ol class="releases">
+    {
+      releases.map(({ version, anchor, notice, highlights, Content }, index) => (
+        <li>
+          <article class="release" id={anchor} aria-labelledby={`${anchor}-title`}>
+            <header class="release-head">
+              <h2 id={`${anchor}-title`}>{t('changelog.version').replace('{version}', version)}</h2>
+              {index === 0 && <p class="latest">{t('changelog.latest')}</p>}
+            </header>
+
+            <div class="release-body">
+              {notice && <p class="notice">{notice}</p>}
+
+              {highlights.length > 0 ? (
+                <>
+                  <ul class="highlights">
+                    {highlights.map((item) => (
+                      <li>{item}</li>
+                    ))}
+                  </ul>
+                  <details class="details">
+                    <summary>{t('changelog.all').replace('{version}', version)}</summary>
+                    <div class="notes">
+                      <Content />
+                    </div>
+                  </details>
+                </>
+              ) : (
+                <div class="notes">
+                  <Content />
+                </div>
+              )}
+            </div>
+          </article>
+        </li>
+      ))
+    }
+  </ol>
+</div>
+
+<style>
+  /* Índice de versiones: saltos rápidos dentro de la misma página. */
+  .versions ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--hd-space-2);
+    padding: 0;
+    list-style: none;
+  }
+
+  .versions a {
+    display: inline-block;
+    padding: var(--hd-space-1) var(--hd-space-3);
+    border: 1px solid var(--hd-border);
+    border-radius: var(--hd-radius-md);
+    color: var(--hd-text-muted);
+    font-size: var(--hd-text-sm);
+    font-variant-numeric: tabular-nums;
+    text-decoration: none;
+  }
+
+  .versions a:hover,
+  .versions a:focus-visible {
+    border-color: var(--hd-border-gold);
+    color: var(--hd-accent);
+  }
+
+  .releases {
+    margin-block-start: var(--hd-space-8);
+    padding: 0;
+    list-style: none;
+  }
+
+  .release {
+    display: grid;
+    gap: var(--hd-space-4);
+    padding-block: var(--hd-space-8);
+    border-block-start: 1px solid var(--hd-border);
+    /* El índice salta aquí: que el título no quede pegado al borde. */
+    scroll-margin-block-start: var(--hd-space-6);
+  }
+
+  /* En pantallas anchas, el número de versión acompaña al texto en su columna. */
+  @media (min-width: 56rem) {
+    .release {
+      grid-template-columns: 11rem minmax(0, 1fr);
+      gap: var(--hd-space-8);
+    }
+
+    /* Queda bajo la cabecera del sitio, que también es fija (unos 4,6rem en
+       una sola línea a este ancho). */
+    .release-head {
+      position: sticky;
+      inset-block-start: 6rem;
+      align-self: start;
+    }
+  }
+
+  .release-head h2 {
+    color: var(--hd-accent);
+    font-size: var(--hd-text-2xl);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .latest {
+    margin-block-start: var(--hd-space-1);
+    color: var(--hd-text-muted);
+    font-size: var(--hd-text-sm);
+  }
+
+  .release-body {
+    max-width: var(--hd-measure);
+  }
+
+  .notice {
+    margin-block-end: var(--hd-space-4);
+    padding: var(--hd-space-3) var(--hd-space-4);
+    border-inline-start: 3px solid var(--hd-accent);
+    background: var(--hd-surface-raised);
+  }
+
+  .highlights {
+    display: grid;
+    gap: var(--hd-space-2);
+    padding: 0;
+    list-style: none;
+  }
+
+  /* Rombo dorado, el mismo del filo de forja de las cabeceras. */
+  .highlights li {
+    position: relative;
+    padding-inline-start: var(--hd-space-6);
+  }
+
+  .highlights li::before {
+    content: '';
+    position: absolute;
+    inset-inline-start: var(--hd-space-1);
+    inset-block-start: 0.6em;
+    inline-size: 0.45rem;
+    block-size: 0.45rem;
+    background: var(--hd-accent);
+    transform: rotate(45deg);
+  }
+
+  .details {
+    margin-block-start: var(--hd-space-6);
+  }
+
+  .details summary {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--hd-space-2);
+    padding: var(--hd-space-2) var(--hd-space-4);
+    border: 1px solid var(--hd-border-gold);
+    border-radius: var(--hd-radius-md);
+    color: var(--hd-accent);
+    font-weight: 600;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .details summary::-webkit-details-marker {
+    display: none;
+  }
+
+  /* Flecha que gira al abrir: dice si el bloque está plegado o no. */
+  .details summary::after {
+    content: '';
+    inline-size: 0.5rem;
+    block-size: 0.5rem;
+    border-inline-end: 2px solid currentColor;
+    border-block-end: 2px solid currentColor;
+    transform: translateY(-0.15rem) rotate(45deg);
+  }
+
+  .details[open] summary::after {
+    transform: translateY(0.1rem) rotate(-135deg);
+  }
+
+  .details summary:hover {
+    background: var(--hd-surface-raised);
+  }
+
+  .details[open] .notes {
+    margin-block-start: var(--hd-space-4);
+  }
+
+  /* El Markdown no lleva clases: se estiliza por elemento dentro de las notas. */
+  .notes :global(h3) {
+    margin-block: var(--hd-space-6) var(--hd-space-2);
+    font-size: var(--hd-text-lg);
+  }
+
+  .notes :global(h3:first-child) {
+    margin-block-start: 0;
+  }
+
+  .notes :global(p),
+  .notes :global(ul) {
+    margin-block-end: var(--hd-space-4);
+  }
+
+  .notes :global(ul ul) {
+    margin-block: var(--hd-space-2) 0;
+  }
+
+  .notes :global(li) {
+    margin-block-end: var(--hd-space-2);
+    color: var(--hd-text-muted);
+  }
+
+  .notes :global(strong) {
+    color: var(--hd-text);
+  }
+</style>

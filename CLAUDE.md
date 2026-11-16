@@ -62,7 +62,9 @@ citar el juego.
 
 En curso: landing real, presskit, legales. Por decisión del dueño
 (2026-10-31) entran también las páginas El juego, Cómo se juega y Héroes, y el
-esqueleto del devlog (vacío y oculto hasta su primera entrada).
+esqueleto del devlog (vacío y oculto hasta su primera entrada). El
+2026-11-15 entran las páginas Novedades (changelog por versión del juego) y
+Capturas (galería del juego).
 Fuera de alcance ahora: compendio de cartas, deckbuilder.
 
 El nombre público es **Hero Duel CCG**. *TCGMaster* es el nombre interno del
